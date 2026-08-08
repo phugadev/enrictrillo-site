@@ -1,0 +1,25 @@
+---
+title: "AWS SAA-C03, week one: unlearning the 'just deploy it' instinct"
+excerpt: "Ten years of shipping to whatever platform was fastest didn't prepare me for thinking in VPCs, IAM boundaries, and failure domains."
+date: "2026-07-02"
+wavelength: "compute"
+series: "AWS SAA-C03"
+---
+
+I've deployed a lot of software. I have not, until now, had to explain *why* a request can or can't reach a private subnet without drawing the network.
+
+That's the gap the SAA-C03 is closing, and it's a useful kind of uncomfortable. Fullstack work rewards being fast and pragmatic — reach for the platform that gets you shipping, don't overthink the infrastructure underneath it. The certification punishes exactly that instinct. Every scenario question wants the *correct* architecture, not the one that happens to work.
+
+## What's actually sticking
+
+Three things from week one that changed how I think about systems, not just how I answer practice questions:
+
+1. **IAM is the actual product surface.** Every AWS service is, underneath, a permission boundary with some compute or storage attached. Get the boundary wrong and nothing else matters.
+2. **Availability zones aren't a checkbox.** I'd treated multi-AZ as a "yes, obviously" setting. It's a design decision with real cost and latency trade-offs depending on what you're protecting against.
+3. **Cost and resilience are the same conversation.** Every redundancy choice is a cost choice wearing a different hat.
+
+## Why I'm doing this in public
+
+The certification is a means, not the point. The point is being able to say, credibly, that I can take a project from idea to production infrastructure alone — which is exactly what FIRSTLIGHT and the CMO platform are for. Writing the process down is the only way I've found to actually notice what I'm learning versus what I'm just passing.
+
+Week two: VPC peering and why I kept reaching for a NAT gateway I didn't need.
