@@ -33,6 +33,17 @@ body {
   outline-offset: 3px;
 }
 
+/* Spectrometer scanline. The prefers-reduced-motion block above already
+   neutralises this, so the strip is static for anyone who asks for that. */
+@keyframes scan {
+  from { left: 0%; }
+  to   { left: 100%; }
+}
+
+.animate-scan {
+  animation: scan 7s linear infinite;
+}
+
 /* Article prose refinements beyond typography plugin defaults */
 .prose :where(code):not(:where([class~="not-prose"] *))::before,
 .prose :where(code):not(:where([class~="not-prose"] *))::after {

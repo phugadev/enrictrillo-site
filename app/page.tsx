@@ -4,7 +4,7 @@ import { PostCard } from "@/components/PostCard";
 import { DispersionMark } from "@/components/DispersionMark";
 import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
-import { WavelengthKey } from "@/components/WavelengthKey";
+import { Spectrometer } from "@/components/Spectrometer";
 import { CONTAINER, Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { SmartLink } from "@/components/ui/SmartLink";
@@ -35,10 +35,8 @@ export default function Home() {
           production rather than handing them across three teams.
         </p>
 
-        <div className="mt-7">
-          <Availability showDetail />
-        </div>
-
+        {/* Availability lives in the sticky nav and the footer — a third
+            statement here made it read as filler rather than signal. */}
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[13px]">
           <a
             href={`mailto:${site.email}`}
@@ -51,6 +49,9 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Signature strip and the site's legend, before any coloured dot appears */}
+      <Spectrometer />
 
       <Section id="work">
         <SectionLabel>Selected work</SectionLabel>
@@ -81,9 +82,6 @@ export default function Home() {
           ))}
         </div>
       </Section>
-
-      {/* Explains the colour coding introduced by Work, just above */}
-      <WavelengthKey />
 
       {/* Hides itself while no credentials are banked */}
       <Credentials />
