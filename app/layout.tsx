@@ -28,7 +28,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   alternates: {
     canonical: "/",
-    types: { "application/rss+xml": `${site.url}/feed.xml` },
+    types: {
+      "application/rss+xml": `${site.url}/feed.xml`,
+      // Points agents at the curated markdown map rather than the rendered DOM.
+      "text/plain": `${site.url}/llms.txt`,
+    },
   },
   openGraph: {
     title: `${site.name} — ${site.role}`,

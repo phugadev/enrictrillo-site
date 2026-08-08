@@ -70,6 +70,9 @@ Intelligence.
 project (`"Watchman"`) or a study thread (`"AWS SAA-C03"`). Series pages are
 generated automatically; there's nothing to register.
 
+GitHub-flavoured markdown is enabled, so tables, task lists and strikethrough
+all work alongside the usual headings, lists, quotes and footnotes.
+
 Code blocks can carry a filename:
 
 ````mdx
@@ -132,6 +135,10 @@ These need no maintenance — they read from `lib/site.ts` and `content/posts/`:
 - `/sitemap.xml`, `/robots.txt`
 - `/opengraph-image` and `/blog/<slug>/opengraph-image` — social cards,
   generated per post with the wavelength accent (`lib/og.tsx`)
+- `/llms.txt` — a curated markdown map of the site for language models
+  (the llmstxt.org convention), generated from the same data as everything
+  else so it can't go stale. This is what an assistant should find when
+  someone asks it about you, instead of scraping the DOM.
 
 ## A note on MDX
 
@@ -153,11 +160,13 @@ Point enrictrillo.com's DNS at the Vercel project once it's live.
 app/
   layout.tsx             — fonts, metadata
   page.tsx               — homepage (hero, work, credentials, latest posts, about)
-  blog/page.tsx          — blog index, grouped by wavelength
+  blog/page.tsx          — blog index, flat and newest-first
   blog/[slug]/layout.tsx — loads the reading font for post pages only
   blog/[slug]/page.tsx   — post template
   blog/series/[series]/  — auto-generated series index pages
+  blog/wavelength/[…]/   — auto-generated band index pages
   feed.xml/route.ts      — RSS
+  llms.txt/route.ts      — markdown site map for language models
   sitemap.ts, robots.ts
   opengraph-image.tsx    — site social card
 content/posts/           — posts, one .mdx per file
@@ -173,7 +182,8 @@ components/
   PostNav.tsx            — older/newer at the end of a post
   Mdx.tsx                — MDX rendering
   MdxComponents.tsx      — image/figure handling + <Figure>
-  WavelengthKey.tsx      — the spectrum legend on the homepage
+  Spectrometer.tsx       — hero strip; the site's legend for the four bands
+  WavelengthChips.tsx    — band filters, rendered as links to real pages
   Availability.tsx, Credentials.tsx, DispersionMark.tsx
   ui/
     Section.tsx          — hairline band + CONTAINER (the shared measure)

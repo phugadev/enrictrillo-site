@@ -102,6 +102,34 @@ body {
   font-style: normal;
 }
 
+/* GFM tables: scroll inside their own box rather than widening the column. */
+.prose table {
+  display: block;
+  overflow-x: auto;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+/* GFM task lists — drop the bullet, tint the checkbox to the brand accent. */
+.prose ul.contains-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.prose .task-list-item {
+  padding-left: 0;
+}
+
+.prose .task-list-item::marker {
+  content: "";
+}
+
+.prose .task-list-item input[type="checkbox"] {
+  accent-color: #E3A24C;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
 /* rehype-autolink-headings wraps each heading in an <a>; keep it invisible
    until hover so headings don't render as underlined links. */
 .prose :where(h1, h2, h3, h4) a {

@@ -4,6 +4,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeUnwrapImages from "rehype-unwrap-images";
+import remarkGfm from "remark-gfm";
 import { mdxComponents } from "./MdxComponents";
 
 /**
@@ -23,6 +24,9 @@ export async function Mdx({ source }: { source: string }) {
   const { default: Content } = await evaluate(source, {
     ...runtime,
     development: false,
+    // Without GFM, tables render as literal pipe characters and strikethrough
+    // and task lists don't parse at all.
+    remarkPlugins: [remarkGfm],
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: "wrap" }],
