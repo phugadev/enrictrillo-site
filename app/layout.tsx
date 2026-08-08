@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { site } from "@/lib/site";
 
@@ -51,6 +52,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       */}
       <body className="bg-ink font-body text-paper antialiased" suppressHydrationWarning>
         {children}
+        {/*
+          Cookieless and GDPR-friendly by default — no consent banner needed.
+          Only sends events from the deployed site; local dev is a no-op.
+        */}
+        <Analytics />
       </body>
     </html>
   );
