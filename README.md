@@ -195,8 +195,18 @@ A few things worth knowing before editing:
   and `SectionLabel` exist so the sizes don't drift apart again.
 - **`CONTAINER`** (`components/ui/Section.tsx`) is the one place the page measure is
   defined. `Section` applies it with the standard vertical rhythm.
-- **Everything is a server component.** Nothing here needs client JS; keep it that
-  way unless a feature genuinely requires interactivity.
+- **Everything you write should be a server component.** The only client component
+  in the tree is `<Analytics />` in the root layout. Nothing else here needs client
+  JS; keep it that way unless a feature genuinely requires interactivity.
+
+## Analytics
+
+Vercel Analytics is wired up in `app/layout.tsx`. Cookieless, so no consent banner
+is required, and it no-ops in local dev — numbers only come from the deployment.
+
+It costs nothing in bundle size: the tracker is a 1.3 KB same-origin script loaded
+after hydration, served from a randomised path (e.g. `/f88f10b70f57bb41/script.js`)
+so ad blockers don't trivially match it. First Load JS is unchanged at 99.8 kB.
 
 ## Fonts
 
