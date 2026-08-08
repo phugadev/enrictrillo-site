@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
 import { PostNav } from "@/components/PostNav";
+import { JsonLd, blogPostingSchema } from "@/lib/schema";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
 import { site } from "@/lib/site";
 
@@ -59,6 +60,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   return (
     <PageShell mainClassName="mx-auto max-w-2xl px-6 py-16">
+      <JsonLd data={blogPostingSchema(meta)} />
       <PostHeader meta={meta} />
 
       <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import { JsonLd, personSchema, websiteSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 
 /**
@@ -56,6 +57,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       */}
       <body className="bg-ink font-body text-paper antialiased" suppressHydrationWarning>
         {children}
+        {/* Entity data for search and assistants — see lib/schema.tsx */}
+        <JsonLd data={personSchema()} />
+        <JsonLd data={websiteSchema()} />
         {/*
           Cookieless and GDPR-friendly by default — no consent banner needed.
           Only sends events from the deployed site; local dev is a no-op.
