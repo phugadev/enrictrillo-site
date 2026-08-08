@@ -119,10 +119,12 @@ export default function Home() {
               and Node behind it, AWS underneath, and AI work layered through the middle — part of
               the toolkit rather than a separate specialism.
             </p>
-            <p>
-              I've contracted before and I'm doing it again — currently taking Outside IR35 and C2C
-              engagements.
-            </p>
+            {/*
+              TODO(rico): this slot wants something the availability pills don't
+              already say — years contracting, sectors/domains you've delivered
+              in, team sizes, notice period. Restating "Outside IR35 and C2C"
+              here made it the third identical claim on one scroll.
+            */}
           </div>
         </div>
       </Section>

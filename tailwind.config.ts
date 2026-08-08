@@ -10,8 +10,11 @@ const config: Config = {
         "surface-2": "#1B1D22",
         hairline: "#26282E",
         paper: "#EDEAE2",
-        muted: "#93959C",
-        faint: "#5A5C63",
+        muted: "#93959C", // 6.54:1 on ink — AA
+        // Was #5A5C63 at 2.93:1, which failed AA at every size while carrying
+        // all dates, labels and the post readout. #7A7C85 is 4.71:1 and still
+        // reads clearly below `muted`.
+        faint: "#7A7C85",
         interface: "#E3A24C", // 590nm
         systems: "#5FBF86",  // 520nm
         compute: "#4C93E0",  // 470nm
