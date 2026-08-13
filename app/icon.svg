@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Enric Trillo">
+  <!--
+    The dispersion mark, redrawn for icon sizes.
+
+    Not a straight export of components/DispersionMark.tsx: that one is a
+    24-unit line drawing at stroke-width 1.4, which turns to mush at 16px. Here
+    the strokes are 3 units on a 32 grid and the fan is spread wider so the four
+    bands stay separable in a browser tab.
+
+    The ink background is deliberate. On a transparent icon the incoming grey
+    ray disappears against a light tab bar, and the mark loses the "one beam in,
+    four out" reading that is the whole point of it.
+  -->
+  <rect width="32" height="32" rx="7" fill="#0B0C0E"/>
+  <g stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M4 16h8" stroke="#8A8D93"/>
+    <path d="M12 16 26 6.5" stroke="#E3A24C"/>
+    <path d="M12 16 28.5 12.5" stroke="#5FBF86"/>
+    <path d="M12 16 28.5 19.5" stroke="#4C93E0"/>
+    <path d="M12 16 26 25.5" stroke="#9C7BE6"/>
+  </g>
+  <circle cx="12" cy="16" r="2.4" fill="#EDEAE2"/>
+</svg>
