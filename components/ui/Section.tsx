@@ -4,13 +4,15 @@ import type { ReactNode } from "react";
 export const CONTAINER = "mx-auto max-w-3xl px-6";
 
 /**
- * A section of the page, separated from the one above by a hairline.
+ * A section of the page, separated from the one above by whitespace alone.
  *
- * The rule sits *inside* the container rather than on the <section> itself.
- * Full-bleed rules cut the whole viewport in half at every section boundary,
- * which read as page-long dividers and made the page feel like stacked slabs
- * rather than one column of content. Contained, they read as typographic
- * separators.
+ * This used to carry a hairline rule (`border-t border-hairline`) inside the
+ * container to mark the boundary. Dropped because every section boundary on
+ * the page picked up a rule, including the one directly under the
+ * Spectrometer's own bordered panel — two adjacent rules read as a visual
+ * collision rather than a clean seam. Vertical padding alone now does the
+ * separating; `py-16` is generous enough that sections still read as
+ * distinct blocks without a line drawn between them.
  */
 export function Section({
   id,
@@ -24,7 +26,7 @@ export function Section({
   return (
     <section id={id} className={className}>
       <div className={CONTAINER}>
-        <div className="border-t border-hairline py-14">{children}</div>
+        <div className="py-16">{children}</div>
       </div>
     </section>
   );

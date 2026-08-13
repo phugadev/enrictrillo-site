@@ -73,7 +73,7 @@ export default async function WavelengthPage({
         <WavelengthChips active={band.wavelength as Wavelength} />
       </div>
 
-      <div className="mt-10 divide-y divide-hairline border-t border-hairline">
+      <div className="mt-12 divide-y divide-hairline">
         {band.posts.map((post) => (
           <PostCard key={post.slug} post={post} showWavelength={false} />
         ))}
