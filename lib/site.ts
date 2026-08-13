@@ -154,6 +154,7 @@ export const projects: Project[] = [
     status: "Shipped",
     year: "2026",
     links: { repo: "https://github.com/phugadev/watchman" },
+    caseStudySlug: "watchman",
   },
   {
     name: "supasteeltokens",

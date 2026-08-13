@@ -1,0 +1,50 @@
+---
+title: "Agent tool loops fail quietly"
+excerpt: "An agent that has stopped making progress looks exactly like an agent that is working, and that is a design problem."
+date: "2026-08-10"
+wavelength: "intelligence"
+draft: true
+---
+
+Draft — notes from a build in progress, published early so I stop rewriting the opening paragraph.
+
+A conventional program that gets stuck crashes, hangs, or pegs a core. An agent loop that gets stuck keeps calling tools, keeps producing plausible reasoning, and keeps costing money. From the outside it is indistinguishable from progress.
+
+## The failure modes I have actually hit
+
+- **The retry spiral.** A tool returns an error, the agent rephrases the same call, gets the same error, rephrases again. Seen it run 40 iterations on a permissions failure that no rephrasing could fix.
+- **The oscillation.** Two states the agent alternates between forever — writes a file, decides it is wrong, reverts, decides the revert was wrong.
+- **The confident wrong turn.** One bad early assumption, then twenty tool calls of impeccable reasoning built on it.
+- **Silent truncation.** A tool result gets cut off, the agent reasons over the fragment, and nothing anywhere records that it was a fragment.
+
+## What I am instrumenting
+
+```ts
+type StepRecord = {
+  step: number;
+  tool: string;
+  argsHash: string;
+  outcome: "ok" | "error";
+  durationMs: number;
+  resultTruncated: boolean;
+};
+```
+
+`argsHash` is the important one. Identical hash three times in a row is the retry spiral, detectable without any understanding of what the tool does. It is the cheapest useful signal in the whole loop and I did not have it for the first two months.
+
+## Rules I am testing
+
+- [x] Hard step ceiling, and treat hitting it as a failure to report rather than a result to return
+- [x] Duplicate-call detection on `argsHash`, breaking the loop at three repeats
+- [x] Explicit `resultTruncated` flag surfaced into the model's context, not just the log
+- [ ] Progress assertion — the agent states what changed after each step, and a repeat of "nothing changed" ends the run
+- [ ] Cost ceiling per run, separate from the step ceiling
+- [ ] A structured failure report the caller can act on, rather than a prose apology
+
+The progress assertion is the one I am least sure about. It costs tokens on every step, and my worry is that a model that is confidently wrong will be equally confident that it made progress.
+
+## Open question
+
+Is there a version of this that does not require the agent to self-report? Everything on my list above is either external and dumb (step counts, hashes) or internal and unreliable (self-assessment). The dumb external signals have caught every real failure so far, which makes me suspect the self-reporting layer is a comfort blanket.
+
+More once I have run it against something real. Other posts: [the writing index](/blog).

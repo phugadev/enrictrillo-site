@@ -1,0 +1,107 @@
+---
+title: "Watchman: alert fatigue and the quiet hours rule"
+excerpt: "The best feature I shipped to Watchman this year was one that sends fewer notifications."
+date: "2026-05-19"
+wavelength: "interface"
+series: "Watchman"
+draft: false
+---
+
+Six weeks after Watchman went into a client's estate, I asked the on-call engineer how it was going. He said it was great, and then admitted he had muted the Slack channel.
+
+That is a product failure, not a user failure. A monitor nobody reads is a monitor that does not exist.
+
+## The numbers behind the mute
+
+I pulled the notification log for the previous 30 days.
+
+| Alert outcome | Count | Share |
+| --- | --- | --- |
+| Acted on | 41 | 6% |
+| Acknowledged, no action | 118 | 18% |
+| Ignored entirely | 502 | 76% |
+
+Three quarters of everything Watchman said was noise. Worse, the 6% that mattered were *indistinguishable in the feed* from the 76% that did not.
+
+![Watchman notification volume over thirty days, with a long flat band of low-severity alerts](/test-shot.png "Thirty days of notifications. The dark band is everything nobody read.")
+
+## What was actually firing
+
+Digging into the ignored bucket, almost all of it was one of three shapes:
+
+1. **Flapping.** A probe crossing a threshold, recovering, and crossing again. One checkout probe generated 61 alerts in a single afternoon for what was one incident.
+2. **Known-noisy sources.** A batch job that pegs disk IO every night at 02:00. Correct alert, zero information.
+3. **Duplicate blast radius.** One database going slow produced separate alerts from nine dependent services.
+
+None of these need cleverness. They need the product to have an opinion.
+
+## The three rules I shipped
+
+### Rule one: state, not events
+
+An alert now represents a *state transition*, not a threshold crossing. A source that goes unhealthy opens an incident; further unhealthy events attach to it silently. Recovery has to hold for two consecutive evaluation windows before the incident closes.
+
+That one change killed the flapping category outright — 61 notifications became 1 open and 1 close.
+
+### Rule two: quiet hours as a first-class object
+
+The obvious version of this is a global mute schedule. The useful version is per-rule, and it suppresses *delivery* while still recording the incident.
+
+```tsx title="components/QuietHours.tsx"
+export function QuietHoursBadge({ window, tz }: { window: QuietWindow; tz: string }) {
+  const active = isWithinWindow(new Date(), window, tz);
+
+  return (
+    <span
+      data-active={active}
+      className="font-mono text-[11px] uppercase tracking-wide data-[active=true]:text-amber"
+      title={`Suppressed ${window.from}–${window.to} ${tz}`}
+    >
+      {active ? "quiet" : `quiet ${window.from}–${window.to}`}
+    </span>
+  );
+}
+```
+
+The badge sits next to the rule in the UI at all times, not buried in a settings modal. If a rule is suppressed you should be able to see that while you are staring at the dashboard wondering why nothing fired.
+
+> Every suppression rule is a promise you are making to your future self at 3am. Make it visible, or you will spend an incident debugging your own configuration.
+
+### Rule three: collapse by cause, not by service
+
+When nine services alert at once, Watchman now checks whether they share a dependency that is *also* unhealthy. If so, the dependency alert is primary and the rest fold into it as a count.
+
+The dependency graph is declared, not inferred:
+
+```yaml
+services:
+  checkout:
+    depends_on: [orders-db, payments-api]
+  orders-api:
+    depends_on: [orders-db]
+  reporting:
+    depends_on: [orders-db, warehouse]
+```
+
+Inferring it from traffic was tempting and I am glad I did not. A declared graph is wrong in ways you can see and fix. An inferred one is wrong in ways that show up only during the incident it was meant to help with.
+
+<Figure src="/test-shot.png" alt="Alert pipeline" width={1200} height={675} caption="Sub-second alerting." />
+
+## The result
+
+Thirty days after shipping all three:
+
+- Notifications: 661 → 88
+- Acted-on share: 6% → 34%
+- Median time to acknowledge: 14 minutes → 4 minutes
+- Slack channel: ~~muted~~ unmuted, and the on-call rota now uses it as the incident thread
+
+The acted-on share is the number I care about. It did not go to 100% and it should not — some alerts are correctly informational. But a feed where a third of the entries deserve a human is a feed people read.
+
+## What I would do differently
+
+I built the state machine first and the collapsing last, because the state machine was the interesting engineering problem. Wrong order. Blast-radius collapsing was three days of work and removed more noise than anything else.
+
+*Build the boring deduplication first.* The clever part can wait, and you will understand the shape of the clever part much better once the noise is gone.
+
+The rest of this build log is on the [blog index](/blog).
