@@ -13,6 +13,7 @@ export function PostCard({
   post,
   showWavelength = true,
   as: Heading = "h2",
+  compact = false,
 }: {
   post: PostMeta;
   showWavelength?: boolean;
@@ -22,10 +23,18 @@ export function PostCard({
    * the "Latest writing" SectionLabel is already an h2.
    */
   as?: "h2" | "h3";
+  /**
+   * Tighter row (py-5, matching ProjectRow's rhythm) with the excerpt
+   * paragraph omitted. Used on the homepage teaser, where the excerpt is
+   * more of an activity signal than something a reader needs to decide
+   * whether to click — unlike /blog and the wavelength/series pages, which
+   * keep the full treatment.
+   */
+  compact?: boolean;
 }) {
   const wl = wavelengths[post.wavelength];
   return (
-    <Link href={`/blog/${post.slug}`} className="group flex gap-4 py-6">
+    <Link href={`/blog/${post.slug}`} className={`group flex gap-4 ${compact ? "py-5" : "py-6"}`}>
       <WavelengthSpine wavelength={post.wavelength} />
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
@@ -37,7 +46,9 @@ export function PostCard({
         <Heading className="font-display text-[19px] leading-snug text-paper transition-colors group-hover:text-white">
           {post.title}
         </Heading>
-        <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{post.excerpt}</p>
+        {!compact && (
+          <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{post.excerpt}</p>
+        )}
       </div>
     </Link>
   );
