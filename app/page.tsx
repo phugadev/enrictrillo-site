@@ -1,11 +1,14 @@
 import Link from "next/link";
+import { Avatar } from "@/components/Avatar";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { DispersionMark } from "@/components/DispersionMark";
 import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
 import { ProjectRow } from "@/components/ProjectRow";
+import { Now } from "@/components/Now";
 import { Spectrometer } from "@/components/Spectrometer";
+import { Toolkit } from "@/components/Toolkit";
 import { CONTAINER, Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { site, projects } from "@/lib/site";
@@ -19,10 +22,20 @@ export default function Home() {
   return (
     <PageShell>
       {/* Hero */}
-      <section className={`${CONTAINER} pb-14 pt-16 sm:pt-20`}>
-        <SectionLabel as="p" className="mb-5">
-          {site.role} — {site.location}
-        </SectionLabel>
+      <section className={`${CONTAINER} pb-12 pt-14 sm:pt-16`}>
+        {/* Face first — every portfolio worth copying leads with one, and it
+            costs 8 KB. Name and role sit beside it so the page introduces
+            itself before the headline makes a claim. */}
+        <div className="mb-8 flex items-center gap-4">
+          <Avatar />
+          <div className="min-w-0">
+            <p className="font-display text-[17px] tracking-tight text-paper">{site.name}</p>
+            <SectionLabel as="p" className="mt-1">
+              {site.role} — {site.location}
+            </SectionLabel>
+          </div>
+        </div>
+
         <h1 className="font-display text-[40px] font-medium leading-[1.15] tracking-tight text-paper sm:text-[52px]">
           Production software,
           <br />
@@ -52,6 +65,9 @@ export default function Home() {
       {/* Signature strip and the site's legend, before any coloured dot appears */}
       <Spectrometer />
 
+      {/* Hides itself until there's a present tense worth stating */}
+      <Now />
+
       <Section id="work">
         <SectionLabel>Selected work</SectionLabel>
         <ul className="mt-6 divide-y divide-hairline">
@@ -60,6 +76,8 @@ export default function Home() {
           ))}
         </ul>
       </Section>
+
+      <Toolkit />
 
       {/* Hides itself while no credentials are banked */}
       <Credentials />
@@ -74,7 +92,7 @@ export default function Home() {
           </div>
           <div className="mt-2 divide-y divide-hairline">
             {posts.map((post) => (
-              <PostCard key={post.slug} post={post} />
+              <PostCard key={post.slug} post={post} as="h3" />
             ))}
           </div>
         </Section>
