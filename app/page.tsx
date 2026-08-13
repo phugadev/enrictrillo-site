@@ -3,7 +3,6 @@ import { Avatar } from "@/components/Avatar";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { DispersionMark } from "@/components/DispersionMark";
-import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
 import { ProjectRow } from "@/components/ProjectRow";
 import { Now } from "@/components/Now";
@@ -50,8 +49,8 @@ export default function Home() {
           production across the full stack — no handoffs between specialists along the way.
         </p>
 
-        {/* Availability lives in the sticky nav and the footer — a third
-            statement here made it read as filler rather than signal. */}
+        {/* Availability lives in AvailabilityBar (below) and the footer —
+            a third statement here made it read as filler rather than signal. */}
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[13px]">
           <a
             href={`mailto:${site.email}`}
