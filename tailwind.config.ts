@@ -41,8 +41,8 @@ const config: Config = {
       },
       fontFamily: {
         display: ["var(--font-display)"],
-        // Body shares the display face site-wide — one less family to load.
-        body: ["var(--font-display)"],
+        // Inter, not Space Grotesk — see the note in app/layout.tsx.
+        body: ["var(--font-body)"],
         // Long-form only. Loaded by app/blog/[slug]/layout.tsx, not the root.
         reading: ["var(--font-reading)"],
         mono: ["var(--font-mono)"],

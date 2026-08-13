@@ -118,8 +118,14 @@ interface, systems, compute, intelligence.
 Everything outside blog posts — name, role, tagline, projects, credentials,
 availability, nav, socials — lives in `lib/site.ts`.
 
-Two things worth knowing:
+Three things worth knowing:
 
+- **Project links and metrics.** Each entry in `projects` takes an optional
+  `links: { live?, repo?, npm? }` and `metrics: string[]`. Omit any link that
+  doesn't exist — a "Live" chip pointing at a dead deploy costs more than a
+  missing one. The name is deliberately not a link; the chips carry every
+  destination. **Only put a figure in `metrics` you have just verified**: it's
+  the most persuasive line on the page and the easiest to disprove.
 - **Availability.** `site.availability.open` toggles the status line in the hero
   and footer. Set it to `false` and both disappear; nothing else changes.
 - **Credentials.** `credentials` is deliberately *earned only* — no pending or
@@ -180,6 +186,7 @@ lib/
 components/
   PageShell.tsx          — skip link + nav + <main> + footer; every page uses it
   Nav.tsx, Footer.tsx
+  ProjectRow.tsx         — a row in Selected work, with its live/repo/npm links
   PostCard.tsx           — post row on the homepage and blog index
   PostHeader.tsx         — the instrument readout above each post
   PostNav.tsx            — older/newer at the end of a post
@@ -232,16 +239,31 @@ so ad blockers don't trivially match it. First Load JS is unchanged at 99.8 kB.
 
 ## Fonts
 
-Two families load site-wide — Space Grotesk (`font-display`, `font-body`) and
-JetBrains Mono (`font-mono`), about 64 KB.
+Three families load site-wide, about 85 KB total:
 
-A third, Newsreader (`font-reading`), is loaded by `app/blog/[slug]/layout.tsx`
+- **Space Grotesk** (`font-display`) — headings and project names only. Set
+  against Inter and Geist at headline size it's the one that reads as authored
+  rather than as the category default. It's also noticeably wider, which is why
+  it no longer carries body copy.
+- **Inter** (`font-body`) — everything else. Denser and more neutral over a
+  paragraph. **Pinned to weight 400**: every `font-medium` in the codebase sits
+  on `font-display`, and the only bold/italic text is inside prose. The full
+  100–900 variable axis cost 47 KB against 23 KB for the single static cut — if
+  you add a `<strong>` or `font-semibold` to body copy, add the weight in
+  `app/layout.tsx` or the browser will synthesise it.
+- **JetBrains Mono** (`font-mono`) — metadata, labels, the post readout.
+
+A fourth, Newsreader (`font-reading`), is loaded by `app/blog/[slug]/layout.tsx`
 rather than the root layout, so **only post pages fetch it**. Long-form reading
 gets a real reading face with true italics; every other page stays light.
+Space Grotesk and Inter-at-400 have no italic cut, so prose italics come from
+Newsreader — that's the whole reason it's in the bundle.
 
 If you add a page that needs the reading face, it has to live under
 `app/blog/[slug]/` or load its own instance — `font-reading` resolves to nothing
 elsewhere.
 
-All three use variable fonts (no `weight` array). Pinning weights previously left
-prose headings without a real 700 cut, so the browser synthesised bold.
+Space Grotesk, JetBrains Mono and Newsreader use variable fonts (no `weight`
+array) because they each render at more than one weight — pinning them
+previously left prose headings without a real 700 cut, so the browser
+synthesised bold. Inter is the deliberate exception, as above.

@@ -4,11 +4,10 @@ import { PostCard } from "@/components/PostCard";
 import { DispersionMark } from "@/components/DispersionMark";
 import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
+import { ProjectRow } from "@/components/ProjectRow";
 import { Spectrometer } from "@/components/Spectrometer";
 import { CONTAINER, Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { SmartLink } from "@/components/ui/SmartLink";
-import { WavelengthDot } from "@/components/ui/WavelengthDot";
 import { site, projects } from "@/lib/site";
 import { getAllPosts } from "@/lib/posts";
 
@@ -55,32 +54,11 @@ export default function Home() {
 
       <Section id="work">
         <SectionLabel>Selected work</SectionLabel>
-        <div className="mt-6 divide-y divide-hairline">
+        <ul className="mt-6 divide-y divide-hairline">
           {projects.map((project) => (
-            <SmartLink key={project.name} href={project.href} className="group block py-5">
-              <div className="flex items-start justify-between gap-6">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2.5">
-                    <WavelengthDot wavelength={project.wavelength} />
-                    <h3 className="font-display text-[17px] text-paper">{project.name}</h3>
-                  </div>
-                  <p className="mt-1.5 max-w-md text-[14px] leading-relaxed text-muted">
-                    {project.description}
-                  </p>
-                  {project.stack && (
-                    <p className="mt-2.5 font-mono text-[11px] tracking-wide text-faint">
-                      {project.stack.join(" · ")}
-                    </p>
-                  )}
-                </div>
-                <span className="shrink-0 text-right font-mono text-[11px] uppercase tracking-wider text-faint">
-                  <span className="block text-muted">{project.status}</span>
-                  <span className="block">{project.year}</span>
-                </span>
-              </div>
-            </SmartLink>
+            <ProjectRow key={project.name} project={project} />
           ))}
-        </div>
+        </ul>
       </Section>
 
       {/* Hides itself while no credentials are banked */}
