@@ -55,11 +55,12 @@ body {
 }
 
 .prose code {
-  background: var(--c-surface-raised);
-  border: 1px solid var(--c-hairline);
+  background: color-mix(in srgb, var(--c-intelligence) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-intelligence) 40%, transparent);
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
+  color: var(--c-intelligence);
 }
 
 .prose pre {
@@ -89,6 +90,7 @@ body {
   background: transparent;
   border: none;
   padding: 0;
+  color: var(--c-paper);
 }
 
 .prose a {
