@@ -44,7 +44,7 @@ export default function Home() {
         <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
           Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as
           part of the toolkit, not a separate department. I take features from product decision to
-          production across the full stack, with no handoff between specialists along the way.
+          production across the full stack — no handoffs between specialists along the way.
         </p>
 
         {/* Availability lives in the sticky nav and the footer — a third
