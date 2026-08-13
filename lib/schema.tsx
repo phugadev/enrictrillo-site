@@ -31,7 +31,7 @@ export function personSchema() {
       "React",
       "Python",
       "Node.js",
-      "AWS",
+      "Azure",
       "Cloud infrastructure",
       "AI engineering",
       ...Object.values(wavelengths).map((wl) => wl.description),

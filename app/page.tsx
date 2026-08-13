@@ -42,9 +42,9 @@ export default function Home() {
           end to end.
         </h1>
         <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
-          Nine years building and shipping on TypeScript, Next.js and Python — with AWS and AI as
+          Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as
           part of the toolkit, not a separate department. I take features from product decision to
-          production rather than handing them across three teams.
+          production across the full stack — no handoffs between specialists along the way.
         </p>
 
         {/* Availability lives in the sticky nav and the footer — a third
@@ -110,7 +110,7 @@ export default function Home() {
             <p>
               I build and ship production software end to end: product thinking through frontend,
               backend, cloud and AI. In practice that's TypeScript and Next.js on the front, Python
-              and Node behind it, AWS underneath, and AI work layered through the middle — part of
+              and Node behind it, Azure underneath, and AI work layered through the middle — part of
               the toolkit rather than a separate specialism.
             </p>
             {/*
