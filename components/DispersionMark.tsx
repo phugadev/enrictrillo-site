@@ -23,8 +23,3 @@ export function DispersionMark({ size = 20 }: { size?: number }) {
     </svg>
   );
 }
-
-/** A thin vertical spine used beside post titles/cards, colored by wavelength. */
-export function WavelengthSpine({ hex }: { hex: string }) {
-  return <span aria-hidden="true" className="inline-block w-[3px] self-stretch rounded-full" style={{ backgroundColor: hex }} />;
-}

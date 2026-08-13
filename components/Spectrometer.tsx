@@ -25,7 +25,7 @@ export function Spectrometer() {
   }, {});
 
   return (
-    <div className="relative h-16 overflow-hidden border-t border-hairline" aria-hidden={false}>
+    <div className="relative h-16 overflow-hidden border-t border-hairline">
       <div className="absolute inset-0 opacity-[0.14]" style={{ background: BAND_GRADIENT }} />
       <div className="animate-scan absolute inset-y-0 w-px bg-paper/50" aria-hidden="true" />
 

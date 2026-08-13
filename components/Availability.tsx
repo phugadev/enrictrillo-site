@@ -6,15 +6,13 @@ import { site } from "@/lib/site";
  *
  * `pill` is the nav variant — bordered, short label, survives a narrow
  * viewport. `inline` is the footer variant with the full claim.
+ *
+ * `site.availability.detail` isn't rendered here by design — the footer would
+ * be the third statement of the same claim on one scroll. It reaches readers
+ * through /llms.txt instead.
  */
-export function Availability({
-  variant = "inline",
-  showDetail = false,
-}: {
-  variant?: "inline" | "pill";
-  showDetail?: boolean;
-}) {
-  const { open, short, label, detail } = site.availability;
+export function Availability({ variant = "inline" }: { variant?: "inline" | "pill" }) {
+  const { open, short, label } = site.availability;
   if (!open) return null;
 
   const dot = (
@@ -43,7 +41,6 @@ export function Availability({
     <span className="inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[12px] text-muted">
       {dot}
       <span>{label}</span>
-      {showDetail && <span className="text-faint">{detail}</span>}
     </span>
   );
 }

@@ -190,6 +190,7 @@ components/
     SectionLabel.tsx     — the mono uppercase section heading
     SmartLink.tsx        — internal vs external link handling
     WavelengthDot.tsx    — the colour-coded dot
+    WavelengthSpine.tsx  — the vertical rule beside a post row
 ```
 
 ## Conventions

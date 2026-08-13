@@ -1,5 +1,25 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * The site is dark-only, so `prose` and `prose-invert` have to resolve to the
+ * same palette. The typography plugin emits `.prose-invert` after `.prose` at
+ * equal specificity, so customising `DEFAULT` alone silently loses every value
+ * the moment `prose-invert` is applied — body copy fell back to the plugin's
+ * cool grey and prose links rendered white instead of the amber accent.
+ * Spreading one object into both modifiers keeps them from diverging again.
+ */
+const proseColors = {
+  "--tw-prose-body": "#D8D5CC",
+  "--tw-prose-headings": "#EDEAE2",
+  "--tw-prose-links": "#E3A24C",
+  "--tw-prose-bold": "#EDEAE2",
+  "--tw-prose-quotes": "#D8D5CC",
+  "--tw-prose-quote-borders": "#26282E",
+  "--tw-prose-code": "#EDEAE2",
+  "--tw-prose-pre-bg": "#141519",
+  "--tw-prose-hr": "#26282E",
+};
+
 const config: Config = {
   content: ["./app/**/*.{ts,tsx,mdx}", "./components/**/*.{ts,tsx}", "./content/**/*.mdx"],
   theme: {
@@ -29,20 +49,8 @@ const config: Config = {
         mono: ["var(--font-mono)"],
       },
       typography: () => ({
-        DEFAULT: {
-          css: {
-            "--tw-prose-body": "#D8D5CC",
-            "--tw-prose-headings": "#EDEAE2",
-            "--tw-prose-links": "#E3A24C",
-            "--tw-prose-bold": "#EDEAE2",
-            "--tw-prose-quotes": "#D8D5CC",
-            "--tw-prose-quote-borders": "#26282E",
-            "--tw-prose-code": "#EDEAE2",
-            "--tw-prose-pre-bg": "#141519",
-            "--tw-prose-hr": "#26282E",
-            maxWidth: "none",
-          },
-        },
+        DEFAULT: { css: { ...proseColors, maxWidth: "none" } },
+        invert: { css: proseColors },
       }),
     },
   },
