@@ -32,6 +32,9 @@ yarn-error.log*
 
 # claude code — local session settings, not shared config
 .claude/settings.local.json
+# claude code — isolated worktrees for background agents. Without this, a
+# `git add -A` while one exists commits it as a broken embedded-repo gitlink.
+.claude/worktrees/
 
 # os / editor
 .DS_Store
