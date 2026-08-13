@@ -57,3 +57,13 @@ export function SparkleIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** A wireframe frame with a cursor overlapping its corner — designing and clicking. */
+export function UxUiIcon({ className }: IconProps) {
+  return (
+    <svg {...shared} className={className}>
+      <rect x="2.5" y="3" width="11" height="9" rx="1.2" />
+      <path d="M10.5 8.5 16.5 14 14 14.3 12.7 17 10.5 8.5Z" strokeLinejoin="round" />
+    </svg>
+  );
+}

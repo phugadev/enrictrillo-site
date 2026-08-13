@@ -6,6 +6,7 @@ import {
   ProductEngineeringIcon,
   SparkleIcon,
   SystemDesignIcon,
+  UxUiIcon,
 } from "./ui/ExpertiseIcons";
 
 /**
@@ -27,8 +28,9 @@ import {
  */
 const icons: Record<string, ComponentType<{ className?: string }>> = {
   "Product Engineering": ProductEngineeringIcon,
+  "UX/UI Design": UxUiIcon,
   "System Design": SystemDesignIcon,
-  "Cloud Infrastructure": CloudIcon,
+  "Cloud Infra": CloudIcon,
   "Applied AI": SparkleIcon,
 };
 
