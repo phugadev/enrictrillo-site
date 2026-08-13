@@ -1,5 +1,6 @@
 import { site } from "@/lib/site";
 import { Availability } from "./Availability";
+import { LiveClock } from "./LiveClock";
 import { CONTAINER } from "./ui/Section";
 import { SmartLink } from "./ui/SmartLink";
 
@@ -17,7 +18,8 @@ export function Footer() {
         <Availability />
         <div className="mt-5 flex flex-col gap-1 font-mono text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
-            {site.name} — {site.location} · GMT/BST
+            © {new Date().getFullYear()} {site.name}, {site.company} — {site.location} ·{" "}
+            <LiveClock />
           </p>
           <div className="flex gap-5">
             {LINKS.map((link) => (
