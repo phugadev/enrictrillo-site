@@ -1,0 +1,70 @@
+---
+title: "Watchman: cutting the p99 with a second index"
+excerpt: "A rule evaluator that was fast on average and terrible at the tail, and the boring index that fixed it."
+date: "2026-07-28"
+wavelength: "systems"
+series: "Watchman"
+draft: false
+---
+
+Watchman's alert evaluator runs every rule against the latest rollup window. Median evaluation was 38 ms. The p99 was 2.9 seconds, which meant that roughly once every couple of minutes an alert arrived late enough for someone to notice.
+
+Averages hide this. I only found it because the evaluator emits its own timing into Watchman, which is either good design or unforgivable recursion depending on your mood.
+
+## The query
+
+Every rule resolves to roughly this:
+
+```sql title="lib/rules/window.sql"
+SELECT source, kind, p99_ms, count
+FROM event_rollup_1m
+WHERE source = $1
+  AND kind = $2
+  AND bucket >= now() - ($3 || ' minutes')::interval
+ORDER BY bucket DESC;
+```
+
+The table had a primary key on `(bucket, source, kind)`. That is a fine key and a bad index for this query, because the leading column is the one the query does *not* filter on with equality. Postgres was scanning a bucket range and filtering, which is cheap when the range is 5 minutes and expensive when a rule asks for a 6-hour window.
+
+## The distribution nobody looked at
+
+Of 900 rules:
+
+| Window length | Rules | Median eval | p99 eval |
+| --- | --- | --- | --- |
+| 5 min | 731 | 22 ms | 51 ms |
+| 60 min | 141 | 61 ms | 240 ms |
+| 360 min | 28 | 480 ms | 3,100 ms |
+
+Twenty-eight rules out of nine hundred were producing the entire tail. ~~I assumed the problem was total rule count~~ — it was never rule count, it was window length on a handful of rules.
+
+## The fix
+
+A second index, leading with the equality columns:
+
+```sql
+CREATE INDEX CONCURRENTLY event_rollup_1m_source_kind_bucket_idx
+  ON event_rollup_1m (source, kind, bucket DESC);
+```
+
+That is the whole change. p99 went to 96 ms.
+
+### Why it took a week to find three lines
+
+Because I went looking in the wrong layer. My first assumption was connection pool contention, so I spent two days instrumenting the pool, then a day on the batching in the evaluator, then a day convinced it was autovacuum.
+
+The thing that actually located it was dropping `pg_stat_statements` output next to the rule metadata and grouping by window length. Ten minutes once I looked at the right table.
+
+> Instrument the *shape of the workload* before you instrument the machinery. I had detailed timings of every layer and no idea which rules were slow.
+
+### The cost
+
+The index adds about 340 MB and roughly 6% to the rollup write path. Both fine. I checked the write cost before shipping rather than after, which is the one part of this I would repeat unchanged.
+
+## Follow-ups I did not do
+
+- Materialising longer windows as a `event_rollup_1h` table. Real win available, no current need.
+- Capping window length in the rule editor. Tempting, but a 6-hour window is a legitimate thing to want.
+- Caching evaluation results between runs. Complexity for a problem that no longer exists.
+
+Earlier in this series: the [ingest pipeline post](/blog) covers where these rollups come from.

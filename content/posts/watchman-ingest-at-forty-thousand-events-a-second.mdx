@@ -1,0 +1,125 @@
+---
+title: "Watchman: ingest at forty thousand events a second"
+excerpt: "How Watchman's event pipeline went from choking at 3k/s to holding 40k/s on a single writer, and the three ideas that got it there."
+date: "2026-03-04"
+wavelength: "systems"
+series: "Watchman"
+draft: false
+---
+
+Watchman is the system health monitor I run for my own infrastructure and for two client estates. It swallows health events — HTTP probes, queue depths, container restarts, disk pressure — and turns them into alerts that fire in under a second.
+
+The first version handled about 3,000 events a second before Postgres started backing up. That was fine for a demo and useless for anything real. This post is the log of getting it to 40,000 on the same box.
+
+## The shape of the problem
+
+An event is small and boring:
+
+```json
+{
+  "source": "probe.eu-west-1.api",
+  "kind": "http_latency",
+  "ts": "2026-03-01T09:14:02.881Z",
+  "value_ms": 412,
+  "labels": { "service": "checkout", "region": "eu-west-1" }
+}
+```
+
+There are a lot of them, they arrive in bursts, and *none of them individually matter*. What matters is the aggregate and the transition: a service that was healthy and now is not.
+
+That last sentence is the whole optimisation. If no single event matters, you are allowed to batch, and you are allowed to lose a few on a hard crash. I wrote that down as an explicit product decision before touching any code, because it is the thing that unlocks everything else.
+
+## Idea one: batch at the edge, not in the database
+
+The original writer did one `INSERT` per event inside a transaction per event. Postgres was spending its life on transaction overhead and WAL fsyncs rather than on the 90 bytes of payload.
+
+The fix is a batcher that accumulates events in memory and flushes on whichever comes first: a size threshold or a time threshold.
+
+```ts title="lib/ingest/batcher.ts"
+type Flush<T> = (batch: T[]) => Promise<void>;
+
+export function createBatcher<T>(flush: Flush<T>, maxSize = 2_000, maxWaitMs = 250) {
+  let buffer: T[] = [];
+  let timer: NodeJS.Timeout | null = null;
+
+  async function drain() {
+    if (timer) clearTimeout(timer);
+    timer = null;
+    if (buffer.length === 0) return;
+
+    const batch = buffer;
+    buffer = [];
+    await flush(batch);
+  }
+
+  return {
+    push(item: T) {
+      buffer.push(item);
+      if (buffer.length >= maxSize) return drain();
+      timer ??= setTimeout(drain, maxWaitMs);
+    },
+    drain,
+  };
+}
+```
+
+Two hundred lines of tuning later, the numbers that mattered were `maxSize = 2000` and `maxWaitMs = 250`. Bigger batches did not help throughput and did hurt the p99 alert latency, which is the number the product is actually sold on.
+
+### Why not a queue?
+
+I tried Redis Streams in between the API and the writer. It worked, and it added an entire piece of infrastructure to babysit for a benefit I could get from a 40-line in-process buffer. The rule I keep coming back to: *do not add a moving part until the simple thing has visibly failed.* In-process batching has not visibly failed yet, so Redis stays out.[^queue]
+
+## Idea two: COPY, not INSERT
+
+Once you have a batch, the insert path itself becomes the bottleneck. A multi-row `INSERT` of 2,000 rows is far better than 2,000 single inserts, but it still parses and plans a very large statement.
+
+`COPY ... FROM STDIN (FORMAT binary)` skips all of that. On my hardware the difference was not subtle:
+
+| Write strategy | Throughput (events/s) | CPU on writer |
+| --- | --- | --- |
+| Single INSERT per event | 3,100 | 94% |
+| Multi-row INSERT, 2k batch | 21,400 | 71% |
+| Binary COPY, 2k batch | 41,800 | 38% |
+
+The CPU column is the interesting one. COPY did not just go faster, it left headroom for the alert evaluator to run on the same machine.
+
+## Idea three: stop storing what you will never read
+
+Watchman kept every raw event for 90 days. Nobody ever queried raw events older than about three hours — after that, every dashboard and every alert rule reads from the one-minute rollups.
+
+So raw events now live for six hours in a partitioned table, and a continuous rollup job writes the aggregates that everything else reads:
+
+```sql
+INSERT INTO event_rollup_1m (bucket, source, kind, count, p50_ms, p95_ms, p99_ms)
+SELECT date_trunc('minute', ts) AS bucket, source, kind, count(*), percentile_cont(0.5) WITHIN GROUP (ORDER BY value_ms), percentile_cont(0.95) WITHIN GROUP (ORDER BY value_ms), percentile_cont(0.99) WITHIN GROUP (ORDER BY value_ms)
+FROM events_raw
+WHERE ts >= $1 AND ts < $2
+GROUP BY 1, 2, 3
+ON CONFLICT (bucket, source, kind) DO NOTHING;
+```
+
+Yes, that `SELECT` is one absurdly long line. It is generated, I do not read it, and formatting it prettily would not make the query planner happier.
+
+### Retention as a partition problem
+
+Dropping a six-hour partition is instant. Deleting 90 days of rows a night at a time was not, and the vacuum load from it was quietly eating the throughput I had just bought.
+
+## What broke along the way
+
+- **Batch loss on deploy.** A rolling restart dropped whatever was in the buffer. Fixed with a `SIGTERM` handler that calls `drain()` before exiting, and a 5-second grace period in the container spec.
+- **Backpressure that wasn't.** When Postgres slowed down, the buffer grew without bound and the process OOMed. Now `push` rejects once the buffer is over 4x `maxSize`, and the API returns 429. Shedding load beats falling over.
+- **Clock skew.** Probes send their own timestamps. One box drifted 40 seconds and produced a beautiful, entirely fictional latency spike. Events more than 120 seconds from server time now get stamped with arrival time and flagged.
+  - The flag matters more than the correction — a silent correction hides a broken host.
+  - Three of the four times this fired, the underlying problem was a failing NTP sync on the probe host, not the network.
+
+## Where it stands
+
+Steady state is roughly 12,000 events a second across the three estates, with the 40k figure being what the box will take before p99 alert latency crosses one second. That is about 3x headroom, which is where I like to sit.
+
+The next constraint is the alert evaluator, not the writer. That is a different post — the short version is that evaluating 900 rules against every rollup row is a join problem I have currently solved with brute force and an embarrassing amount of RAM.
+
+---
+
+Related: the [Watchman series index](/blog) has the rest of this thread. The Postgres [COPY documentation](https://www.postgresql.org/docs/current/sql-copy.html) is worth reading end to end if you are anywhere near a bulk write path.
+
+[^queue]: The counter-argument is real: an external queue survives a process crash, and my in-process buffer does not. I accepted up to 250 ms of event loss on hard crash. If Watchman were billing-critical rather than observability-critical, that trade would be wrong.

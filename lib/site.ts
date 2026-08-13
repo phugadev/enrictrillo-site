@@ -155,6 +155,8 @@ export const projects: Project[] = [
     status: "Shipped",
     year: "2026",
     links: { repo: "https://github.com/phugadev/watchman" },
+    // PREVIEW ONLY — do not merge to main. Demonstrates the case-study link.
+    caseStudySlug: "watchman",
   },
   {
     name: "supasteeltokens",

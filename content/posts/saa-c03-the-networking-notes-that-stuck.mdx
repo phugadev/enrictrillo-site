@@ -1,0 +1,72 @@
+---
+title: "SAA-C03: the networking notes that stuck"
+excerpt: "Six weeks into the Solutions Architect Associate syllabus, these are the VPC facts I stopped having to look up."
+date: "2026-02-17"
+wavelength: "compute"
+series: "AWS SAA-C03"
+draft: false
+---
+
+I have been deploying to AWS for years and studying for SAA-C03 anyway, mostly because "years of usage" turns out to mean "deep knowledge of the six services I happen to use."
+
+Networking is where that gap was widest. These are the notes that survived — the things I had wrong, not a syllabus summary.
+
+## Things I had genuinely wrong
+
+- A security group is **stateful**; a network ACL is **stateless**. I knew this as a sentence and not as a consequence: with a NACL you must explicitly allow the ephemeral return port range, and forgetting that is the classic "why does my outbound call hang" bug.
+- A subnet is *public* because its route table has a route to an internet gateway. Nothing else about it is different. The word "public" is not a property you set.
+- A NAT gateway lives in a **public** subnet and serves **private** ones. I had drawn this backwards on a whiteboard more than once.
+
+## The comparison I kept needing
+
+| Path | Direction | Needs public IP | Cost shape | Crosses AZ | Typical use |
+| --- | --- | --- | --- | --- | --- |
+| Internet gateway | In and out | Yes | Free (data transfer applies) | N/A | Public web tier |
+| NAT gateway | Outbound only | No | Hourly + per-GB processed | Per-AZ, so deploy one per AZ | Private instances pulling updates |
+| VPC endpoint (gateway) | To S3 / DynamoDB | No | Free | Regional | Keeping S3 traffic off the NAT |
+| VPC endpoint (interface) | To most services | No | Hourly + per-GB | Per-AZ ENI | Private access to service APIs |
+| VPC peering | VPC to VPC | No | Data transfer only | Yes | Two VPCs, no transitivity |
+| Transit gateway | Hub and spoke | No | Attachment hourly + per-GB | Yes | Many VPCs, needs transitivity |
+
+The row that saved a client real money was the gateway endpoint one. A private subnet pulling large objects from S3 through a NAT gateway pays per-GB processing for traffic that a free gateway endpoint carries instead.
+
+## Drilling it rather than reading it
+
+Reading the docs a second time does nothing for me. Building a broken thing and fixing it does.
+
+```bash
+# Stand up the smallest VPC that can demonstrate the failure, then break it.
+aws ec2 create-vpc --cidr-block 10.42.0.0/16 --query 'Vpc.VpcId' --output text
+aws ec2 create-subnet --vpc-id "$VPC" --cidr-block 10.42.1.0/24 --availability-zone eu-west-2a
+aws ec2 describe-route-tables --filters "Name=vpc-id,Values=$VPC" \
+  --query 'RouteTables[].Routes[].{Dest:DestinationCidrBlock,Gateway:GatewayId,Nat:NatGatewayId}'
+```
+
+I keep the whole thing in a template so teardown is one command and I am not nervously checking the bill:
+
+```yaml
+Resources:
+  StudyVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.42.0.0/16
+      EnableDnsHostnames: true
+      Tags:
+        - Key: purpose
+          Value: saa-c03-scratch
+        - Key: autodelete
+          Value: "true"
+```
+
+The `autodelete` tag is checked by a nightly Lambda that tears down anything still standing. Study accounts are exactly where a forgotten NAT gateway goes to quietly cost forty pounds a month.
+
+## Remaining gaps
+
+- [x] VPC routing and gateway types
+- [x] Security groups vs NACLs
+- [x] Endpoint types and when each applies
+- [ ] Direct Connect vs Site-to-Site VPN, including the resilience tiers
+- [ ] Route 53 routing policies beyond weighted and failover
+- [ ] IPv6-only subnets, which I have never used in anger
+
+Next in this thread: sitting the exam. The rest is on the [blog](/blog).

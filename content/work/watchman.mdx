@@ -1,0 +1,45 @@
+---
+title: "Watchman: a system health monitor built for the 3am page"
+excerpt: "A real-time monitoring dashboard designed around one question: what actually needs a human right now."
+wavelength: "systems"
+year: "2026"
+stack: ["TypeScript", "Next.js", "PostgreSQL", "WebSockets"]
+links: { repo: "https://github.com/phugadev/watchman" }
+draft: false
+---
+
+## The brief
+
+Most monitoring dashboards answer "is everything green?" Watchman was built to
+answer a narrower, more useful question: **does anything here need a human in
+the next five minutes?** Everything else is noise dressed up as data.
+
+## Approach
+
+The dashboard ingests metrics over WebSockets and keeps a rolling window in
+Postgres rather than reaching for a time-series database — at the scale this
+runs at, a well-indexed relational table with a background rollup job is
+simpler to operate and easier to reason about than adding a new piece of
+infrastructure.
+
+<Compare
+  items={[
+    { code: "Alert on every threshold breach.", label: "Naive approach", outcome: "bad" },
+    { code: "Alert on sustained breaches during business hours only.", label: "Shipped approach", outcome: "good" },
+  ]}
+/>
+
+## What shipped
+
+- A single-page dashboard, server-rendered, with a thin client layer only
+  where the live-updating view genuinely needs it.
+- Quiet-hours suppression, so a flaky staging service doesn't page anyone at
+  3am for something that can wait until standup.
+- A rule engine simple enough to read in one sitting, deliberately avoiding a
+  general-purpose alerting DSL nobody but its author would understand.
+
+## Outcome
+
+Fewer, more trustworthy alerts. The measure of success wasn't uptime — it was
+how often the on-call engineer could silence a notification without opening
+a laptop.
