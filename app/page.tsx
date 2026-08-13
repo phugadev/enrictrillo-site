@@ -7,6 +7,9 @@ import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
 import { ProjectRow } from "@/components/ProjectRow";
 import { Now } from "@/components/Now";
+// DESIGN TRIAL — see PR description. Revert by dropping this import and the
+// <Expertise /> line below.
+import { Expertise } from "@/components/Expertise";
 import { Spectrometer } from "@/components/Spectrometer";
 import { Toolkit } from "@/components/Toolkit";
 import { CONTAINER, Section } from "@/components/ui/Section";
@@ -60,6 +63,10 @@ export default function Home() {
             Read the writing →
           </Link>
         </div>
+
+        {/* DESIGN TRIAL — capability areas at the same altitude as the
+            tagline, so it sits inside the hero rather than after it. */}
+        <Expertise />
       </section>
 
       {/* Signature strip and the site's legend, before any coloured dot appears */}

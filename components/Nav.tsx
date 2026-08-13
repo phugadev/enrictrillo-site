@@ -22,9 +22,9 @@ import { CONTAINER } from "./ui/Section";
  */
 export function Nav() {
   return (
-    <header className="sticky top-0 z-20 border-b border-hairline bg-ink/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 bg-ink/85 backdrop-blur-md">
       <div
-        className={`${CONTAINER} flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-4`}
+        className={`${CONTAINER} flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-hairline py-4`}
       >
         <Link
           href="/"
