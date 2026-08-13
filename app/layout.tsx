@@ -1,19 +1,43 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { JsonLd, personSchema, websiteSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 
 /**
- * Two families only — Space Grotesk carries both display and body copy, mono
- * carries metadata. Omitting `weight` pulls the variable font, which covers
- * the whole range in one file per style; fixed-weight axes meant prose
+ * Space Grotesk carries display only. Set against Inter and Geist at headline
+ * size it's the one that reads as authored rather than as the category
+ * default, which is worth keeping for the first thing a reader sees — but its
+ * personality works against a paragraph, and it's noticeably wider.
+ *
+ * Inter carries body copy: denser, more neutral, and it gets out of the way.
+ * Mono carries metadata. Omitting `weight` pulls the variable font, which
+ * covers the whole range in one file per style; fixed-weight axes meant prose
  * headings (700) had no real cut and were being synthetically bolded.
+ *
+ * Prose keeps Newsreader — see app/blog/[slug]/layout.tsx.
  */
 const display = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-display",
+  display: "swap",
+});
+
+/**
+ * Pinned to 400, unlike the other two. Body copy is the one face that never
+ * changes weight here — every `font-medium` in the codebase sits on
+ * `font-display`, and the only bold or italic text is inside prose, which is
+ * Newsreader. Shipping Inter's full 100–900 variable axis for a single weight
+ * cost 47 KB against 15 KB for the static cut.
+ *
+ * If you ever put a <strong> or a `font-semibold` on body copy, add the weight
+ * here — otherwise the browser will synthesise it.
+ */
+const body = Inter({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -47,7 +71,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${display.variable} ${mono.variable}`}>
+    <html lang="en-GB" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       {/*
         suppressHydrationWarning covers only <body>'s own attributes, not its
         children — browser extensions (Bitdefender's `bis_register`, password

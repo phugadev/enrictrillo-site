@@ -72,6 +72,17 @@ export const wavelengths: Record<
 /** Display order for grouped views — long wavelength to short, like a real spectrum. */
 export const wavelengthOrder: Wavelength[] = ["interface", "systems", "compute", "intelligence"];
 
+/**
+ * Where a project can be inspected. Every one of these is a claim a reader can
+ * check in ten seconds, so omit anything that doesn't exist — a "Live" link to
+ * a dead deploy costs more credibility than no link at all.
+ */
+export type ProjectLinks = {
+  live?: string;
+  repo?: string;
+  npm?: string;
+};
+
 export type Project = {
   name: string;
   description: string;
@@ -80,18 +91,25 @@ export type Project = {
   wavelength: Wavelength;
   status: "Shipped" | "In build" | "Archived";
   year: string;
-  href: string;
+  links?: ProjectLinks;
+  /**
+   * Hard numbers — stars, installs, users. This is the line that actually
+   * persuades, and it is also the easiest thing on the site to disprove, so
+   * only ever put a figure here you have just verified. Omit otherwise.
+   */
+  metrics?: string[];
 };
 
 export const projects: Project[] = [
   {
     name: "Watchman",
     description: "Real-time system health monitor.",
-    // TODO(rico): add the stack once you confirm it — omitted rather than guessed.
+    // TODO(rico): add the stack once you confirm it — omitted rather than
+    // guessed. Less urgent now the repo is linked and readable.
     wavelength: "systems",
     status: "Shipped",
     year: "2026",
-    href: "/blog",
+    links: { repo: "https://github.com/phugadev/watchman" },
   },
   {
     name: "supasteeltokens",
@@ -101,7 +119,7 @@ export const projects: Project[] = [
     wavelength: "compute",
     status: "Shipped",
     year: "2026",
-    href: "https://www.npmjs.com/package/supasteeltokens",
+    links: { npm: "https://www.npmjs.com/package/supasteeltokens" },
   },
 ];
 

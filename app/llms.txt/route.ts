@@ -3,6 +3,8 @@ import { credentials, projects, site, wavelengths } from "@/lib/site";
 
 export const dynamic = "force-static";
 
+const LINK_LABELS = { live: "Live", repo: "Source", npm: "npm" } as const;
+
 /**
  * /llms.txt — the llmstxt.org convention: a curated markdown map of the site
  * for language models reading it, in place of them scraping rendered HTML.
@@ -36,10 +38,18 @@ export function GET() {
   if (projects.length > 0) {
     lines.push("## Selected work", "");
     for (const project of projects) {
+      const primary = project.links?.live ?? project.links?.repo ?? project.links?.npm;
+      const title = primary ? `[${project.name}](${primary})` : project.name;
       const stack = project.stack?.length ? ` Stack: ${project.stack.join(", ")}.` : "";
-      const href = project.href.startsWith("http") ? project.href : `${site.url}${project.href}`;
+      const metrics = project.metrics?.length ? ` ${project.metrics.join(". ")}.` : "";
+      // Every link, not just the primary — an assistant answering "where can I
+      // see his code" should get the repo even when the live site is listed.
+      const links = Object.entries(project.links ?? {})
+        .map(([kind, url]) => `${LINK_LABELS[kind as keyof typeof LINK_LABELS]}: ${url}`)
+        .join(", ");
+
       lines.push(
-        `- [${project.name}](${href}): ${project.description} ${project.status}, ${project.year}. ${wavelengths[project.wavelength].label}.${stack}`,
+        `- ${title}: ${project.description} ${project.status}, ${project.year}. ${wavelengths[project.wavelength].label}.${stack}${metrics}${links ? ` Links — ${links}.` : ""}`,
       );
     }
     lines.push("");
