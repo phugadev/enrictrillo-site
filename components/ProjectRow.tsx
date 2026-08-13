@@ -1,6 +1,34 @@
+import Link from "next/link";
 import { wavelengths, type Project } from "@/lib/site";
+import { getCaseStudyBySlug } from "@/lib/work";
 import { SmartLink } from "./ui/SmartLink";
 import { WavelengthDot } from "./ui/WavelengthDot";
+
+/**
+ * Resolves `project.caseStudySlug` to a route, or `undefined` when the
+ * project doesn't have one. A slug that's set but doesn't match a file under
+ * content/work/ is a content bug, not a normal "no case study yet" state —
+ * it throws (naming the project) rather than silently falling through to a
+ * dead link, matching lib/posts.ts and lib/work.ts's "fail loudly, name the
+ * file" convention. A case study that exists but is a draft still resolves
+ * in dev (so it's previewable) but disappears in production, exactly like
+ * the draft itself does on /work/[slug].
+ */
+function resolveCaseStudyHref(project: Project): string | undefined {
+  if (!project.caseStudySlug) return undefined;
+
+  let meta;
+  try {
+    ({ meta } = getCaseStudyBySlug(project.caseStudySlug));
+  } catch {
+    throw new Error(
+      `lib/site.ts — project "${project.name}" has caseStudySlug "${project.caseStudySlug}", but content/work/${project.caseStudySlug}.mdx doesn't exist.`,
+    );
+  }
+
+  if (meta.draft && process.env.NODE_ENV === "production") return undefined;
+  return `/work/${project.caseStudySlug}`;
+}
 
 /** Matches a "before → after" metric, e.g. "0 → 40k users". */
 const DELTA_PATTERN = /^(.+?)\s*→\s*(.+)$/;
@@ -49,6 +77,7 @@ const LINK_ORDER = [
  */
 export function ProjectRow({ project }: { project: Project }) {
   const links = LINK_ORDER.filter(({ key }) => project.links?.[key]);
+  const caseStudyHref = resolveCaseStudyHref(project);
 
   return (
     <li className="py-5">
@@ -76,7 +105,7 @@ export function ProjectRow({ project }: { project: Project }) {
         </span>
       </div>
 
-      {(project.metrics?.length || links.length > 0) && (
+      {(project.metrics?.length || links.length > 0 || caseStudyHref) && (
         // Left-aligned with the description rather than justified apart: a
         // project with links but no metrics would otherwise strand a single
         // chip against the right edge with a void beside it.
@@ -106,6 +135,15 @@ export function ProjectRow({ project }: { project: Project }) {
                 <span className="sr-only">{`${label} — ${project.name}`}</span>
               </SmartLink>
             ))}
+            {caseStudyHref && (
+              <Link
+                href={caseStudyHref}
+                className="text-faint underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+              >
+                <span aria-hidden="true">Case study →</span>
+                <span className="sr-only">{`Case study — ${project.name}`}</span>
+              </Link>
+            )}
           </div>
         </div>
       )}

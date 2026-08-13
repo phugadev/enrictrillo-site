@@ -1,9 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts, getAllSeries, getPostsByWavelength } from "@/lib/posts";
+import { getAllCaseStudies } from "@/lib/work";
 import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
+  const caseStudies = getAllCaseStudies();
   const newest = (list: { date: string }[]) =>
     list.length ? new Date(list[0].date) : new Date();
 
@@ -12,6 +14,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${site.url}/blog`,
       lastModified: newest(posts),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${site.url}/work`,
+      lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
     },
@@ -31,6 +39,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...posts.map((post) => ({
       url: `${site.url}/blog/${post.slug}`,
       lastModified: new Date(post.date),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
+    // Case studies only carry a `year`, not a precise date, so there's no
+    // finer lastModified to give them than "now".
+    ...caseStudies.map((study) => ({
+      url: `${site.url}/work/${study.slug}`,
+      lastModified: new Date(),
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),
