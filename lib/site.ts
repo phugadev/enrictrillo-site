@@ -17,8 +17,6 @@ export const site = {
    */
   availability: {
     open: true,
-    /** Nav pill — has to survive a narrow viewport. */
-    short: "Available",
     label: "Available for Outside IR35 & C2C contracts",
     detail: "UK-based · Remote",
   },
