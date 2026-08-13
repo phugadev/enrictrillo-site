@@ -94,8 +94,8 @@ export type ProjectLinks = {
  */
 export const toolkit: Record<Wavelength, string[]> = {
   interface: ["TypeScript", "React", "Next.js", "Tailwind"],
-  systems: ["Node", "Python", "PostgreSQL", "REST & tRPC"],
-  compute: ["AWS", "Vercel", "Docker", "CI/CD"],
+  systems: ["Node", "Python", "PostgreSQL", "REST APIs"],
+  compute: ["Azure", "Vercel", "Docker", "CI/CD"],
   intelligence: ["LLM APIs", "Agents & tool use", "RAG", "Evals"],
 };
 
