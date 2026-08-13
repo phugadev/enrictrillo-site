@@ -6,11 +6,34 @@ import { CONTAINER } from "@/components/ui/Section";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
 
+const description =
+  "Build logs, architecture notes and infrastructure/AI engineering write-ups, filed by wavelength.";
+
 export const metadata: Metadata = {
   title: `Writing — ${site.name}`,
-  description:
-    "Build logs, architecture notes and infrastructure/AI engineering write-ups, filed by wavelength.",
+  description,
   alternates: { canonical: "/blog" },
+  /**
+   * Without this block the page inherits the root layout's openGraph wholesale
+   * — the homepage title *and* og:url=https://enrictrillo.com, so sharing the
+   * writing index linked back to the homepage.
+   *
+   * `images` has to be explicit: declaring openGraph here suppresses the
+   * file-based card that would otherwise cascade down from app/opengraph-image
+   * (the band pages proved it — they declared openGraph and emitted no image at
+   * all). /blog/[slug] gets away with omitting it only because it has a
+   * co-located opengraph-image.tsx, which wins over the declaration.
+   */
+  openGraph: {
+    type: "website",
+    title: `Writing — ${site.name}`,
+    description,
+    url: "/blog",
+    siteName: site.name,
+    images: [
+      { url: "/opengraph-image", width: 1200, height: 630, alt: `${site.name} — ${site.role}` },
+    ],
+  },
 };
 
 /**

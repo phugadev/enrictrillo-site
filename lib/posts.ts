@@ -83,11 +83,16 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
     );
   }
 
-  if (data.series !== undefined && (typeof data.series !== "string" || data.series.trim() === "")) {
+  // `series:` with nothing after it is YAML for null, not for "absent". Treat
+  // the two the same: leaving a key behind with its value deleted is the
+  // normal way you stop a post being part of a series, and failing the build
+  // with "must be a non-empty string when present" for a key you just emptied
+  // reads like a bug in the site rather than a note about your frontmatter.
+  if (data.series != null && (typeof data.series !== "string" || data.series.trim() === "")) {
     fail(file, "`series` must be a non-empty string when present.");
   }
 
-  if (data.draft !== undefined && typeof data.draft !== "boolean") {
+  if (data.draft != null && typeof data.draft !== "boolean") {
     fail(file, "`draft` must be true or false when present.");
   }
 

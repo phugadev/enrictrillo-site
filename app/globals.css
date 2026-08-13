@@ -9,6 +9,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* The header is sticky at ~56px, so an un-offset anchor jump hides the
+     target's top rule and clips its heading. This also fixes keyboard focus
+     landing under the nav when tabbing near the top of a page. */
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -102,12 +106,35 @@ body {
   font-style: normal;
 }
 
-/* GFM tables: scroll inside their own box rather than widening the column. */
-.prose table {
-  display: block;
+/* GFM tables scroll inside their wrapper rather than widening the column. */
+.prose [data-table-wrapper] {
   overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.prose [data-table-wrapper] table {
+  display: table;
   width: 100%;
+  /* Fills the column when it fits, scrolls the wrapper when it doesn't. */
+  min-width: max-content;
+  margin: 0;
   font-size: 0.9em;
+}
+
+/*
+  Tables and code blocks break out past the reading measure once there's room.
+  Prose wants ~672px, but a six-column table in 672px wraps every single cell
+  onto three lines and a long code line scrolls almost immediately. The extra
+  96px lands them on the same 768px measure the rest of the site uses, so they
+  line up with the homepage rather than looking like a wider accident.
+*/
+@media (min-width: 1024px) {
+  .prose [data-table-wrapper],
+  .prose figure[data-rehype-pretty-code-figure] {
+    width: calc(100% + 6rem);
+    max-width: none;
+    margin-left: -3rem;
+  }
 }
 
 /* GFM task lists — drop the bullet, tint the checkbox to the brand accent. */
@@ -143,6 +170,3 @@ body {
   text-underline-offset: 4px;
 }
 
-.prose h2, .prose h3 {
-  scroll-margin-top: 6rem;
-}

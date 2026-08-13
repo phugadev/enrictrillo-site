@@ -71,7 +71,13 @@ project (`"Watchman"`) or a study thread (`"AWS SAA-C03"`). Series pages are
 generated automatically; there's nothing to register.
 
 GitHub-flavoured markdown is enabled, so tables, task lists and strikethrough
-all work alongside the usual headings, lists, quotes and footnotes.
+all work alongside the usual headings, lists, quotes and footnotes. Smart
+punctuation is applied too — write straight quotes and apostrophes and they come
+out curly, with `--` becoming an en dash. Code blocks are left alone.
+
+Wide tables are wrapped in a scrolling container (`components/Mdx.tsx`) so they
+fill the column and scroll inside themselves rather than pushing the page
+sideways. Tables and code blocks widen past the reading measure above 1024px.
 
 Code blocks can carry a filename:
 
@@ -118,7 +124,7 @@ interface, systems, compute, intelligence.
 Everything outside blog posts — name, role, tagline, projects, credentials,
 availability, nav, socials — lives in `lib/site.ts`.
 
-Three things worth knowing:
+Four things worth knowing:
 
 - **Project links and metrics.** Each entry in `projects` takes an optional
   `links: { live?, repo?, npm? }` and `metrics: string[]`. Omit any link that
@@ -126,6 +132,12 @@ Three things worth knowing:
   missing one. The name is deliberately not a link; the chips carry every
   destination. **Only put a figure in `metrics` you have just verified**: it's
   the most persuasive line on the page and the easiest to disprove.
+- **Toolkit and Now.** `toolkit` maps each wavelength band to a list of
+  technologies — it's what stops the spectrometer being a legend for a system
+  the reader never sees applied, so keep it to things the tagline and About copy
+  already claim. `now` is a list of present-tense lines; **the section hides
+  itself while the array is empty**, which is deliberate — a stale "now" is
+  worse than no "now".
 - **Availability.** `site.availability.open` toggles the status line in the hero
   and footer. Set it to `false` and both disappear; nothing else changes.
 - **Credentials.** `credentials` is deliberately *earned only* — no pending or
@@ -165,6 +177,7 @@ Point enrictrillo.com's DNS at the Vercel project once it's live.
 ```
 app/
   layout.tsx             — fonts, metadata
+  not-found.tsx          — branded 404, wrapped in PageShell like every page
   page.tsx               — homepage (hero, work, credentials, latest posts, about)
   blog/page.tsx          — blog index, flat and newest-first
   blog/[slug]/layout.tsx — loads the reading font for post pages only
@@ -176,6 +189,7 @@ app/
   sitemap.ts, robots.ts
   opengraph-image.tsx    — site social card
 content/posts/           — posts, one .mdx per file
+public/                  — headshot.jpg and any post images
 lib/
   site.ts                — all site copy, projects, credentials, taxonomy
   palette.ts             — every colour in the site, defined once
@@ -186,6 +200,9 @@ lib/
 components/
   PageShell.tsx          — skip link + nav + <main> + footer; every page uses it
   Nav.tsx, Footer.tsx
+  Avatar.tsx             — the headshot, served locally from public/
+  Now.tsx                — "what I'm doing now"; hides while `now` is empty
+  Toolkit.tsx            — the stack, filed by wavelength band
   ProjectRow.tsx         — a row in Selected work, with its live/repo/npm links
   PostCard.tsx           — post row on the homepage and blog index
   PostHeader.tsx         — the instrument readout above each post
@@ -216,6 +233,9 @@ A few things worth knowing before editing:
   and `SectionLabel` exist so the sizes don't drift apart again.
 - **`CONTAINER`** (`components/ui/Section.tsx`) is the one place the page measure is
   defined. `Section` applies it with the standard vertical rhythm.
+- **Section rules live inside the column, never full-bleed.** Edge-to-edge
+  hairlines cut the viewport in half at every section boundary and made the page
+  read as stacked slabs.
 - **Never type a hex literal.** `lib/palette.ts` is the only file that holds one.
   TypeScript imports `palette`; CSS uses the `--c-*` custom properties the Tailwind
   config publishes from it; Tailwind utilities (`text-muted`, `border-hairline`)

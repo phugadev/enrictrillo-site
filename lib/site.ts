@@ -83,6 +83,29 @@ export type ProjectLinks = {
   npm?: string;
 };
 
+/**
+ * The toolkit, filed by band.
+ *
+ * This is the section that makes the wavelength taxonomy mean something on the
+ * homepage — without it the spectrometer is a legend for a system the reader
+ * never sees applied. Every entry here restates a claim the tagline and About
+ * copy already make; don't add a technology here that isn't true elsewhere on
+ * the page.
+ */
+export const toolkit: Record<Wavelength, string[]> = {
+  interface: ["TypeScript", "React", "Next.js", "Tailwind"],
+  systems: ["Node", "Python", "PostgreSQL", "REST & tRPC"],
+  compute: ["AWS", "Vercel", "Docker", "CI/CD"],
+  intelligence: ["LLM APIs", "Agents & tool use", "RAG", "Evals"],
+};
+
+/**
+ * Present tense — what's true this month. Kept as data so it can be edited
+ * without touching a component, and the section hides itself while the array
+ * is empty rather than showing a stale or invented status.
+ */
+export const now: string[] = [];
+
 export type Project = {
   name: string;
   description: string;

@@ -8,8 +8,13 @@ import { site } from "@/lib/site";
  */
 export default function robots(): MetadataRoute.Robots {
   return {
+    // /llms.txt is discovered through the <link rel="alternate" type="text/plain">
+    // in the root layout, not from here. robots.txt has no field for "prefer
+    // this representation", and a second Allow line naming a path that
+    // `allow: "/"` already covers is noise in a file crawlers parse literally.
     rules: { userAgent: "*", allow: "/" },
     sitemap: `${site.url}/sitemap.xml`,
-    host: site.url,
+    // `Host:` removed — Yandex-only, ignored by Google and Bing, and the
+    // canonical host is already stated by metadataBase and rel=canonical.
   };
 }

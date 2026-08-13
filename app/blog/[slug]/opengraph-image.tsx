@@ -3,7 +3,16 @@ import { OgCard, ogContentType, ogSize } from "@/lib/og";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { site, wavelengths } from "@/lib/site";
 
-export const alt = "Post preview";
+/**
+ * A constant `alt`, not generateImageMetadata.
+ *
+ * Deriving the alt per item is possible and nicer, but on a dynamic route it
+ * makes the card's URL `.../opengraph-image/<id>` while generateStaticParams
+ * still only produces the slug — so the card never prerenders and every social
+ * URL 404s. A generic alt on a working card beats a per-post alt on a broken
+ * one; the card's own title carries the specifics for anyone who can see it.
+ */
+export const alt = "Writing by Enric Trillo";
 export const size = ogSize;
 export const contentType = ogContentType;
 
