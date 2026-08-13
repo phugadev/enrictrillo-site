@@ -48,20 +48,23 @@ export function PostCard({
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group flex items-baseline justify-between gap-6 py-4"
+        className="group -mx-3 flex items-baseline justify-between gap-6 rounded-lg px-3 py-4 transition-colors hover:bg-surface"
       >
         <span className="flex min-w-0 items-baseline gap-2.5">
           <WavelengthDot wavelength={post.wavelength} className="translate-y-[-2px]" />
-          <Heading className="font-display text-[16px] leading-snug text-paper transition-colors group-hover:text-white">
+          <Heading className="font-display text-[16px] leading-snug text-paper transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-white">
             {post.title}
           </Heading>
           {isRecent(post.date) && (
-            <span className="shrink-0 translate-y-[-1px] rounded-full bg-hairline/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-muted">
+            <span className="shrink-0 translate-y-[-1px] rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute">
               New
             </span>
           )}
         </span>
-        <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
+        <span className="flex shrink-0 items-baseline gap-1.5 font-mono text-[11px] uppercase tracking-wider text-faint">
+          <span className="opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
+            →
+          </span>
           {format(parseDate(post.date), "MMM yyyy")}
         </span>
       </Link>
