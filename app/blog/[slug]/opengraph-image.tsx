@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OgCard, ogContentType, ogSize } from "@/lib/og";
+import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { site, wavelengths } from "@/lib/site";
 
@@ -40,6 +40,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         footer={`${site.name} · ${meta.readingTime}`}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts() },
   );
 }

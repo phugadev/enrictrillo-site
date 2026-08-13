@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
 import { PostNav } from "@/components/PostNav";
+import { CONTAINER } from "@/components/ui/Section";
 import { JsonLd, blogPostingSchema } from "@/lib/schema";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
 import { site } from "@/lib/site";
@@ -59,15 +60,23 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const { newer, older } = getAdjacentPosts(slug);
 
   return (
-    <PageShell mainClassName="mx-auto max-w-2xl px-6 py-16">
-      <JsonLd data={blogPostingSchema(meta)} />
-      <PostHeader meta={meta} />
+    // Post pages read narrower than CONTAINER (see the max-w-2xl below) —
+    // long-form wants a tighter measure than the homepage's cards. But the
+    // measure being narrower doesn't mean the page should be: this outer div
+    // stays on CONTAINER so the column lines up with Nav and Footer on both
+    // edges, the same way it does on every other page. A plain max-w-2xl
+    // mx-auto here centers independently and drifts 48px off the chrome.
+    <PageShell mainClassName={`${CONTAINER} py-16`}>
+      <div className="max-w-2xl">
+        <JsonLd data={blogPostingSchema(meta)} />
+        <PostHeader meta={meta} />
 
-      <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">
-        <Mdx source={content} />
-      </article>
+        <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">
+          <Mdx source={content} />
+        </article>
 
-      <PostNav newer={newer} older={older} />
+        <PostNav newer={newer} older={older} />
+      </div>
     </PageShell>
   );
 }

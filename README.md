@@ -151,8 +151,13 @@ These need no maintenance — they read from `lib/site.ts` and `content/posts/`:
 
 - `/feed.xml` — RSS
 - `/sitemap.xml`, `/robots.txt`
-- `/opengraph-image` and `/blog/<slug>/opengraph-image` — social cards,
-  generated per post with the wavelength accent (`lib/og.tsx`)
+- `/opengraph-image` and one per post/band/series — social cards, generated
+  with the wavelength accent (`lib/og.tsx`) and set in Space Grotesk, the same
+  face as the page they're advertising. Satori (which renders these) has no
+  idea what CSS the site loads, so the two weights it needs are committed as
+  static `.woff` files under `assets/fonts/` rather than fetched at build
+  time — these routes are fully static, so a network fetch here would only
+  ever run during `next build`, for two files that never change.
 - `/llms.txt` — a curated markdown map of the site for language models
   (the llmstxt.org convention), generated from the same data as everything
   else so it can't go stale. This is what an assistant should find when
