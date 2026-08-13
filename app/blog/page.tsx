@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
+import { SeriesChips } from "@/components/SeriesChips";
 import { WavelengthChips } from "@/components/WavelengthChips";
 import { CONTAINER } from "@/components/ui/Section";
 import { getAllPosts } from "@/lib/posts";
@@ -59,6 +60,10 @@ export default function BlogIndex() {
         <>
           <div className="mt-8">
             <WavelengthChips />
+          </div>
+
+          <div className="mt-5">
+            <SeriesChips />
           </div>
 
           <div className="mt-12 divide-y divide-hairline">
