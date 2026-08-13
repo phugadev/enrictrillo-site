@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { format } from "date-fns";
+import { parseDate } from "@/lib/dates";
 import { seriesSlug, type PostMeta } from "@/lib/posts";
 import { site, wavelengths } from "@/lib/site";
 
@@ -31,7 +32,7 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
           {site.name} · {city}
         </Row>
         <Row label="Date">
-          <time dateTime={meta.date}>{format(new Date(meta.date), "EEE, dd MMM yyyy")}</time>
+          <time dateTime={meta.date}>{format(parseDate(meta.date), "EEE, dd MMM yyyy")}</time>
         </Row>
         <Row label="Wavelength">
           <span style={{ color: wl.hex }}>

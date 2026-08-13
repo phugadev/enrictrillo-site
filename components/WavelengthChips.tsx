@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getPostsByWavelength } from "@/lib/posts";
+import { palette } from "@/lib/palette";
 import { wavelengthOrder, wavelengths, type Wavelength } from "@/lib/site";
 
 /**
@@ -36,7 +37,7 @@ export function WavelengthChips({ active }: { active?: Wavelength }) {
           <>
             <span
               className="h-2 w-2 shrink-0 rounded-full"
-              style={{ backgroundColor: isActive ? "#0B0C0E" : wl.hex }}
+              style={{ backgroundColor: isActive ? palette.ink : wl.hex }}
               aria-hidden="true"
             />
             {wl.label}
@@ -64,8 +65,8 @@ export function WavelengthChips({ active }: { active?: Wavelength }) {
             className="inline-flex items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[12px] transition-colors"
             style={
               isActive
-                ? { backgroundColor: wl.hex, borderColor: wl.hex, color: "#0B0C0E" }
-                : { borderColor: "#26282E" }
+                ? { backgroundColor: wl.hex, borderColor: wl.hex, color: palette.ink }
+                : { borderColor: palette.hairline }
             }
           >
             {inner}

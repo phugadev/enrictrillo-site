@@ -1,3 +1,4 @@
+import { palette } from "./palette";
 import { wavelengthOrder, wavelengths, type Wavelength } from "./site";
 
 export const ogSize = { width: 1200, height: 630 };
@@ -19,7 +20,7 @@ export function OgCard({
   wavelength?: Wavelength;
   footer: string;
 }) {
-  const accent = wavelength ? wavelengths[wavelength].hex : "#EDEAE2";
+  const accent = wavelength ? wavelengths[wavelength].hex : palette.paper;
 
   return (
     <div
@@ -29,7 +30,7 @@ export function OgCard({
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "#0B0C0E",
+        backgroundColor: palette.ink,
         padding: 72,
       }}
     >
@@ -67,7 +68,7 @@ export function OgCard({
           display: "flex",
           fontSize: title.length > 60 ? 60 : 76,
           lineHeight: 1.15,
-          color: "#EDEAE2",
+          color: palette.paper,
           letterSpacing: -1.5,
           maxWidth: 940,
         }}
@@ -81,8 +82,8 @@ export function OgCard({
           justifyContent: "space-between",
           alignItems: "center",
           fontSize: 24,
-          color: "#5A5C63",
-          borderTop: "1px solid #26282E",
+          color: palette.dim,
+          borderTop: `1px solid ${palette.hairline}`,
           paddingTop: 28,
         }}
       >

@@ -172,8 +172,11 @@ app/
 content/posts/           — posts, one .mdx per file
 lib/
   site.ts                — all site copy, projects, credentials, taxonomy
+  palette.ts             — every colour in the site, defined once
   posts.ts               — reads/parses posts, wavelength grouping
+  dates.ts               — timezone-safe parsing of YYYY-MM-DD
   og.tsx                 — shared OG card
+  schema.tsx             — JSON-LD (Person, WebSite, BlogPosting)
 components/
   PageShell.tsx          — skip link + nav + <main> + footer; every page uses it
   Nav.tsx, Footer.tsx
@@ -206,6 +209,14 @@ A few things worth knowing before editing:
   and `SectionLabel` exist so the sizes don't drift apart again.
 - **`CONTAINER`** (`components/ui/Section.tsx`) is the one place the page measure is
   defined. `Section` applies it with the standard vertical rhythm.
+- **Never type a hex literal.** `lib/palette.ts` is the only file that holds one.
+  TypeScript imports `palette`; CSS uses the `--c-*` custom properties the Tailwind
+  config publishes from it; Tailwind utilities (`text-muted`, `border-hairline`)
+  are generated from the same object. Adding a colour means editing one file.
+- **Format dates with `parseDate` from `lib/dates.ts`, never `new Date(iso)`.**
+  The date-only form parses as UTC midnight, so a US-region build renders every
+  date a day early. Machine-readable output (RSS `pubDate`, `<time dateTime>`)
+  is the exception and deliberately stays on the raw value.
 - **Everything you write should be a server component.** The only client component
   in the tree is `<Analytics />` in the root layout. Nothing else here needs client
   JS; keep it that way unless a feature genuinely requires interactivity.
