@@ -106,6 +106,19 @@ export const toolkit: Record<Wavelength, string[]> = {
  */
 export const now: string[] = [];
 
+/**
+ * DESIGN TRIAL — see PR description. Domain-level capability areas, not
+ * specific technologies — see `toolkit` for the stack. Rendered as a plain
+ * chip list by `components/Expertise.tsx`; that component hides itself while
+ * this array is empty, so clearing it is a one-line revert.
+ */
+export const expertise: string[] = [
+  "Product Engineering",
+  "System Design",
+  "Cloud Infrastructure",
+  "Applied AI",
+];
+
 export type Project = {
   name: string;
   description: string;
