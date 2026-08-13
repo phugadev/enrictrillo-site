@@ -120,6 +120,16 @@ export const expertise: { label: string; description: string }[] = [
   { label: "Applied AI", description: "LLM APIs and agentic workflows wired into production systems." },
 ];
 
+/**
+ * Diligence facts for the About section — the concrete details a contract
+ * decision-maker actually checks before booking a call: sectors delivered
+ * in, typical team size, how fast you could start. Empty by default rather
+ * than guessed; `components/About.tsx` hides the whole row while this is
+ * empty, same discipline as `now` and `credentials`. Deliberately excludes
+ * years of experience — the hero states that already.
+ */
+export const aboutFacts: { label: string; value: string }[] = [];
+
 export type Project = {
   name: string;
   description: string;
