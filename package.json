@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
     "new-post": "node scripts/new-post.mjs"
   },
   "dependencies": {

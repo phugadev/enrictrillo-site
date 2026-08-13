@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 ::selection {
-  background: #E3A24C;
-  color: #0B0C0E;
+  background: var(--c-interface);
+  color: var(--c-ink);
 }
 
 html {
@@ -12,8 +12,8 @@ html {
 }
 
 body {
-  background-color: #0B0C0E;
-  color: #EDEAE2;
+  background-color: var(--c-ink);
+  color: var(--c-paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -29,7 +29,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid #E3A24C;
+  outline: 2px solid var(--c-interface);
   outline-offset: 3px;
 }
 
@@ -51,29 +51,29 @@ body {
 }
 
 .prose code {
-  background: #1B1D22;
-  border: 1px solid #26282E;
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-hairline);
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
 }
 
 .prose pre {
-  border: 1px solid #26282E;
+  border: 1px solid var(--c-hairline);
   border-radius: 8px;
 }
 
 /* Code block filenames: ```ts title="lib/posts.ts" */
 .prose [data-rehype-pretty-code-title] {
-  background: #1B1D22;
-  border: 1px solid #26282E;
+  background: var(--c-surface-raised);
+  border: 1px solid var(--c-hairline);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
   padding: 0.55em 0.9em;
   font-family: var(--font-mono);
   font-size: 0.72em;
   letter-spacing: 0.04em;
-  color: #93959C;
+  color: var(--c-muted);
 }
 
 .prose [data-rehype-pretty-code-title] + pre {
@@ -89,13 +89,13 @@ body {
 
 .prose a {
   text-decoration: underline;
-  text-decoration-color: #E3A24C55;
+  text-decoration-color: color-mix(in srgb, var(--c-interface) 33.3%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 150ms ease;
 }
 
 .prose a:hover {
-  text-decoration-color: #E3A24C;
+  text-decoration-color: var(--c-interface);
 }
 
 .prose blockquote {
@@ -125,7 +125,7 @@ body {
 }
 
 .prose .task-list-item input[type="checkbox"] {
-  accent-color: #E3A24C;
+  accent-color: var(--c-interface);
   margin-right: 0.5em;
   vertical-align: middle;
 }
@@ -139,7 +139,7 @@ body {
 
 .prose :where(h1, h2, h3, h4) a:hover {
   text-decoration: underline;
-  text-decoration-color: #E3A24C88;
+  text-decoration-color: color-mix(in srgb, var(--c-interface) 53.3%, transparent);
   text-underline-offset: 4px;
 }
 

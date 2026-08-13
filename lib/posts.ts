@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
+import { isValidDate } from "./dates";
 import type { Wavelength } from "./site";
 import { wavelengths, wavelengthOrder } from "./site";
 
@@ -59,14 +60,17 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
     fail(file, "`excerpt` is required and must be a non-empty string.");
   }
 
-  // Unquoted YAML dates (date: 2026-08-07) parse to a Date; quoted ones stay strings.
+  // Unquoted YAML dates (date: 2026-08-07) parse to a Date; quoted ones stay
+  // strings. Strings are held to strict YYYY-MM-DD rather than anything
+  // `new Date()` happens to accept — "August 7 2026" used to pass here and
+  // then land verbatim in <time dateTime="…">, which isn't a valid datetime.
   let date: string;
   if (data.date instanceof Date && !Number.isNaN(data.date.getTime())) {
     date = data.date.toISOString().slice(0, 10);
-  } else if (typeof data.date === "string" && !Number.isNaN(new Date(data.date).getTime())) {
-    date = data.date;
+  } else if (typeof data.date === "string" && isValidDate(data.date.trim())) {
+    date = data.date.trim();
   } else {
-    fail(file, `\`date\` must be a valid date like "2026-08-07" (got ${JSON.stringify(data.date)}).`);
+    fail(file, `\`date\` must be an ISO date like "2026-08-07" (got ${JSON.stringify(data.date)}).`);
   }
 
   if (
@@ -99,7 +103,7 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
   };
 }
 
-export function getAllSlugs(): string[] {
+function getAllSlugs(): string[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
   return fs
     .readdirSync(POSTS_DIR)
@@ -116,11 +120,28 @@ export function getPostBySlug(slug: string): { meta: PostMeta; content: string }
   return { meta: parseMeta(slug, data, stats.text), content };
 }
 
+/**
+ * Build-time memo. getAllPosts is called by the homepage, the blog index, the
+ * chips, the spectrometer, the sitemap, the feed and /llms.txt — plus once per
+ * post for adjacency, and again beneath getPostsByWavelength and getAllSeries.
+ * Each call otherwise re-reads and re-parses every file on disk.
+ *
+ * Production only: .mdx files aren't modules, so nothing invalidates this when
+ * you edit a post with `next dev` running, and a cached list would serve stale
+ * titles until you restarted the server.
+ */
+let publishedPosts: PostMeta[] | null = null;
+
 export function getAllPosts(): PostMeta[] {
-  return getAllSlugs()
+  if (publishedPosts) return publishedPosts;
+
+  const posts = getAllSlugs()
     .map((slug) => getPostBySlug(slug).meta)
     .filter((p) => !p.draft)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
+
+  if (process.env.NODE_ENV === "production") publishedPosts = posts;
+  return posts;
 }
 
 /**

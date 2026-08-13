@@ -21,7 +21,6 @@ function MdxImage({ src, alt, title }: ComponentPropsWithoutRef<"img">) {
 
   return (
     <figure className={FIGURE}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt={alt ?? ""}

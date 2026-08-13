@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { parseDate } from "@/lib/dates";
 import { Section } from "./ui/Section";
 import { SectionLabel } from "./ui/SectionLabel";
 import { SmartLink } from "./ui/SmartLink";
@@ -35,7 +36,7 @@ export function Credentials() {
                 </span>
               </span>
               <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
-                {format(new Date(`${credential.earned}-01`), "MMM yyyy")}
+                {format(parseDate(`${credential.earned}-01`), "MMM yyyy")}
               </span>
             </span>
           );

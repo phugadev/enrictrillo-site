@@ -28,6 +28,11 @@ export function GET() {
     .map((post) => {
       const url = `${site.url}/blog/${post.slug}`;
       const wl = wavelengths[post.wavelength];
+      // pubDate deliberately keeps `new Date(post.date)` rather than
+      // lib/dates' parseDate: a feed timestamp wants one fixed instant, and
+      // the date-only form parses as UTC midnight everywhere. Routing it
+      // through local midnight would make the published feed depend on which
+      // region built it.
       return `    <item>
       <title>${escapeXml(post.title)}</title>
       <link>${url}</link>

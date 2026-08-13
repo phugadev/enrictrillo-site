@@ -1,3 +1,5 @@
+import { palette } from "./palette";
+
 export const site = {
   name: "Enric Trillo",
   role: "Fullstack Product Engineer",
@@ -42,13 +44,13 @@ export const wavelengths: Record<
   interface: {
     label: "Interface",
     nm: 590,
-    hex: "#E3A24C",
+    hex: palette.interface,
     description: "Product thinking and frontend",
   },
   systems: {
     label: "Systems",
     nm: 520,
-    hex: "#5FBF86",
+    hex: palette.systems,
     description: "Architecture, backend and data",
   },
   // "Compute" rather than "Cloud": the band is where code runs, which includes
@@ -56,13 +58,13 @@ export const wavelengths: Record<
   compute: {
     label: "Compute",
     nm: 470,
-    hex: "#4C93E0",
+    hex: palette.compute,
     description: "Infrastructure, deploys and hardware",
   },
   intelligence: {
     label: "Intelligence",
     nm: 405,
-    hex: "#9C7BE6",
+    hex: palette.intelligence,
     description: "Models, agents and AI engineering",
   },
 };
