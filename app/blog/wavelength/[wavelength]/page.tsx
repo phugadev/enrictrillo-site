@@ -35,10 +35,15 @@ export async function generateMetadata({
     title: `${wl.label} — ${site.name}`,
     description,
     alternates: { canonical: `/blog/wavelength/${band.wavelength}` },
+    // No `images` here on purpose — the co-located opengraph-image.tsx supplies
+    // the card (and the twitter:image with it). siteName is restated because a
+    // child openGraph block replaces the root layout's rather than merging.
     openGraph: {
+      type: "website",
       title: `${wl.label} · ${wl.nm}nm`,
       description,
       url: `/blog/wavelength/${band.wavelength}`,
+      siteName: site.name,
     },
   };
 }

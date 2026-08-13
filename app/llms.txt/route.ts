@@ -5,6 +5,9 @@ export const dynamic = "force-static";
 
 const LINK_LABELS = { live: "Live", repo: "Source", npm: "npm" } as const;
 
+/** The HTML pages pluralise properly; "post(s)" here read as machine-generated. */
+const plural = (n: number, word: string) => `${n} ${n === 1 ? word : `${word}s`}`;
+
 /**
  * /llms.txt — the llmstxt.org convention: a curated markdown map of the site
  * for language models reading it, in place of them scraping rendered HTML.
@@ -76,7 +79,7 @@ export function GET() {
     for (const band of bands) {
       const wl = wavelengths[band.wavelength];
       lines.push(
-        `- [${wl.label} (${wl.nm}nm)](${site.url}/blog/wavelength/${band.wavelength}): ${wl.description}. ${band.posts.length} post(s).`,
+        `- [${wl.label} (${wl.nm}nm)](${site.url}/blog/wavelength/${band.wavelength}): ${wl.description}. ${plural(band.posts.length, "post")}.`,
       );
     }
     lines.push("");
@@ -86,7 +89,7 @@ export function GET() {
     lines.push("## Series", "");
     for (const s of series) {
       lines.push(
-        `- [${s.name}](${site.url}/blog/series/${s.slug}): ${s.posts.length} post(s) in this series.`,
+        `- [${s.name}](${site.url}/blog/series/${s.slug}): ${plural(s.posts.length, "post")} in this series.`,
       );
     }
     lines.push("");

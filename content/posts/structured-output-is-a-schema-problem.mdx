@@ -1,0 +1,97 @@
+---
+title: "Structured output is a schema problem, not a prompt problem"
+excerpt: "Every time I have failed to get reliable JSON out of a model, the fix was in the schema rather than in the instructions."
+date: "2026-06-11"
+wavelength: "intelligence"
+draft: false
+---
+
+I have now built four production features that need a model to return structured data — document extraction, a support triage router, a spec-to-test generator, and a pricing normaliser. All four went through the same arc: prompt engineering, frustration, and then a schema change that made the problem disappear.
+
+This is the pattern I wish I had known at the start. *The schema is the prompt.* Everything you can express as structure, express as structure.
+
+## The failure that taught me
+
+The extraction feature pulled line items off supplier invoices. Early schema:
+
+```json
+{
+  "line_items": [
+    { "description": "string", "quantity": "number", "unit_price": "number", "total": "number" }
+  ]
+}
+```
+
+Accuracy on `total` was about 88%, which sounds fine until you notice that a wrong total on an invoice is not a small error. I spent two days on the prompt — worked examples, explicit arithmetic instructions, a chain-of-thought field.
+
+Then I deleted `total` from the schema and computed it in code.
+
+Accuracy on `total` went to 100%, because it was no longer something a model could be wrong about. Accuracy on `quantity` and `unit_price` also improved, from 91% to 96%, because removing the redundant field removed a source of internal inconsistency the model had been trying to satisfy.
+
+## The rules that came out of it
+
+### Never ask for a derived value
+
+If a field can be computed from other fields, compute it. Totals, durations, counts, percentages, slugs, normalised forms. Every derived field you ask for is a chance for the output to be internally inconsistent, and internal inconsistency is much harder to detect than a missing value.
+
+### Make illegal states unrepresentable
+
+An enum is worth ten sentences of instruction. Compare:
+
+```python title="evals/schema.py"
+# Weak: the model decides what a category is, and drifts across calls.
+class Ticket(BaseModel):
+    category: str
+    urgency: str
+
+# Strong: the space is closed, and a bad value fails validation loudly.
+class Ticket(BaseModel):
+    category: Literal["billing", "access", "bug", "feature_request", "other"]
+    urgency: Literal["low", "normal", "high"]
+    urgency_reason: str = Field(description="One clause. Why this urgency and not the next one down.")
+```
+
+The second version does not need a prompt that lists the categories. It does not need a retry loop for category typos. And `urgency_reason` is doing real work: it forces a justification *next to* the value, and it makes bad classifications legible during review instead of requiring you to guess what happened.
+
+### Optional means optional, and say what absence means
+
+`"notes": "string"` with no guidance produces a model that invents notes. `Optional[str]` with a description saying *omit this field entirely when the document does not contain a remarks section* produces a model that omits it.
+
+Absence is information. If your schema cannot express "not present," you have told the model that hallucinating is the only legal move.[^absence]
+
+### One extraction, one shape
+
+I once tried to make a single call return both the invoice header and the line items and a confidence assessment. Splitting it into two calls with two narrow schemas was faster in wall-clock time (they run concurrently), cheaper, and more accurate on both halves.
+
+## What the numbers looked like
+
+Measured on a held-out set of 400 invoices, exact-match at the field level:
+
+| Change | Field accuracy | Rows needing human review |
+| --- | --- | --- |
+| Baseline schema, tuned prompt | 88.4% | 31% |
+| Derived fields removed | 94.1% | 19% |
+| Enums closed, absence explicit | 96.8% | 11% |
+| Split into two narrow calls | 97.9% | 7% |
+
+Note what is *not* in that table: a model change. Same model throughout. The entire improvement is schema design.
+
+## The eval harness matters more than any of this
+
+None of the above is knowable without measurement. My harness is deliberately unglamorous — a directory of input files, a directory of hand-checked expected outputs, and a script that diffs them field by field and prints a table.
+
+```bash
+python -m evals.run --suite invoices --schema v4 --concurrency 8 --out runs/2026-06-09-v4.json
+```
+
+Field-level diffing rather than whole-output diffing is the part I would insist on. A whole-output comparison tells you 62% of documents were perfect. A field-level one tells you that `vat_rate` is carrying the failures, which is the sentence that leads to a fix.
+
+## What I still get wrong
+
+Long documents. Every technique above degrades once the source exceeds what fits comfortably in context, and chunking reintroduces the consistency problems the schema was designed to remove. I do not have a clean answer — currently I chunk, extract per chunk, and reconcile in code with an explicit conflict policy. It works and it is not elegant.
+
+---
+
+Further reading worth the time: the [JSON Schema specification](https://json-schema.org/) is more useful than most model-specific documentation, because the constraints it can express are the constraints you should be reaching for. More posts on the [blog index](/blog).
+
+[^absence]: This applies well beyond models. Every API I have regretted designing had a field where "empty string" and "not provided" and "explicitly none" were the same value on the wire.

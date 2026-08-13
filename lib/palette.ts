@@ -21,10 +21,9 @@ export const palette = {
   muted: "#93959C", // 6.54:1 on ink — AA
   faint: "#7A7C85", // 4.71:1 on ink — AA
 
-  // Both fail AA as body text and are only ever used on non-text marks: `ray`
-  // is the dispersion mark's incoming beam, `dim` the OG card's footer rule.
+  // Non-text only: the dispersion mark's incoming beam. Fails AA as body copy,
+  // so don't reach for it to make something look quieter — use `faint`.
   ray: "#8A8D93",
-  dim: "#5A5C63",
 
   interface: "#E3A24C", // 590nm
   systems: "#5FBF86", // 520nm

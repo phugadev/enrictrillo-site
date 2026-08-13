@@ -26,7 +26,15 @@ export async function generateMetadata({
     title: `${found.name} — ${site.name}`,
     description,
     alternates: { canonical: `/blog/series/${found.slug}` },
-    openGraph: { title: found.name, description, url: `/blog/series/${found.slug}` },
+    // The card itself comes from the co-located opengraph-image.tsx; siteName is
+    // restated because a child openGraph block replaces the root layout's.
+    openGraph: {
+      type: "website",
+      title: found.name,
+      description,
+      url: `/blog/series/${found.slug}`,
+      siteName: site.name,
+    },
   };
 }
 

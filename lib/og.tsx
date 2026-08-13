@@ -82,7 +82,7 @@ export function OgCard({
           justifyContent: "space-between",
           alignItems: "center",
           fontSize: 24,
-          color: palette.dim,
+          color: palette.muted,
           borderTop: `1px solid ${palette.hairline}`,
           paddingTop: 28,
         }}
