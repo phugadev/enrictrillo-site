@@ -29,10 +29,12 @@ export function Availability({ variant = "inline" }: { variant?: "inline" | "pil
         title={label}
       >
         {dot}
-        {/* Label drops on mobile so the nav links still fit; the pulsing dot
-            keeps the signal and the accessible name carries the full claim. */}
-        <span className="hidden sm:inline">{short}</span>
-        <span className="sr-only sm:hidden">{label}</span>
+        {/* Used to drop this label below `sm` so the nav links still fit on
+            one row — measured at 375/390/414px and it left only a bare
+            pulsing dot on the two most common phone widths, ambiguous to a
+            sighted visitor. Nav.tsx now gives the pill its own row on
+            mobile, so the short label always has room and always renders. */}
+        {short}
       </span>
     );
   }
