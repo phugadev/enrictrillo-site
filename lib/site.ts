@@ -134,6 +134,14 @@ export type Project = {
    * only ever put a figure here you have just verified. Omit otherwise.
    */
   metrics?: string[];
+  /**
+   * Slug of a matching content/work/<slug>.mdx case study. Optional — most
+   * projects won't have one. ProjectRow verifies the slug actually resolves
+   * (via getCaseStudyBySlug) rather than trusting the string, so a stale
+   * value pointing at deleted content fails loudly instead of rendering a
+   * dead link.
+   */
+  caseStudySlug?: string;
 };
 
 export const projects: Project[] = [

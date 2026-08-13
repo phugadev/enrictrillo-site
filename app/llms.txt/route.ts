@@ -1,4 +1,5 @@
 import { getAllPosts, getAllSeries, getPostsByWavelength } from "@/lib/posts";
+import { getAllCaseStudies } from "@/lib/work";
 import { credentials, projects, site, wavelengths } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -20,6 +21,7 @@ export function GET() {
   const posts = getAllPosts();
   const bands = getPostsByWavelength();
   const series = getAllSeries();
+  const caseStudies = getAllCaseStudies();
   const { availability } = site;
 
   const lines: string[] = [
@@ -53,6 +55,21 @@ export function GET() {
 
       lines.push(
         `- ${title}: ${project.description} ${project.status}, ${project.year}. ${wavelengths[project.wavelength].label}.${stack}${metrics}${links ? ` Links — ${links}.` : ""}`,
+      );
+    }
+    lines.push("");
+  }
+
+  if (caseStudies.length > 0) {
+    lines.push("## Case studies", "");
+    for (const study of caseStudies) {
+      const stack = study.stack?.length ? ` Stack: ${study.stack.join(", ")}.` : "";
+      const links = Object.entries(study.links ?? {})
+        .map(([kind, url]) => `${LINK_LABELS[kind as keyof typeof LINK_LABELS]}: ${url}`)
+        .join(", ");
+
+      lines.push(
+        `- [${study.title}](${site.url}/work/${study.slug}): ${study.excerpt} ${wavelengths[study.wavelength].label}, ${study.year}.${stack}${links ? ` Links — ${links}.` : ""}`,
       );
     }
     lines.push("");
