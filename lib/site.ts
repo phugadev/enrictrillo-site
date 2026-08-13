@@ -114,8 +114,9 @@ export const now: string[] = ["Building depth in Azure, with AWS returning to th
  */
 export const expertise: { label: string; description: string }[] = [
   { label: "Product Engineering", description: "Owning a feature from product decision through to what ships." },
+  { label: "UX/UI Design", description: "Interface and interaction decisions made in code, not handed off." },
   { label: "System Design", description: "Architecture and data decisions that hold up under real load." },
-  { label: "Cloud Infrastructure", description: "Deploys, CI/CD and infra-as-code — Azure-first." },
+  { label: "Cloud Infra", description: "Deploys, CI/CD and infra-as-code — Azure-first." },
   { label: "Applied AI", description: "LLM APIs and agentic workflows wired into production systems." },
 ];
 
