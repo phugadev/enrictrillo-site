@@ -178,6 +178,8 @@ Point enrictrillo.com's DNS at the Vercel project once it's live.
 app/
   layout.tsx             — fonts, metadata
   not-found.tsx          — branded 404, wrapped in PageShell like every page
+  icon.svg               — favicon: the dispersion mark, redrawn for 16px
+  favicon.ico, apple-icon.png — rasterised from icon.svg (32px / 180px)
   page.tsx               — homepage (hero, work, credentials, latest posts, about)
   blog/page.tsx          — blog index, flat and newest-first
   blog/[slug]/layout.tsx — loads the reading font for post pages only
