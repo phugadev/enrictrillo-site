@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Section } from "./ui/Section";
 import { SectionLabel } from "./ui/SectionLabel";
 import { toolkit, wavelengthOrder, wavelengths } from "@/lib/site";
@@ -40,7 +41,8 @@ export function Toolkit() {
                 {items.map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted"
+                    className="rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-[var(--chip)] hover:text-[var(--chip)]"
+                    style={{ "--chip": wl.hex } as CSSProperties}
                   >
                     {item}
                   </span>
