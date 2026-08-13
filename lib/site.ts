@@ -105,11 +105,12 @@ export const toolkit: Record<Wavelength, string[]> = {
 export const now: string[] = ["Building depth in Azure, with AWS returning to the toolkit down the line."];
 
 /**
- * DESIGN TRIAL — see PR description. Domain-level capability areas, not
- * specific technologies — see `toolkit` for the stack. Each one now also
- * carries a short description, surfaced as a tooltip on hover. Rendered as a
- * plain chip list by `components/Expertise.tsx`; that component hides itself
- * while this array is empty, so clearing it is a one-line revert.
+ * Domain-level capability areas, not specific technologies — see `toolkit`
+ * for the stack. Each one carries a short description, surfaced as a
+ * hover/focus tooltip by `components/Expertise.tsx` (a CSS-only tooltip, not
+ * the native `title` attribute — see that file for why). That component
+ * hides itself while this array is empty, so clearing it is a one-line
+ * revert.
  */
 export const expertise: { label: string; description: string }[] = [
   { label: "Product Engineering", description: "Owning a feature from product decision through to what ships." },
