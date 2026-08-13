@@ -35,11 +35,18 @@ export function Spectrometer() {
   }, {});
 
   return (
-    <div className={CONTAINER}>
+    <div className={`${CONTAINER} mb-4`}>
       {/*
         Contained rather than full-bleed. As an edge-to-edge band it split the
         page in two and read as chrome; boxed to the text column it reads as an
         instrument panel — which is what it is.
+
+        mb-4 is deliberate: Section no longer draws a border-t rule at its own
+        top edge, so the only separation between this panel and whatever
+        follows is Section's py-16 top padding. That's already generous, but a
+        small margin here keeps the panel from ever looking like it's flush
+        against the next block even when a future non-Section component
+        follows it directly.
       */}
       <div className="relative h-16 overflow-hidden rounded-lg border border-hairline">
         <div className="absolute inset-0 opacity-[0.14]" style={{ background: BAND_GRADIENT }} />

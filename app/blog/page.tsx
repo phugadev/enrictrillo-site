@@ -61,7 +61,7 @@ export default function BlogIndex() {
             <WavelengthChips />
           </div>
 
-          <div className="mt-10 divide-y divide-hairline border-t border-hairline">
+          <div className="mt-12 divide-y divide-hairline">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
