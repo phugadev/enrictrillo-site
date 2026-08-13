@@ -128,7 +128,11 @@ export const expertise: { label: string; description: string }[] = [
  * empty, same discipline as `now` and `credentials`. Deliberately excludes
  * years of experience — the hero states that already.
  */
-export const aboutFacts: { label: string; value: string }[] = [];
+export const aboutFacts: { label: string; value: string }[] = [
+  { label: "Sectors", value: "Fintech, e-commerce, dev tools" },
+  { label: "Team size", value: "2–8 engineers" },
+  { label: "Notice period", value: "2 weeks" },
+];
 
 export type Project = {
   name: string;
