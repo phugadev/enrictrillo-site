@@ -76,7 +76,7 @@ export default function Home() {
 
       <Section id="work">
         <SectionLabel>Selected work</SectionLabel>
-        <ul className="mt-6 divide-y divide-hairline">
+        <ul className="mt-6 space-y-4">
           {projects.map((project) => (
             <ProjectRow key={project.name} project={project} />
           ))}
