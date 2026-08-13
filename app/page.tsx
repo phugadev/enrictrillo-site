@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Avatar } from "@/components/Avatar";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
-import { DispersionMark } from "@/components/DispersionMark";
+import { About } from "@/components/About";
 import { Credentials } from "@/components/Credentials";
 import { ProjectRow } from "@/components/ProjectRow";
 import { Now } from "@/components/Now";
@@ -104,30 +104,7 @@ export default function Home() {
         </Section>
       )}
 
-      <Section id="about">
-        <SectionLabel>About</SectionLabel>
-        <div className="mt-6 flex items-start gap-4">
-          <DispersionMark size={22} />
-          <div className="max-w-xl space-y-4 text-[16px] leading-relaxed text-muted">
-            <p>
-              I'm {site.name}, a {site.role.toLowerCase()} based in {site.location}, working through{" "}
-              {site.company}.
-            </p>
-            <p>
-              I build and ship production software end to end: product thinking through frontend,
-              backend, cloud and AI. In practice that's TypeScript and Next.js on the front, Python
-              and Node behind it, Azure underneath, and AI work layered through the middle — part of
-              the toolkit rather than a separate specialism.
-            </p>
-            {/*
-              TODO(rico): this slot wants something the availability pills don't
-              already say — years contracting, sectors/domains you've delivered
-              in, team sizes, notice period. Restating "Outside IR35 and C2C"
-              here made it the third identical claim on one scroll.
-            */}
-          </div>
-        </div>
-      </Section>
+      <About />
     </PageShell>
   );
 }
