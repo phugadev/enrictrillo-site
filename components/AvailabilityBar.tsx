@@ -18,7 +18,7 @@ export function AvailabilityBar() {
   if (!open) return null;
 
   return (
-    <div className="w-full border-b border-hairline bg-surface">
+    <div className="w-full">
       <div className="flex w-full items-center justify-center gap-2.5 px-6 py-[9px] text-center">
         <span className="rounded-full bg-systems px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider text-ink">
           Open

@@ -25,10 +25,11 @@ export function Expertise() {
       <ul className="flex flex-wrap gap-2">
         {expertise.map((item) => (
           <li
-            key={item}
-            className="rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted"
+            key={item.label}
+            title={item.description}
+            className="cursor-help rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted"
           >
-            {item}
+            {item.label}
           </li>
         ))}
       </ul>

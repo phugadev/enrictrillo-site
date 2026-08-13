@@ -104,19 +104,20 @@ export const toolkit: Record<Wavelength, string[]> = {
  * without touching a component, and the section hides itself while the array
  * is empty rather than showing a stale or invented status.
  */
-export const now: string[] = [];
+export const now: string[] = ["Building depth in Azure, with AWS returning to the toolkit down the line."];
 
 /**
  * DESIGN TRIAL — see PR description. Domain-level capability areas, not
- * specific technologies — see `toolkit` for the stack. Rendered as a plain
- * chip list by `components/Expertise.tsx`; that component hides itself while
- * this array is empty, so clearing it is a one-line revert.
+ * specific technologies — see `toolkit` for the stack. Each one now also
+ * carries a short description, surfaced as a tooltip on hover. Rendered as a
+ * plain chip list by `components/Expertise.tsx`; that component hides itself
+ * while this array is empty, so clearing it is a one-line revert.
  */
-export const expertise: string[] = [
-  "Product Engineering",
-  "System Design",
-  "Cloud Infrastructure",
-  "Applied AI",
+export const expertise: { label: string; description: string }[] = [
+  { label: "Product Engineering", description: "Owning a feature from product decision through to what ships." },
+  { label: "System Design", description: "Architecture and data decisions that hold up under real load." },
+  { label: "Cloud Infrastructure", description: "Deploys, CI/CD and infra-as-code — Azure-first." },
+  { label: "Applied AI", description: "LLM APIs and agentic workflows wired into production systems." },
 ];
 
 export type Project = {
