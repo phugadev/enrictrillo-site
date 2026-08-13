@@ -1,8 +1,40 @@
+import fs from "fs";
+import path from "path";
 import { palette } from "./palette";
 import { wavelengthOrder, wavelengths, type Wavelength } from "./site";
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
+
+const OG_FONT_FAMILY = "Space Grotesk";
+
+/**
+ * Font weights for `ImageResponse`. Satori (which backs next/og) has no
+ * notion of the page's @font-face rules — without this, every OG card fell
+ * back to its own generic sans, a typeface that appears nowhere else on the
+ * site, right next to the h1 it's supposed to be advertising.
+ *
+ * Weight files are committed under assets/fonts/ rather than fetched from
+ * Google Fonts at request time: these routes are fully static
+ * (generateStaticParams covers every post/band/series), so a network fetch
+ * here would only ever run during `next build` — but making the build depend
+ * on fonts.gstatic.com being reachable, for two files that don't change, is a
+ * cost with no matching benefit. woff, not woff2 or the variable font next/
+ * font/google loads for the page itself: Satori's font shaper only takes
+ * ttf/otf/woff.
+ */
+let ogFontsCache: { name: string; data: Buffer; weight: 400 | 500; style: "normal" }[] | null = null;
+
+export function ogFonts() {
+  if (ogFontsCache) return ogFontsCache;
+
+  const dir = path.join(process.cwd(), "assets/fonts");
+  ogFontsCache = [
+    { name: OG_FONT_FAMILY, data: fs.readFileSync(path.join(dir, "SpaceGrotesk-Regular.woff")), weight: 400, style: "normal" },
+    { name: OG_FONT_FAMILY, data: fs.readFileSync(path.join(dir, "SpaceGrotesk-Medium.woff")), weight: 500, style: "normal" },
+  ];
+  return ogFontsCache;
+}
 
 /**
  * Shared OG card. Kept to plain flex/colour CSS — Satori (which backs
@@ -32,6 +64,7 @@ export function OgCard({
         justifyContent: "space-between",
         backgroundColor: palette.ink,
         padding: 72,
+        fontFamily: OG_FONT_FAMILY,
       }}
     >
       {/* Spectrum bar — the dispersion mark, flattened for a 1200px canvas */}
@@ -67,6 +100,7 @@ export function OgCard({
         style={{
           display: "flex",
           fontSize: title.length > 60 ? 60 : 76,
+          fontWeight: 500,
           lineHeight: 1.15,
           color: palette.paper,
           letterSpacing: -1.5,

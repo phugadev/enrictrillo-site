@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OgCard, ogContentType, ogSize } from "@/lib/og";
+import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getPostsByWavelength } from "@/lib/posts";
 import { site, wavelengths } from "@/lib/site";
 
@@ -41,7 +41,7 @@ export default async function Image({ params }: { params: Promise<{ wavelength: 
   // spectrum rather than throwing inside a metadata route.
   if (!band) {
     const fallback = <OgCard eyebrow="Wavelength" title="Writing" footer={site.name} />;
-    return new ImageResponse(fallback, size);
+    return new ImageResponse(fallback, { ...size, fonts: ogFonts() });
   }
 
   const wl = wavelengths[band.wavelength];
@@ -56,6 +56,6 @@ export default async function Image({ params }: { params: Promise<{ wavelength: 
         footer={`${site.name} · ${count} ${count === 1 ? "post" : "posts"}`}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts() },
   );
 }

@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OgCard, ogContentType, ogSize } from "@/lib/og";
+import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { site } from "@/lib/site";
 
 export const alt = `${site.name} — ${site.role}`;
@@ -15,6 +15,6 @@ export default function Image() {
         footer={`${site.name} · ${site.location}`}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts() },
   );
 }

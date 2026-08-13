@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OgCard, ogContentType, ogSize } from "@/lib/og";
+import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getAllSeries, getSeriesBySlug, type PostMeta } from "@/lib/posts";
 import { site, type Wavelength } from "@/lib/site";
 
@@ -53,7 +53,10 @@ export default async function Image({ params }: { params: Promise<{ series: stri
   // An unknown slug 404s at the page; the card falls back rather than throwing
   // inside a metadata route.
   if (!found) {
-    return new ImageResponse(<OgCard eyebrow="Series" title="Writing" footer={site.name} />, size);
+    return new ImageResponse(
+      <OgCard eyebrow="Series" title="Writing" footer={site.name} />,
+      { ...size, fonts: ogFonts() },
+    );
   }
 
   const count = found.posts.length;
@@ -67,6 +70,6 @@ export default async function Image({ params }: { params: Promise<{ series: stri
         footer={`${site.name} · ${count} ${count === 1 ? "post" : "posts"}`}
       />
     ),
-    size,
+    { ...size, fonts: ogFonts() },
   );
 }

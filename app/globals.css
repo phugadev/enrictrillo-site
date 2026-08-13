@@ -123,17 +123,25 @@ body {
 
 /*
   Tables and code blocks break out past the reading measure once there's room.
-  Prose wants ~672px, but a six-column table in 672px wraps every single cell
-  onto three lines and a long code line scrolls almost immediately. The extra
-  96px lands them on the same 768px measure the rest of the site uses, so they
-  line up with the homepage rather than looking like a wider accident.
+  A six-column table at the prose width wraps every single cell onto three
+  lines, and a long code line scrolls almost immediately.
+
+  The post's own container is CONTAINER (components/ui/Section.tsx) — the same
+  768px measure as the rest of the site, so its content box lines up with Nav
+  and Footer. Prose itself is narrower (max-w-2xl, flush against the left edge
+  of that box, not centered within it — see app/blog/[slug]/page.tsx), leaving
+  a fixed 3rem of slack on the right before CONTAINER's own edge. Growing right
+  by exactly that gap lands a breakout flush with CONTAINER on both sides
+  without shifting left, which is what a symmetric negative-margin trick would
+  do here — the two boxes don't share a centre, so a shift built for a
+  self-centred column would overshoot CONTAINER's left edge instead of
+  meeting it.
 */
 @media (min-width: 1024px) {
   .prose [data-table-wrapper],
   .prose figure[data-rehype-pretty-code-figure] {
-    width: calc(100% + 6rem);
+    width: calc(100% + 3rem);
     max-width: none;
-    margin-left: -3rem;
   }
 }
 
