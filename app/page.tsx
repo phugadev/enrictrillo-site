@@ -92,7 +92,7 @@ export default function Home() {
           </div>
           <div className="mt-2 divide-y divide-hairline">
             {posts.map((post) => (
-              <PostCard key={post.slug} post={post} as="h3" />
+              <PostCard key={post.slug} post={post} as="h3" compact />
             ))}
           </div>
         </Section>
