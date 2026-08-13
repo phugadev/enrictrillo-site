@@ -1,6 +1,30 @@
-import type { Project } from "@/lib/site";
+import { wavelengths, type Project } from "@/lib/site";
 import { SmartLink } from "./ui/SmartLink";
 import { WavelengthDot } from "./ui/WavelengthDot";
+
+/** Matches a "before → after" metric, e.g. "0 → 40k users". */
+const DELTA_PATTERN = /^(.+?)\s*→\s*(.+)$/;
+
+/**
+ * Renders a metric string as plain text, unless it's a "before → after"
+ * delta — then the arrow picks up the project's own band color so the
+ * before/after shape reads at a glance instead of blending into the rest of
+ * the line.
+ */
+function Metric({ text, hex }: { text: string; hex: string }) {
+  const match = text.match(DELTA_PATTERN);
+  if (!match) return <>{text}</>;
+  const [, before, after] = match;
+  return (
+    <>
+      {before}
+      <span className="mx-1 font-medium" style={{ color: hex }}>
+        →
+      </span>
+      {after}
+    </>
+  );
+}
 
 /**
  * Fixed order so every row reads the same way down the list: the thing you can
@@ -58,7 +82,16 @@ export function ProjectRow({ project }: { project: Project }) {
         // chip against the right edge with a void beside it.
         <div className="mt-3.5 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px]">
           {/* Numbers lead — they're the part that actually persuades. */}
-          {project.metrics?.length ? <p className="text-muted">{project.metrics.join("  ·  ")}</p> : null}
+          {project.metrics?.length ? (
+            <p className="text-muted">
+              {project.metrics.map((metric, i) => (
+                <span key={metric}>
+                  {i > 0 ? <span className="text-faint">  ·  </span> : null}
+                  <Metric text={metric} hex={wavelengths[project.wavelength].hex} />
+                </span>
+              ))}
+            </p>
+          ) : null}
 
           <div className="flex flex-wrap gap-4">
             {links.map(({ key, label }) => (

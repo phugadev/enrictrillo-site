@@ -17,7 +17,7 @@ export function Footer() {
         <Availability />
         <div className="mt-5 flex flex-col gap-1 font-mono text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
-            {site.name} — {site.location}
+            {site.name} — {site.location} · GMT/BST
           </p>
           <div className="flex gap-5">
             {LINKS.map((link) => (
