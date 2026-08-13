@@ -4,15 +4,25 @@ import { site } from "@/lib/site";
  * Quiet availability signal. Renders nothing when `site.availability.open`
  * is false, so closing the door is a one-line change in lib/site.ts.
  *
- * `pill` is the nav variant — bordered, short label, survives a narrow
- * viewport. `inline` is the footer variant with the full claim.
+ * `pill` is the nav variant — a bare dot, no label text. `inline` is the
+ * footer variant with the full claim.
+ *
+ * The nav is sticky and `AvailabilityBar` (rendered directly below it,
+ * PageShell.tsx) isn't — so the two aren't saying the same thing twice, they
+ * split one signal into two layers: the dot is the ambient, always-on-screen
+ * marker ("this is still true, right now, wherever you've scrolled to"); the
+ * bar is the one-time full sentence a reader sees once near the top. Putting
+ * the label back on the pill would make that split redundant again, so it
+ * stays dot-only at every width, not just on mobile where the crowding
+ * problem originally showed up. `title` and the `sr-only` span carry the full
+ * claim for anyone hovering or using assistive tech.
  *
  * `site.availability.detail` isn't rendered here by design — the footer would
  * be the third statement of the same claim on one scroll. It reaches readers
  * through /llms.txt instead.
  */
 export function Availability({ variant = "inline" }: { variant?: "inline" | "pill" }) {
-  const { open, short, label } = site.availability;
+  const { open, label } = site.availability;
   if (!open) return null;
 
   const dot = (
@@ -25,16 +35,11 @@ export function Availability({ variant = "inline" }: { variant?: "inline" | "pil
   if (variant === "pill") {
     return (
       <span
-        className="inline-flex items-center gap-2 rounded-full border border-hairline px-2.5 py-1.5 font-mono text-[11px] text-muted sm:px-3"
+        className="inline-flex items-center rounded-full border border-hairline p-2"
         title={label}
       >
         {dot}
-        {/* Used to drop this label below `sm` so the nav links still fit on
-            one row — measured at 375/390/414px and it left only a bare
-            pulsing dot on the two most common phone widths, ambiguous to a
-            sighted visitor. Nav.tsx now gives the pill its own row on
-            mobile, so the short label always has room and always renders. */}
-        {short}
+        <span className="sr-only">{label}</span>
       </span>
     );
   }
