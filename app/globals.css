@@ -54,12 +54,19 @@ body {
   content: "";
 }
 
+/*
+  Inline code as a tinted pill rather than the plain bordered chip it used to
+  be. Intelligence-band purple, not the interface-band orange prose links
+  already use a few lines down — the two need to read as different things at
+  a glance, not compete for the same accent. 5.95:1 on ink, comfortably AA.
+*/
 .prose code {
-  background: var(--c-surface-raised);
-  border: 1px solid var(--c-hairline);
+  background: color-mix(in srgb, var(--c-intelligence) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-intelligence) 40%, transparent);
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
+  color: var(--c-intelligence);
 }
 
 .prose pre {
@@ -89,6 +96,11 @@ body {
   background: transparent;
   border: none;
   padding: 0;
+  /* Without this, code inside a block inherits .prose code's purple. Syntax
+     tokens override it per-span anyway (rehype-pretty-code paints each one
+     inline), but any untagged text in the block — punctuation, whitespace —
+     would otherwise pick up the inline-code accent it isn't. */
+  color: var(--c-paper);
 }
 
 .prose a {
