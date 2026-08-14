@@ -83,7 +83,9 @@ const LINK_ORDER = [
  * weight on the page, so it gets more presence than a plain text row: each
  * project sits in its own raised `bg-surface` panel (the same treatment
  * MdxComponents already uses for callouts) rather than blending into the
- * hairline-divided rows used everywhere else on the homepage. Stack chips
+ * hairline-divided rows used everywhere else on the homepage, with a
+ * band-coloured accent bar along the top edge and a small lift on hover so
+ * the panel itself feels alive, not just the links inside it. Stack chips
  * reuse Toolkit's exact chip styling — same hover-to-band-colour behaviour —
  * so Work and Toolkit read as two views of one system instead of two
  * unrelated components.
@@ -101,7 +103,12 @@ export function ProjectRow({ project }: { project: Project }) {
   const wl = wavelengths[project.wavelength];
 
   return (
-    <li className="rounded-xl bg-surface p-6">
+    <li className="relative overflow-hidden rounded-xl bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-2">
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-[3px]"
+        style={{ backgroundColor: wl.hex }}
+      />
       <div className="flex items-start justify-between gap-6">
         <div className="flex items-center gap-2.5">
           <WavelengthDot wavelength={project.wavelength} />
@@ -117,7 +124,7 @@ export function ProjectRow({ project }: { project: Project }) {
         </div>
       </div>
 
-      <p className="mt-3 max-w-lg text-[14px] leading-relaxed text-muted">{project.description}</p>
+      <p className="mt-3 text-[14px] leading-relaxed text-muted">{project.description}</p>
 
       {project.stack && (
         <div className="mt-4 flex flex-wrap gap-2">
