@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ComponentPropsWithoutRef } from "react";
+import { CodeBlock } from "./CodeBlock";
 
 const FIGURE = "my-8";
 const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
@@ -126,4 +127,4 @@ export function Compare({ items }: { items: CompareItem[] }) {
   );
 }
 
-export const mdxComponents = { img: MdxImage, Figure, Compare };
+export const mdxComponents = { img: MdxImage, Figure, Compare, pre: CodeBlock };
