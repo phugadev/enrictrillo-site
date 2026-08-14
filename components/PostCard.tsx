@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
 import { wavelengths } from "@/lib/site";
-import { WavelengthDot } from "./ui/WavelengthDot";
+import { WavelengthIcon } from "./ui/WavelengthIcon";
 import { WavelengthSpine } from "./ui/WavelengthSpine";
 
 /** How long a post keeps the "New" pill on the homepage teaser. */
@@ -33,12 +33,12 @@ export function PostCard({
    */
   as?: "h2" | "h3";
   /**
-   * Single-line row (dot + title + date, matching Credentials' rhythm)
-   * with the excerpt and metadata line dropped. Used on the homepage
-   * teaser, where the excerpt is more of an activity signal than something
-   * a reader needs to decide whether to click — unlike /blog and the
-   * wavelength/series pages, which keep the full treatment. Picks up a
-   * "New" pill for posts published within the last three weeks.
+   * Single-line row (wavelength-tinted icon + title + date) with the
+   * excerpt and metadata line dropped. Used on the homepage teaser, where
+   * the excerpt is more of an activity signal than something a reader needs
+   * to decide whether to click — unlike /blog and the wavelength/series
+   * pages, which keep the full treatment. Picks up a "New" pill for posts
+   * published within the last three weeks.
    */
   compact?: boolean;
 }) {
@@ -48,24 +48,24 @@ export function PostCard({
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group -mx-3 flex items-baseline justify-between gap-6 rounded-lg px-3 py-4 transition-colors hover:bg-surface"
+        className="group -mx-3 flex items-center justify-between gap-6 rounded-lg px-3 py-3 transition-colors hover:bg-surface"
       >
-        <span className="flex min-w-0 items-baseline gap-2.5">
-          <WavelengthDot wavelength={post.wavelength} className="translate-y-[-2px]" />
-          <Heading className="font-display text-[16px] leading-snug text-paper transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-white">
-            {post.title}
+        <span className="flex min-w-0 items-center gap-3">
+          <WavelengthIcon wavelength={post.wavelength} />
+          <Heading className="flex min-w-0 items-center gap-2 font-display text-[16px] leading-snug text-paper transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-white">
+            <span className="truncate">{post.title}</span>
+            {isRecent(post.date) && (
+              <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute">
+                New
+              </span>
+            )}
           </Heading>
-          {isRecent(post.date) && (
-            <span className="shrink-0 translate-y-[-1px] rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute">
-              New
-            </span>
-          )}
         </span>
-        <span className="flex shrink-0 items-baseline gap-1.5 font-mono text-[11px] uppercase tracking-wider text-faint">
+        <span className="flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-faint">
           <span className="opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
             →
           </span>
-          {format(parseDate(post.date), "MMM yyyy")}
+          {format(parseDate(post.date), "d MMM yyyy")}
         </span>
       </Link>
     );
