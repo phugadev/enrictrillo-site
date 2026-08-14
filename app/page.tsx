@@ -13,6 +13,7 @@ import { Spectrometer } from "@/components/Spectrometer";
 import { Toolkit } from "@/components/Toolkit";
 import { CONTAINER, Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 // DESIGN TRIAL — see PR description. Revert by dropping this import and
 // unwrapping the sections below it that use <Reveal>.
 import { Reveal } from "@/components/ui/Reveal";
@@ -34,7 +35,10 @@ export default function Home() {
         <div className="mb-8 flex items-center gap-4">
           <Avatar />
           <div className="min-w-0">
-            <p className="font-display text-[17px] tracking-tight text-paper">{site.name}</p>
+            <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-paper">
+              {site.name}
+              <VerifiedBadge className="h-4 w-4" />
+            </p>
             <SectionLabel as="p" className="mt-1">
               {site.role} — {site.location}
             </SectionLabel>
@@ -108,7 +112,7 @@ export default function Home() {
                 All posts →
               </Link>
             </div>
-            <div className="mt-2 divide-y divide-hairline">
+            <div className="mt-2">
               {posts.map((post) => (
                 <PostCard key={post.slug} post={post} as="h3" compact />
               ))}
