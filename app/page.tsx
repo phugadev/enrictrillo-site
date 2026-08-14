@@ -32,7 +32,7 @@ export default function Home() {
         {/* Face first — every portfolio worth copying leads with one, and it
             costs 8 KB. Name and role sit beside it so the page introduces
             itself before the headline makes a claim. */}
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-8 flex animate-fade-up items-center gap-4">
           <Avatar />
           <div className="min-w-0">
             <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-paper">
@@ -45,12 +45,18 @@ export default function Home() {
           </div>
         </div>
 
-        <h1 className="font-display text-[40px] font-medium leading-[1.15] tracking-tight text-paper sm:text-[52px]">
+        <h1
+          className="animate-fade-up font-display text-[40px] font-medium leading-[1.15] tracking-tight text-paper sm:text-[52px]"
+          style={{ animationDelay: "80ms" }}
+        >
           Production software,
           <br />
           end to end.
         </h1>
-        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted">
+        <p
+          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-muted"
+          style={{ animationDelay: "160ms" }}
+        >
           Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as
           part of the toolkit, not a separate department. I take features from product decision to
           production across the full stack — no handoffs between specialists along the way.
@@ -58,7 +64,10 @@ export default function Home() {
 
         {/* Availability lives in AvailabilityBar (below) and the footer —
             a third statement here made it read as filler rather than signal. */}
-        <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[13px]">
+        <div
+          className="mt-8 flex animate-fade-up flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[13px]"
+          style={{ animationDelay: "240ms" }}
+        >
           <a
             href={`mailto:${site.email}`}
             className="rounded-full border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
@@ -72,7 +81,9 @@ export default function Home() {
 
         {/* DESIGN TRIAL — capability areas at the same altitude as the
             tagline, so it sits inside the hero rather than after it. */}
-        <Expertise />
+        <div className="animate-fade-up" style={{ animationDelay: "320ms" }}>
+          <Expertise />
+        </div>
       </section>
 
       {/* Signature strip and the site's legend, before any coloured dot appears */}

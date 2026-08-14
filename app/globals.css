@@ -48,6 +48,21 @@ body {
   animation: scan 7s linear infinite;
 }
 
+/* Hero entrance — a one-time fade-and-rise on load, staggered per element
+   via inline `animation-delay`. Distinct from Reveal (components/ui/Reveal.tsx),
+   which is scroll-triggered for below-the-fold sections; the hero is always
+   visible on first paint, so this fires immediately rather than waiting on
+   an IntersectionObserver. The prefers-reduced-motion block above already
+   neutralises this along with every other animation on the site. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 600ms ease-out both;
+}
+
 /* Article prose refinements beyond typography plugin defaults */
 .prose :where(code):not(:where([class~="not-prose"] *))::before,
 .prose :where(code):not(:where([class~="not-prose"] *))::after {
