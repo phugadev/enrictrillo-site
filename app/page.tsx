@@ -78,15 +78,12 @@ export default function Home() {
       {/* Signature strip and the site's legend, before any coloured dot appears */}
       <Spectrometer />
 
-      {/* Hides itself until there's a present tense worth stating */}
-      <Reveal>
-        <Now />
-      </Reveal>
-
+      {/* Proof leads — right after the legend that explains its colours,
+          before any lower-stakes content gets in the way of it. */}
       <Reveal>
         <Section id="work">
           <SectionLabel>Selected work</SectionLabel>
-          <ul className="mt-6 space-y-4">
+          <ul className="mt-6 grid items-start gap-4 sm:grid-cols-2">
             {projects.map((project) => (
               <ProjectRow key={project.name} project={project} />
             ))}
@@ -96,6 +93,15 @@ export default function Home() {
 
       <Reveal>
         <Toolkit />
+      </Reveal>
+
+      {/* Hides itself until there's a present tense worth stating. Moved
+          past the proof and capability sections — a present-tense aside is
+          lower stakes than either, and sat awkwardly between the hero and
+          Selected work, right where momentum toward the proof should be
+          building. */}
+      <Reveal>
+        <Now />
       </Reveal>
 
       {/* Hides itself while no credentials are banked */}
