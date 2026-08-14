@@ -70,6 +70,24 @@ export const wavelengths: Record<
 /** Display order for grouped views — long wavelength to short, like a real spectrum. */
 export const wavelengthOrder: Wavelength[] = ["interface", "systems", "compute", "intelligence"];
 
+/** Ascending nm, left to right — the way a spectrometer readout is drawn. */
+const ascendingWavelengths = [...wavelengthOrder].reverse();
+
+/**
+ * The site's one gradient — the full spectrum, ascending nm left to right.
+ * Shared by `Spectrometer` (where it originated) and `ScrollProgress`, so
+ * both instruments are drawn from the same calibration instead of two
+ * hand-tuned copies drifting apart.
+ *
+ * Each band peaks at the CENTRE of its column, not at the edges — see the
+ * note that used to live on this in Spectrometer.tsx. On an element whose
+ * job is to read as a calibrated instrument, the calibration being visibly
+ * off is the worst possible detail to get wrong.
+ */
+export const bandGradient = `linear-gradient(90deg, ${ascendingWavelengths
+  .map((w, i) => `${wavelengths[w].hex} ${((i + 0.5) / ascendingWavelengths.length) * 100}%`)
+  .join(", ")})`;
+
 /**
  * Where a project can be inspected. Every one of these is a claim a reader can
  * check in ten seconds, so omit anything that doesn't exist — a "Live" link to

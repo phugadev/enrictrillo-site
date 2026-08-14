@@ -4,6 +4,9 @@ import { Footer } from "./Footer";
 // DESIGN TRIAL — see PR description. Revert by dropping this import and the
 // <AvailabilityBar /> line below.
 import { AvailabilityBar } from "./AvailabilityBar";
+// DESIGN TRIAL — see PR description. Revert by dropping this import and the
+// <ScrollProgress /> line below.
+import { ScrollProgress } from "./ScrollProgress";
 
 /**
  * Every page's outer frame: skip link, nav, main landmark, footer. Pages pass
@@ -25,6 +28,7 @@ export function PageShell({
       >
         Skip to content
       </a>
+      <ScrollProgress />
       <Nav />
       <AvailabilityBar />
       <main id="content" className={mainClassName}>

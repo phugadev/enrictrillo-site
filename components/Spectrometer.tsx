@@ -1,24 +1,10 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/posts";
-import { wavelengthOrder, wavelengths, type Wavelength } from "@/lib/site";
+import { bandGradient, wavelengthOrder, wavelengths, type Wavelength } from "@/lib/site";
 import { CONTAINER } from "./ui/Section";
 
 /** Ascending nm, left to right — the way a spectrometer readout is drawn. */
 const ASCENDING = [...wavelengthOrder].reverse();
-
-/**
- * Each band peaks at the CENTRE of its column, not at the edges of the panel.
- *
- * Stops used to run 0/33/67/100% while the ticks were laid out with
- * justify-between inside padding, so the 590nm tick sat ~15% of the panel away
- * from where amber actually peaked. On an element whose entire job is to read
- * as a calibrated instrument, the calibration being visibly off is the worst
- * possible detail to get wrong. The ticks are now a 4-column grid and these
- * stops line up with those column centres.
- */
-const BAND_GRADIENT = `linear-gradient(90deg, ${ASCENDING.map(
-  (w, i) => `${wavelengths[w].hex} ${((i + 0.5) / ASCENDING.length) * 100}%`,
-).join(", ")})`;
 
 /**
  * The signature element, and the site's legend. Sits directly under the hero
@@ -49,7 +35,7 @@ export function Spectrometer() {
         follows it directly.
       */}
       <div className="relative h-16 overflow-hidden rounded-lg border border-hairline">
-        <div className="absolute inset-0 opacity-[0.14]" style={{ background: BAND_GRADIENT }} />
+        <div className="absolute inset-0 opacity-[0.14]" style={{ background: bandGradient }} />
         <div className="animate-scan absolute inset-y-0 w-px bg-paper/50" aria-hidden="true" />
 
         <ul className="relative grid h-full grid-cols-4 items-end pb-2.5">
