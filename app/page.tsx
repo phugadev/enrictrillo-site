@@ -13,6 +13,9 @@ import { Spectrometer } from "@/components/Spectrometer";
 import { Toolkit } from "@/components/Toolkit";
 import { CONTAINER, Section } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+// DESIGN TRIAL — see PR description. Revert by dropping this import and
+// unwrapping the sections below it that use <Reveal>.
+import { Reveal } from "@/components/ui/Reveal";
 import { site, projects } from "@/lib/site";
 import { getAllPosts } from "@/lib/posts";
 
@@ -72,39 +75,51 @@ export default function Home() {
       <Spectrometer />
 
       {/* Hides itself until there's a present tense worth stating */}
-      <Now />
+      <Reveal>
+        <Now />
+      </Reveal>
 
-      <Section id="work">
-        <SectionLabel>Selected work</SectionLabel>
-        <ul className="mt-6 space-y-4">
-          {projects.map((project) => (
-            <ProjectRow key={project.name} project={project} />
-          ))}
-        </ul>
-      </Section>
+      <Reveal>
+        <Section id="work">
+          <SectionLabel>Selected work</SectionLabel>
+          <ul className="mt-6 space-y-4">
+            {projects.map((project) => (
+              <ProjectRow key={project.name} project={project} />
+            ))}
+          </ul>
+        </Section>
+      </Reveal>
 
-      <Toolkit />
+      <Reveal>
+        <Toolkit />
+      </Reveal>
 
       {/* Hides itself while no credentials are banked */}
-      <Credentials />
+      <Reveal>
+        <Credentials />
+      </Reveal>
 
       {posts.length > 0 && (
-        <Section>
-          <div className="flex items-center justify-between">
-            <SectionLabel>Latest writing</SectionLabel>
-            <Link href="/blog" className="font-mono text-[12px] text-muted hover:text-paper">
-              All posts →
-            </Link>
-          </div>
-          <div className="mt-2 divide-y divide-hairline">
-            {posts.map((post) => (
-              <PostCard key={post.slug} post={post} as="h3" compact />
-            ))}
-          </div>
-        </Section>
+        <Reveal>
+          <Section>
+            <div className="flex items-center justify-between">
+              <SectionLabel>Latest writing</SectionLabel>
+              <Link href="/blog" className="font-mono text-[12px] text-muted hover:text-paper">
+                All posts →
+              </Link>
+            </div>
+            <div className="mt-2 divide-y divide-hairline">
+              {posts.map((post) => (
+                <PostCard key={post.slug} post={post} as="h3" compact />
+              ))}
+            </div>
+          </Section>
+        </Reveal>
       )}
 
-      <About />
+      <Reveal>
+        <About />
+      </Reveal>
     </PageShell>
   );
 }
