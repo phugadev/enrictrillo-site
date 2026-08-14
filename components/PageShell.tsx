@@ -7,9 +7,6 @@ import { AvailabilityBar } from "./AvailabilityBar";
 // DESIGN TRIAL — see PR description. Revert by dropping this import and the
 // <ScrollProgress /> line below.
 import { ScrollProgress } from "./ScrollProgress";
-// DESIGN TRIAL — see PR description. Revert by dropping this import and the
-// <GrainOverlay /> line below.
-import { GrainOverlay } from "./GrainOverlay";
 
 /**
  * Every page's outer frame: skip link, nav, main landmark, footer. Pages pass
@@ -31,7 +28,6 @@ export function PageShell({
       >
         Skip to content
       </a>
-      <GrainOverlay />
       <ScrollProgress />
       <Nav />
       <AvailabilityBar />
