@@ -1,6 +1,9 @@
 import Image from "next/image";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { wavelengths, type Wavelength } from "@/lib/site";
 import { CodeBlock } from "./CodeBlock";
+import { Diagram } from "./Diagram";
+import { InfoIcon, SuccessIcon, TipIcon, WarningIcon } from "./ui/CalloutIcons";
 
 const FIGURE = "my-8";
 const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
@@ -127,4 +130,56 @@ export function Compare({ items }: { items: CompareItem[] }) {
   );
 }
 
-export const mdxComponents = { img: MdxImage, Figure, Compare, pre: CodeBlock };
+type CalloutVariant = "info" | "warning" | "success" | "tip";
+
+/**
+ * A one-to-one mapping onto the site's four wavelength bands rather than a
+ * separate red/amber/green severity palette — "info" is `compute`-blue,
+ * "warning" is `interface`-amber, and so on. No new colours enter the
+ * system; a callout's accent is legible the same way a project's band tag
+ * already is.
+ */
+const CALLOUT_VARIANTS: Record<CalloutVariant, { wavelength: Wavelength; label: string; Icon: typeof InfoIcon }> = {
+  info: { wavelength: "compute", label: "Info", Icon: InfoIcon },
+  warning: { wavelength: "interface", label: "Warning", Icon: WarningIcon },
+  success: { wavelength: "systems", label: "Success", Icon: SuccessIcon },
+  tip: { wavelength: "intelligence", label: "Tip", Icon: TipIcon },
+};
+
+/**
+ * A callout/admonition for prose — the info/danger/tip variants from
+ * blog.maximeheckel.com's posts, recoloured onto this site's own four
+ * bands instead of importing a new severity palette.
+ *
+ *   <Callout variant="warning">
+ *     Batching trades latency for throughput — don't reach for it on a
+ *     path that needs a same-request answer.
+ *   </Callout>
+ */
+export function Callout({ variant = "info", children }: { variant?: CalloutVariant; children: ReactNode }) {
+  const { wavelength, label, Icon } = CALLOUT_VARIANTS[variant];
+  const hex = wavelengths[wavelength].hex;
+
+  return (
+    <div
+      className="not-prose my-8 flex gap-3 rounded-lg border p-4"
+      style={{ borderColor: `${hex}40`, backgroundColor: `${hex}0d` }}
+    >
+      <span
+        aria-hidden="true"
+        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border"
+        style={{ borderColor: `${hex}40`, backgroundColor: `${hex}14`, color: hex }}
+      >
+        <Icon className="h-3.5 w-3.5" />
+      </span>
+      <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-2">
+        <p className="font-mono text-[11px] font-medium uppercase tracking-wider" style={{ color: hex }}>
+          {label}
+        </p>
+        <div className="mt-1 text-[15px] leading-relaxed text-prose">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export const mdxComponents = { img: MdxImage, Figure, Compare, Callout, Diagram, pre: CodeBlock };
