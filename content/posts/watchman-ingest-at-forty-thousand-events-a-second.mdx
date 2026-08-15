@@ -29,6 +29,21 @@ There are a lot of them, they arrive in bursts, and *none of them individually m
 
 That last sentence is the whole optimisation. If no single event matters, you are allowed to batch, and you are allowed to lose a few on a hard crash. I wrote that down as an explicit product decision before touching any code, because it is the thing that unlocks everything else.
 
+The pipeline that came out of it, end to end:
+
+<Diagram
+  nodes={[
+    { label: "Probes", wavelength: "systems", note: "HTTP, queue, disk" },
+    { label: "Batcher", wavelength: "compute", note: "in-memory buffer" },
+    { label: "Postgres", wavelength: "intelligence", note: "COPY writer" },
+  ]}
+  edges={[undefined, "flush: 2k rows or 250ms"]}
+/>
+
+<Callout variant="warning">
+  Batching trades per-event latency for throughput. It's the right call for a health signal where the aggregate matters, not the individual event — don't reach for it on a path that needs a same-request answer.
+</Callout>
+
 ## Idea one: batch at the edge, not in the database
 
 The original writer did one `INSERT` per event inside a transaction per event. Postgres was spending its life on transaction overhead and WAL fsyncs rather than on the 90 bytes of payload.
