@@ -1,39 +1,51 @@
 /**
- * Every colour the site uses, defined once.
+ * GENERATED — do not edit. Run `node scripts/generate-palette.mjs`.
  *
- * These values used to be re-typed across tailwind.config.ts, globals.css,
- * DispersionMark, og.tsx and WavelengthChips, so changing a single accent was
- * a five-file edit with no way to tell whether you'd caught them all.
- *
- * TypeScript consumers import `palette` directly. CSS gets at the same values
- * through the `:root` custom properties the Tailwind config publishes from
- * `cssVars` — see the plugin at the bottom of tailwind.config.ts.
+ * Literal hex resolved from @ruskel/tokens@0.1.0, luminous exposure.
+ * The DOM consumes the tokens as CSS variables; this exists only for the
+ * places that cannot — satori (opengraph-image routes) and SVG presentation
+ * attributes. See the script header.
  */
 export const palette = {
-  ink: "#0B0C0E",
-  surface: "#141519",
-  surfaceRaised: "#1B1D22",
-  hairline: "#26282E",
+  ink: "#0B0A08",
+  surface: "#161512",
+  surfaceRaised: "#201E1A",
+  hairline: "#2C2A25",
 
-  paper: "#EDEAE2",
-  /** Long-form body copy — fractionally softer than `paper` over a page of text. */
-  prose: "#D8D5CC",
-  muted: "#93959C", // 6.54:1 on ink — AA
-  faint: "#7A7C85", // 4.71:1 on ink — AA
+  paper: "#EDEAE3",
+  prose: "#DAD7D0",
+  muted: "#8F8C84",
+  faint: "#737068",
+  /** Non-text only: the dispersion mark's incoming beam. */
+  ray: "#8F8C84",
 
-  // Non-text only: the dispersion mark's incoming beam. Fails AA as body copy,
-  // so don't reach for it to make something look quieter — use `faint`.
-  ray: "#8A8D93",
+  /** Marks — fills, dots, rays. Seen, not read. */
+  interface: "#D4A720",
+  systems: "#26C678",
+  compute: "#1A8FF9",
+  intelligence: "#9354F9",
 
-  interface: "#E3A24C", // 590nm
-  systems: "#5FBF86", // 520nm
-  compute: "#4C93E0", // 470nm
-  intelligence: "#9C7BE6", // 405nm
+  /** Text ring — coloured type only. Constrained to AA on ink. */
+  interfaceText: "#B59029",
+  systemsText: "#2DA868",
+  computeText: "#3F98F5",
+  intelligenceText: "#A580F5",
+
+  critical: "#F92040",
+  warning: "#FB661B",
+
+  /**
+   * Syntax colours. shiki needs a real theme with literal hex — its
+   * `css-variables` theme was dropped from the bundle — so these are resolved
+   * here rather than referenced as variables. See components/Mdx.tsx.
+   */
+  code: {
+    text: "#DAD7D0",
+    comment: "#737068",
+    keyword: "#A580F5",
+    string: "#2DA868",
+    number: "#B59029",
+    function: "#3F98F5",
+    punctuation: "#8F8C84",
+  },
 } as const;
-
-const kebab = (key: string) => key.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
-
-/** `{ "--c-surface-raised": "#1B1D22", … }` — consumed by the Tailwind base plugin. */
-export const cssVars: Record<string, string> = Object.fromEntries(
-  Object.entries(palette).map(([key, value]) => [`--c-${kebab(key)}`, value]),
-);

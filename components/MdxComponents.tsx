@@ -115,12 +115,12 @@ export function Compare({ items }: { items: CompareItem[] }) {
             <span
               aria-hidden="true"
               className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] ${
-                item.outcome === "good" ? "border-systems text-systems" : "border-hairline text-faint"
+                item.outcome === "good" ? "border-systems text-systems-tint" : "border-hairline text-faint"
               }`}
             >
               {item.outcome === "good" ? "✓" : "✕"}
             </span>
-            <span className={item.outcome === "good" ? "text-systems" : "text-faint"}>
+            <span className={item.outcome === "good" ? "text-systems-tint" : "text-faint"}>
               {item.outcome === "good" ? "Works" : "Doesn't work"}
             </span>
           </p>
