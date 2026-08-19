@@ -63,8 +63,8 @@ function Metric({ text, hex }: { text: string; hex: string }) {
  * stays neutral — it isn't a claim worth colouring.
  */
 const STATUS_STYLE: Record<Project["status"], string> = {
-  Shipped: "bg-systems/15 text-systems",
-  "In build": "bg-compute/15 text-compute",
+  Shipped: "bg-systems/15 text-systems-tint",
+  "In build": "bg-compute/15 text-compute-tint",
   Archived: "bg-hairline/60 text-faint",
 };
 

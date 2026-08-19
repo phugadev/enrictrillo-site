@@ -55,7 +55,7 @@ export function PostCard({
           <Heading className="flex min-w-0 items-center gap-2 font-display text-[16px] leading-snug text-paper transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-white">
             <span className="truncate">{post.title}</span>
             {isRecent(post.date) && (
-              <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute">
+              <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
                 New
               </span>
             )}

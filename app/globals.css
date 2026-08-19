@@ -1,11 +1,8 @@
+@import "@ruskel/tokens";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-::selection {
-  background: var(--c-interface);
-  color: var(--c-ink);
-}
 
 html {
   scroll-behavior: smooth;
@@ -16,8 +13,8 @@ html {
 }
 
 body {
-  background-color: var(--c-ink);
-  color: var(--c-paper);
+  background-color: var(--rsk-ground);
+  color: var(--rsk-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -30,11 +27,6 @@ body {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-:focus-visible {
-  outline: 2px solid var(--c-interface);
-  outline-offset: 3px;
 }
 
 /* Spectrometer scanline. The prefers-reduced-motion block above already
@@ -76,30 +68,30 @@ body {
   a glance, not compete for the same accent. 5.95:1 on ink, comfortably AA.
 */
 .prose code {
-  background: color-mix(in srgb, var(--c-intelligence) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--c-intelligence) 40%, transparent);
+  background: color-mix(in oklab, var(--rsk-mark-405) 16%, transparent);
+  border: 1px solid color-mix(in oklab, var(--rsk-mark-405) 40%, transparent);
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
-  color: var(--c-intelligence);
+  color: var(--rsk-text-405);
 }
 
 .prose pre {
-  border: 1px solid var(--c-hairline);
+  border: 1px solid var(--rsk-rule);
   border-radius: 8px;
 }
 
 /* Code block filenames: ```ts title="lib/posts.ts" */
 .prose [data-rehype-pretty-code-title] {
-  background: var(--c-surface-raised);
-  border: 1px solid var(--c-hairline);
+  background: var(--rsk-surface-2);
+  border: 1px solid var(--rsk-rule);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
   padding: 0.55em 0.9em;
   font-family: var(--font-mono);
   font-size: 0.72em;
   letter-spacing: 0.04em;
-  color: var(--c-muted);
+  color: var(--rsk-text-muted);
 }
 
 .prose [data-rehype-pretty-code-title] + pre {
@@ -115,18 +107,18 @@ body {
      tokens override it per-span anyway (rehype-pretty-code paints each one
      inline), but any untagged text in the block — punctuation, whitespace —
      would otherwise pick up the inline-code accent it isn't. */
-  color: var(--c-paper);
+  color: var(--rsk-text);
 }
 
 .prose a {
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--c-interface) 33.3%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--rsk-text-590) 33.3%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 150ms ease;
 }
 
 .prose a:hover {
-  text-decoration-color: var(--c-interface);
+  text-decoration-color: var(--rsk-text-590);
 }
 
 .prose blockquote {
@@ -187,7 +179,7 @@ body {
 }
 
 .prose .task-list-item input[type="checkbox"] {
-  accent-color: var(--c-interface);
+  accent-color: var(--rsk-mark-590);
   margin-right: 0.5em;
   vertical-align: middle;
 }
@@ -201,7 +193,7 @@ body {
 
 .prose :where(h1, h2, h3, h4) a:hover {
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--c-interface) 53.3%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--rsk-text-590) 53.3%, transparent);
   text-underline-offset: 4px;
 }
 

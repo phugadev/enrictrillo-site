@@ -71,7 +71,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html
+      lang="en-GB"
+      // The site is dark-only, so it runs the luminous exposure of @ruskel/tokens.
+      data-exposure="luminous"
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
+    >
       {/*
         suppressHydrationWarning covers only <body>'s own attributes, not its
         children — browser extensions (Bitdefender's `bis_register`, password
