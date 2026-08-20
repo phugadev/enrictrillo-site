@@ -4,6 +4,7 @@ import { wavelengths, type Wavelength } from "@/lib/site";
 import { CodeBlock } from "./CodeBlock";
 import { Diagram } from "./Diagram";
 import { InfoIcon, SuccessIcon, TipIcon, WarningIcon } from "./ui/CalloutIcons";
+import { Cell, Plate } from "./ui/Plate";
 
 const FIGURE = "my-8";
 const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
@@ -82,7 +83,6 @@ type CompareItem = {
   outcome: "good" | "bad";
 };
 
-const PANEL = "flex flex-col gap-4 rounded-lg border border-hairline bg-surface p-5";
 const CHIP = "inline-flex w-fit items-center rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-faint";
 
 /**
@@ -103,30 +103,27 @@ const CHIP = "inline-flex w-fit items-center rounded-full border border-hairline
  *       { code: 'emphasis="high", per button.md.', label: "button.md", outcome: "good" },
  *     ]}
  *   />
+ *
+ * Built on the .rsk-plate primitive from @ruskel/ui: one framed panel divided
+ * by hairlines, rather than two detached cards. `Plate` and `Cell` are also
+ * exported to MDX for cases the items API does not cover.
  */
-export function Compare({ items }: { items: CompareItem[] }) {
+export function Compare({ items, caption }: { items: CompareItem[]; caption?: string }) {
   return (
-    <div className="my-8 flex flex-col gap-4 sm:grid sm:grid-cols-2">
+    <Plate caption={caption}>
       {items.map((item, i) => (
-        <div key={i} className={PANEL}>
-          <code className="block whitespace-pre-wrap text-[13px] leading-relaxed">{item.code}</code>
+        <Cell
+          key={i}
+          verdict={item.outcome === "good" ? "yes" : "no"}
+          label={item.outcome === "good" ? "Works" : "Doesn't work"}
+        >
+          <code className="block whitespace-pre-wrap font-mono text-[13px] leading-relaxed">
+            {item.code}
+          </code>
           <span className={CHIP}>{item.label}</span>
-          <p className="mt-auto flex items-center gap-2 pt-1 font-mono text-[11px] uppercase tracking-wider">
-            <span
-              aria-hidden="true"
-              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] ${
-                item.outcome === "good" ? "border-systems text-systems-tint" : "border-hairline text-faint"
-              }`}
-            >
-              {item.outcome === "good" ? "✓" : "✕"}
-            </span>
-            <span className={item.outcome === "good" ? "text-systems-tint" : "text-faint"}>
-              {item.outcome === "good" ? "Works" : "Doesn't work"}
-            </span>
-          </p>
-        </div>
+        </Cell>
       ))}
-    </div>
+    </Plate>
   );
 }
 
@@ -182,4 +179,4 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
   );
 }
 
-export const mdxComponents = { img: MdxImage, Figure, Compare, Callout, Diagram, pre: CodeBlock };
+export const mdxComponents = { img: MdxImage, Figure, Compare, Plate, Cell, Callout, Diagram, pre: CodeBlock };
