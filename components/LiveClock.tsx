@@ -18,7 +18,12 @@ import { useEffect, useState } from "react";
  * Renders nothing until mounted, rather than guessing a time server-side and
  * correcting it after hydration — a build-time timestamp would be stale by
  * the time anyone loads the page, and swapping it out post-mount would flash.
- * A 30s poll is plenty for a display that only changes once a minute.
+ *
+ * The tick is scheduled onto the next real minute boundary rather than run
+ * from a fixed interval: a plain `setInterval` is free to land anywhere
+ * inside the minute, so the displayed time could sit up to a minute behind
+ * the wall clock and drift further as timers slip. Re-arming from the actual
+ * clock each time keeps the change visible when the minute actually turns.
  */
 const formatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Europe/London",
@@ -32,10 +37,19 @@ export function LiveClock() {
   const [time, setTime] = useState<string | null>(null);
 
   useEffect(() => {
-    const tick = () => setTime(formatter.format(new Date()));
+    let id: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+      const now = new Date();
+      setTime(formatter.format(now));
+      // Aim just past the next minute boundary, with a floor so a timer that
+      // fires a hair early can't spin.
+      const untilNextMinute = 60_000 - (now.getSeconds() * 1_000 + now.getMilliseconds());
+      id = setTimeout(tick, Math.max(1_000, untilNextMinute));
+    };
+
     tick();
-    const id = setInterval(tick, 30_000);
-    return () => clearInterval(id);
+    return () => clearTimeout(id);
   }, []);
 
   if (!time) return null;
