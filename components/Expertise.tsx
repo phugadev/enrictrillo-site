@@ -23,6 +23,21 @@ import {
  * hero's copy and CTAs sit directly below this block, so opening down
  * would cover them.
  *
+ * The tooltip is positioned against the `ul`, not against its own chip, and
+ * that is the fix for a real bug. Anchored to the chip, a `w-max` tooltip
+ * opening from a chip near the right edge ran past the viewport — and an
+ * `invisible` element still counts toward `scrollWidth`, so the whole
+ * homepage scrolled sideways with nothing visible out there to explain it.
+ * Anchoring to the row makes overflow impossible at every width, because
+ * the row itself cannot overflow. (A breakpoint-split version of this —
+ * chip-anchored from `sm` up — was tried first and still overflowed at
+ * 640px, where the container is narrow but the chips are not.)
+ *
+ * The cost is that the tooltip sits at the row's left edge rather than
+ * under the chip you're pointing at. That reads as a description slot for
+ * the row, which is a fair trade for a page that doesn't drift sideways on
+ * a phone.
+ *
  * Hides itself while `expertise` is empty, same discipline as `Now` and
  * `Credentials`.
  */
@@ -44,13 +59,15 @@ export function Expertise() {
       <SectionLabel as="p" className="mb-3">
         Expertise
       </SectionLabel>
-      <ul className="flex flex-wrap gap-2">
+      {/* The tooltips' positioning ancestor — not the individual chips. See
+          the note above the component for why. */}
+      <ul className="relative flex flex-wrap gap-2">
         {expertise.map((item) => {
           const Icon = icons[item.label];
           const tooltipId = `expertise-${slugify(item.label)}-tooltip`;
 
           return (
-            <li key={item.label} className="relative">
+            <li key={item.label}>
               <div
                 tabIndex={0}
                 aria-describedby={tooltipId}
@@ -62,7 +79,7 @@ export function Expertise() {
                 <div
                   id={tooltipId}
                   role="tooltip"
-                  className="pointer-events-none invisible absolute bottom-full left-0 z-10 mb-2 w-max max-w-[16rem] rounded-lg bg-surface-2 px-4 py-3 text-[11px] leading-relaxed text-paper opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100 sm:max-w-xs"
+                  className="pointer-events-none invisible absolute inset-x-0 bottom-full z-10 mb-2 rounded-lg bg-surface-2 px-4 py-3 text-[11px] leading-relaxed text-paper opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100 sm:right-auto sm:w-max sm:max-w-xs"
                 >
                   {item.description}
                 </div>
