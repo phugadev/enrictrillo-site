@@ -1,5 +1,5 @@
 import { ProjectRow } from "@/components/ProjectRow";
-import { LeadProject, SpecPlate, ThinRow } from "@/components/lab/WorkVariants";
+import { CatalogueEntry, LeadProject, SpecPlate, ThinRow } from "@/components/lab/WorkVariants";
 import { CONTAINER } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { projects, type Project } from "@/lib/site";
@@ -141,6 +141,28 @@ export default function LabWorkPage() {
           <ul className="mt-6 border-t border-hairline">
             {padded.slice(1).map((p) => (
               <ThinRow key={p.name} project={p} />
+            ))}
+          </ul>
+        </Denser>
+      </Variant>
+      <Variant
+        tag="D"
+        name="Catalogue entry — the hybrid"
+        note="C's composition, B's hatch as a structural rule (above it: what the thing is; below it: how to reach it), A's information hierarchy. Destinations are endpoints with addresses, not buttons."
+      >
+        <div className="flex items-baseline justify-between">
+          <SectionLabel>Selected work</SectionLabel>
+          <span className="font-mono text-[12px] text-faint">{projects.length}</span>
+        </div>
+        <ul className="mt-6 divide-y divide-hairline">
+          {projects.map((p, i) => (
+            <CatalogueEntry key={p.name} project={p} index={i} />
+          ))}
+        </ul>
+        <Denser>
+          <ul className="divide-y divide-hairline">
+            {padded.map((p, i) => (
+              <CatalogueEntry key={p.name} project={p} index={i} />
             ))}
           </ul>
         </Denser>

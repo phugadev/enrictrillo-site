@@ -168,3 +168,120 @@ export function ThinRow({ project }: { project: Project }) {
     </li>
   );
 }
+
+/* ─── D · Catalogue entry ───────────────────────────────────────────────── */
+
+/**
+ * C's composition, B's structural language, A's content hierarchy — an entry
+ * in a catalogue of engineering artifacts rather than a card in a gallery.
+ *
+ * The hatch does structural work here instead of decorative: everything above
+ * it describes the artifact, everything below it is how you reach it. Same
+ * rule in every entry, so the section reads as one system.
+ *
+ * Destinations are endpoints, not buttons — a label in the site's own
+ * vocabulary (SOURCE, not GitHub) with its actual address underneath, the way
+ * documentation lists one.
+ */
+const ENDPOINT_ORDER = [
+  { key: "live", label: "Live" },
+  { key: "repo", label: "Source" },
+  { key: "npm", label: "Package" },
+] as const;
+
+/** github.com/phugadev/watchman — the address, minus the ceremony. */
+function address(href: string) {
+  return href.replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/$/, "");
+}
+
+function Endpoint({ label, href, children }: { label: string; href: string; children?: never }) {
+  return (
+    <SmartLink
+      href={href}
+      className="group/ep block min-w-[13rem] max-w-full border-t border-hairline pt-2 transition-colors hover:border-paper"
+    >
+      <span className="block font-mono text-[11px] uppercase tracking-wider text-paper">
+        {label} <span aria-hidden="true">↗</span>
+      </span>
+      <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-muted">
+        {address(href)}
+      </span>
+    </SmartLink>
+  );
+}
+
+export function CatalogueEntry({ project, index }: { project: Project; index: number }) {
+  const wl = wavelengths[project.wavelength];
+  const endpoints = ENDPOINT_ORDER.filter(({ key }) => project.links?.[key]);
+
+  return (
+    <li className="py-10 first:pt-0">
+      <div className="flex gap-5 sm:gap-8">
+        <span className="w-6 shrink-0 pt-1 font-mono text-[11px] text-faint">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h3 className="font-display text-[22px] leading-tight text-paper">{project.name}</h3>
+            <span
+              className="font-mono text-[11px] uppercase tracking-wider"
+              style={{ color: wl.hex }}
+            >
+              {wl.nm}nm {wl.label}
+            </span>
+          </div>
+
+          <div className="mt-1.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+            <span className="flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className={`h-1.5 w-1.5 rounded-full ${
+                  project.status === "Shipped"
+                    ? "bg-systems"
+                    : project.status === "In build"
+                      ? "bg-compute"
+                      : "bg-faint"
+                }`}
+              />
+              {project.status}
+            </span>
+            <span>{project.year}</span>
+          </div>
+
+          <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-muted">
+            {project.description}
+          </p>
+
+          {project.stack && (
+            <p className="mt-3 font-mono text-[11px] text-faint">{project.stack.join(" · ")}</p>
+          )}
+
+          <Hatch className="my-6" />
+
+          {/* Flex-wrap, not a fixed grid: a third of the measure is too
+              narrow for an npm address, and a grid would also leave empty
+              columns on entries with one endpoint. */}
+          <div className="flex flex-wrap gap-x-10 gap-y-4">
+            {project.caseStudySlug && (
+              <SmartLink
+                href={`/work/${project.caseStudySlug}`}
+                className="group/ep block min-w-[13rem] max-w-full border-t border-paper/40 pt-2 transition-colors hover:border-paper"
+              >
+                <span className="block font-mono text-[11px] uppercase tracking-wider text-paper">
+                  Case study <span aria-hidden="true">→</span>
+                </span>
+                <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-muted">
+                  /work/{project.caseStudySlug}
+                </span>
+              </SmartLink>
+            )}
+            {endpoints.map(({ key, label }) => (
+              <Endpoint key={key} label={label} href={project.links![key]!} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+}
