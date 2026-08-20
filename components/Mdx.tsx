@@ -81,10 +81,12 @@ const ruskelSyntax = {
     { scope: ["string", "string.quoted", "punctuation.definition.string"], settings: { foreground: palette.code.string } },
     { scope: ["constant.numeric", "constant.language", "constant.character"], settings: { foreground: palette.code.number } },
     { scope: ["entity.name.function", "support.function", "meta.function-call"], settings: { foreground: palette.code.function } },
-    { scope: ["entity.name.type", "support.type", "support.class", "entity.name.class"], settings: { foreground: palette.code.number } },
+    { scope: ["entity.name.type", "support.type", "support.class", "entity.name.class"], settings: { foreground: palette.code.type } },
+    { scope: ["constant.regexp", "string.regexp", "constant.character.escape"], settings: { foreground: palette.code.special } },
     { scope: ["punctuation", "meta.brace", "keyword.operator"], settings: { foreground: palette.code.punctuation } },
     { scope: ["variable", "variable.other", "meta.definition.variable"], settings: { foreground: palette.code.text } },
-    { scope: ["entity.name.tag", "support.type.property-name"], settings: { foreground: palette.code.string } },
+    { scope: ["entity.name.tag"], settings: { foreground: palette.code.special } },
+    { scope: ["support.type.property-name", "meta.object-literal.key"], settings: { foreground: palette.code.type } },
   ],
 };
 

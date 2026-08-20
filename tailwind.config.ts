@@ -80,12 +80,16 @@ const config: Config = {
         warning: band("620"),
       },
       fontFamily: {
-        display: ["var(--font-display)"],
-        // Inter, not Space Grotesk — see the note in app/layout.tsx.
+        // display and reading both resolve to the sans: the register model
+        // gives headings and body to the same face, at different sizes.
+        display: ["var(--font-body)"],
         body: ["var(--font-body)"],
-        // Long-form only. Loaded by app/blog/[slug]/layout.tsx, not the root.
-        reading: ["var(--font-reading)"],
+        reading: ["var(--font-body)"],
         mono: ["var(--font-mono)"],
+        // The GATED token, not the face. Outside data-voice="author" this
+        // resolves to the sans stack, so `font-serif` cannot put authored
+        // type on an interface surface.
+        serif: ["var(--rsk-font-serif)"],
       },
       typography: () => ({
         DEFAULT: { css: { ...proseColors, maxWidth: "none" } },

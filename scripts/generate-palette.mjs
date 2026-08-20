@@ -82,6 +82,12 @@ const luminous = { ...neutrals, ...resolve(block('\\[data-exposure="luminous"\\]
  * shared `[data-exposure]` block (selection, syntax colours) aliases onto the
  * per-exposure text ring, which itself aliases onto the neutral ramp.
  */
+// The shared [data-exposure] block holds exposure-agnostic values. Since
+// 0.3.0 that includes the syntax ring as literal oklch() rather than aliases,
+// so it has to go through resolve() as well as the alias pass.
+const sharedBlock = strip(css).match(/\[data-exposure\]\s*\{([\s\S]*?)\n\}/g)?.join("\n") ?? "";
+Object.assign(luminous, resolve(sharedBlock));
+
 const aliasSources = [
   block('\\[data-exposure="luminous"\\]'),
   // The bare [data-exposure] block holds the exposure-agnostic aliases —
@@ -95,6 +101,32 @@ for (let pass = 0; pass < 3; pass++) {
     if (luminous[m[2]] && !luminous[m[1]]) luminous[m[1]] = luminous[m[2]];
   }
 }
+
+/**
+ * Rules are declared as `color-mix(in oklab, var(--rsk-text) 12%, transparent)`
+ * so they composite with whatever sits behind them. satori has no "behind" —
+ * it paints one flat canvas — so flatten them over the exposure's own ground,
+ * which is what an OG image sits on anyway.
+ */
+function resolveMixes(scope, table) {
+  const toRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  const toHex = (rgb) =>
+    "#" + rgb.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0").toUpperCase()).join("");
+
+  for (const m of scope.matchAll(
+    /--rsk-([\w-]+):\s*color-mix\(in oklab,\s*var\(--rsk-([\w-]+)\)\s*([\d.]+)%,\s*transparent\)/g
+  )) {
+    const [, name, src, pct] = m;
+    const fg = table[src], bg = table.ground;
+    if (!fg || !bg) continue;
+    const a = Number(pct) / 100;
+    // Gamma space, not linear: browsers composite alpha on the encoded values,
+    // and flattening in linear light comes out visibly too light.
+    const f = toRgb(fg), b = toRgb(bg);
+    table[name] = toHex(f.map((v, i) => v * a + b[i] * (1 - a)));
+  }
+}
+resolveMixes(aliasSources, luminous);
 
 const pick = (k) => {
   const v = luminous[k];
@@ -155,6 +187,8 @@ export const palette = {
     string: "${pick("code-string")}",
     number: "${pick("code-number")}",
     function: "${pick("code-function")}",
+    type: "${pick("code-type")}",
+    special: "${pick("code-special")}",
     punctuation: "${pick("code-punctuation")}",
   },
 } as const;
