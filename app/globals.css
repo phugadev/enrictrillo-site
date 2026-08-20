@@ -92,36 +92,34 @@ body {
   already use a few lines down — the two need to read as different things at
   a glance, not compete for the same accent. 5.95:1 on ink, comfortably AA.
 */
+/*
+  Inline code is neutral. It was tinted with the 405nm intelligence band,
+  which is decorative use of a taxonomy colour: a snippet of code is not
+  *about* intelligence, it is chrome. Same correction as ::selection and the
+  focus ring. It now matches the code frame's own surface, so inline and
+  block code read as the same material.
+*/
 .prose code {
-  background: color-mix(in oklab, var(--rsk-mark-405) 16%, transparent);
-  border: 1px solid color-mix(in oklab, var(--rsk-mark-405) 40%, transparent);
+  background: var(--rsk-code-bg);
+  border: 1px solid var(--rsk-rule);
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
-  color: var(--rsk-text-405);
+  color: var(--rsk-code-text);
 }
 
+/* The frame owns the border and radius now — see components/CodeBlock.tsx
+   and .rsk-codeframe. The pre keeps only its own padding and scroll. */
 .prose pre {
-  border: 1px solid var(--rsk-rule);
-  border-radius: 8px;
+  border: 0;
+  border-radius: 0;
 }
 
-/* Code block filenames: ```ts title="lib/posts.ts" */
+/* The title moves into the frame header, so rehype's own title bar is not
+   rendered separately. Kept hidden rather than deleted because a fence
+   without a custom `pre` override would still emit it. */
 .prose [data-rehype-pretty-code-title] {
-  background: var(--rsk-surface-2);
-  border: 1px solid var(--rsk-rule);
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  padding: 0.55em 0.9em;
-  font-family: var(--font-mono);
-  font-size: 0.72em;
-  letter-spacing: 0.04em;
-  color: var(--rsk-text-muted);
-}
-
-.prose [data-rehype-pretty-code-title] + pre {
-  margin-top: 0;
-  border-radius: 0 0 8px 8px;
+  display: none;
 }
 
 .prose pre code {

@@ -179,4 +179,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
   );
 }
 
-export const mdxComponents = { img: MdxImage, Figure, Compare, Plate, Cell, Callout, Diagram, pre: CodeBlock };
+// CodeBlock intercepts `figure`, not `pre`: rehype-pretty-code emits the
+// title as a sibling of the pre, so a pre-level override can never reach it.
+// Non-code figures pass straight through.
+export const mdxComponents = { img: MdxImage, Figure, Compare, Plate, Cell, Callout, Diagram, figure: CodeBlock };
