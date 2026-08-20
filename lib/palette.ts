@@ -1,7 +1,7 @@
 /**
  * GENERATED — do not edit. Run `node scripts/generate-palette.mjs`.
  *
- * Literal hex resolved from @ruskel/tokens@0.3.0, luminous exposure.
+ * Literal hex resolved from @ruskel/tokens@0.7.0, luminous exposure.
  * The DOM consumes the tokens as CSS variables; this exists only for the
  * places that cannot — satori (opengraph-image routes) and SVG presentation
  * attributes. See the script header.
