@@ -1,4 +1,4 @@
-import { Newsreader } from "next/font/google";
+import { Instrument_Serif, Newsreader } from "next/font/google";
 
 /**
  * The reading face is loaded here rather than in the root layout so only post
@@ -16,6 +16,28 @@ const reading = Newsreader({
   display: "swap",
 });
 
+/**
+ * The authorship display face, per @ruskel/tokens: serif marks a person
+ * speaking, as distinct from the interface (sans) or the machine (mono).
+ * Loaded here with the reading face so only post pages pay for it.
+ *
+ * Display only — Instrument Serif is high-contrast and loses its footing
+ * under about 24px, which is why prose body stays on Newsreader.
+ */
+const authored = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
 export default function PostLayout({ children }: { children: React.ReactNode }) {
-  return <div className={reading.variable}>{children}</div>;
+  return (
+    // data-voice is what unlocks the serif; it is independent of exposure, so
+    // this works on the site's dark ground exactly as it would on paper.
+    <div className={`${reading.variable} ${authored.variable}`} data-voice="author">
+      {children}
+    </div>
+  );
 }

@@ -1,7 +1,7 @@
 /**
  * GENERATED — do not edit. Run `node scripts/generate-palette.mjs`.
  *
- * Literal hex resolved from @ruskel/tokens@0.1.0, luminous exposure.
+ * Literal hex resolved from @ruskel/tokens@0.2.0, luminous exposure.
  * The DOM consumes the tokens as CSS variables; this exists only for the
  * places that cannot — satori (opengraph-image routes) and SVG presentation
  * attributes. See the script header.
@@ -10,7 +10,7 @@ export const palette = {
   ink: "#0B0A08",
   surface: "#161512",
   surfaceRaised: "#201E1A",
-  hairline: "#2C2A25",
+  hairline: "#262522",
 
   paper: "#EDEAE3",
   prose: "#DAD7D0",

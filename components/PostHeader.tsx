@@ -54,7 +54,7 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
 
       <hr className="mt-5 border-hairline" />
 
-      <h1 className="mt-8 font-display text-[32px] font-medium leading-tight tracking-tight text-paper sm:text-[38px]">
+      <h1 className="mt-8 font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-paper sm:text-[46px]">
         {meta.title}
       </h1>
     </header>

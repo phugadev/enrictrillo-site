@@ -1,5 +1,29 @@
 @import "@ruskel/tokens";
 
+/*
+  next/font emits hashed family names, so the token layer's declared stacks
+  ("Inter", "IBM Plex Mono", "Instrument Serif") would never match. Point them
+  at the generated variables instead.
+
+  Note --rsk-serif-face, not --rsk-font-serif: the latter is the *gated*
+  token, which stays on the sans stack until an ancestor carries
+  data-voice="author". Overwriting it here would defeat the guard.
+*/
+:root {
+  --rsk-font-sans: var(--font-body), system-ui, sans-serif;
+  --rsk-font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+/*
+  --font-serif is scoped by next/font to the post layout's wrapper, not to
+  :root. Declaring --rsk-serif-face at :root therefore made it invalid at
+  computed-value time and it inherited down empty, so the gate opened onto
+  nothing. Map it on the same element that carries both.
+*/
+[data-voice="author"] {
+  --rsk-serif-face: var(--font-serif), Georgia, "Times New Roman", serif;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { JsonLd, personSchema, websiteSchema } from "@/lib/schema";
@@ -41,8 +41,17 @@ const body = Inter({
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
+/**
+ * IBM Plex Mono over JetBrains Mono. Mono here is almost entirely metadata —
+ * uppercase, tracked, at 11px — and Plex is the more humanist face at that
+ * size. JetBrains is tuned for 14px code, which this site only reaches inside
+ * post code blocks.
+ *
+ * Plex is not variable, so the weights used have to be listed.
+ */
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
 });

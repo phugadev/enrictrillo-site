@@ -86,6 +86,10 @@ const config: Config = {
         // Long-form only. Loaded by app/blog/[slug]/layout.tsx, not the root.
         reading: ["var(--font-reading)"],
         mono: ["var(--font-mono)"],
+        // The GATED token, not the face. Outside data-voice="author" this
+        // resolves to the sans stack, so `font-serif` cannot put authored
+        // type on an interface surface.
+        serif: ["var(--rsk-font-serif)"],
       },
       typography: () => ({
         DEFAULT: { css: { ...proseColors, maxWidth: "none" } },
