@@ -2,9 +2,8 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
-import { wavelengths } from "@/lib/site";
+import { WavelengthDot } from "./ui/WavelengthDot";
 import { WavelengthIcon } from "./ui/WavelengthIcon";
-import { WavelengthSpine } from "./ui/WavelengthSpine";
 
 /** How long a post keeps the "New" pill on the homepage teaser. */
 const NEW_WINDOW_DAYS = 21;
@@ -15,8 +14,28 @@ function isRecent(iso: string): boolean {
 }
 
 /**
- * `showWavelength` is off in grouped views (the blog index), where the band
- * heading directly above already names the wavelength.
+ * A post in a list. Two shapes, and the difference is who is reading.
+ *
+ * `compact` (the homepage teaser) is title and date, nothing else. A reader
+ * on the homepage has not decided to read anything yet — the list is an
+ * activity signal, proof the work is ongoing, and an excerpt there competes
+ * with the section that is actually meant to convert them.
+ *
+ * The full shape (/blog, band and series pages) keeps the excerpt, because a
+ * reader who has arrived there is choosing *which* post, and these excerpts
+ * make a claim rather than summarising — "the best feature I shipped this
+ * year was one that sends fewer notifications" is the argument, and it is
+ * what makes someone pick that post over the one above it. Sites that list
+ * titles alone get away with it because their titles are reference labels
+ * ("The Popover API"); these are argument titles, and an argument title
+ * without its claim is just a headline.
+ *
+ * What the full shape dropped: the old metadata line ran wavelength · date ·
+ * reading time · series as four mono fragments above the title, and it did
+ * not parse at a glance — four values of equal weight, none of them the
+ * thing you were scanning for. The band is now the coloured dot, the series
+ * sits next to the date, and reading time is gone. It was never a reason to
+ * click or not click.
  */
 export function PostCard({
   post,
@@ -42,8 +61,6 @@ export function PostCard({
    */
   compact?: boolean;
 }) {
-  const wl = wavelengths[post.wavelength];
-
   if (compact) {
     return (
       <Link
@@ -72,20 +89,32 @@ export function PostCard({
   }
 
   return (
-    <Link href={`/blog/${post.slug}`} className="group flex gap-4 py-6">
-      <WavelengthSpine wavelength={post.wavelength} />
-      <div className="min-w-0 flex-1">
-        <div className="mb-1.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
-          {showWavelength && <span style={{ color: wl.hex }}>{wl.label}</span>}
-          <span>{format(parseDate(post.date), "d MMM yyyy")}</span>
-          <span>{post.readingTime}</span>
-          {post.series && <span className="truncate">{post.series}</span>}
-        </div>
-        <Heading className="font-display text-[19px] leading-snug text-paper transition-colors group-hover:text-white">
-          {post.title}
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group -mx-3 block rounded px-3 py-5 transition-colors hover:bg-surface"
+    >
+      <div className="flex items-baseline justify-between gap-6">
+        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-paper transition-colors group-hover:text-white">
+          {/* Hidden on the band pages: every post there is the same band,
+              so the dot would repeat one colour down the page and mean
+              nothing. */}
+          {showWavelength && (
+            <WavelengthDot wavelength={post.wavelength} className="translate-y-[-3px]" />
+          )}
+          <span>{post.title}</span>
         </Heading>
-        <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{post.excerpt}</p>
+        <span className="flex shrink-0 items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+          {post.series && <span className="hidden sm:inline">{post.series}</span>}
+          <span>{format(parseDate(post.date), "d MMM yyyy")}</span>
+        </span>
       </div>
+      <p
+        className={`mt-1.5 max-w-prose text-[14px] leading-relaxed text-muted ${
+          showWavelength ? "pl-[18px]" : ""
+        }`}
+      >
+        {post.excerpt}
+      </p>
     </Link>
   );
 }
