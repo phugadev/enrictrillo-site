@@ -285,3 +285,74 @@ export function CatalogueEntry({ project, index }: { project: Project; index: nu
     </li>
   );
 }
+
+
+/* ─── E · Lead entry, then thin rows ────────────────────────────────────── */
+
+/**
+ * The tail of variant E.
+ *
+ * The question E has to answer is what a thin row keeps. The lead entry
+ * above it already establishes the vocabulary, so a row only needs enough
+ * for a reader to decide whether to click: what it is, roughly when, which
+ * band, and one way in. Everything the lead entry spends space on —
+ * hatch, endpoint addresses, stack, status wording — comes off.
+ *
+ * What survives, and why:
+ *   index + year   the catalogue rhythm; cheap, and it dates the work
+ *   band dot       colour only. The lead entry spells out "520nm Systems";
+ *                  down here the hue alone is enough to group by eye
+ *   name + line    the actual content. Without the description a row is a
+ *                  filename, and nobody clicks a filename
+ *   status dot     only when it is not Shipped — "in build" and "archived"
+ *                  change how a reader reads the row; "shipped" is the
+ *                  default assumption and does not need saying
+ *   one endpoint   the primary destination, labelled, no address
+ */
+const PRIMARY_ORDER = ["live", "repo", "npm"] as const;
+const PRIMARY_LABEL = { live: "Live", repo: "Source", npm: "Package" } as const;
+
+export function ThinEntry({ project, index }: { project: Project; index: number }) {
+  const wl = wavelengths[project.wavelength];
+  const primary = PRIMARY_ORDER.find((key) => project.links?.[key]);
+
+  return (
+    <li className="border-b border-hairline">
+      <div className="group -mx-3 flex items-baseline gap-4 rounded px-3 py-4 transition-colors hover:bg-surface sm:gap-5">
+        <span aria-hidden="true" className="w-6 shrink-0 font-mono text-[11px] text-faint">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        <span
+          aria-hidden="true"
+          className="h-1.5 w-1.5 shrink-0 translate-y-[-2px] rounded-full"
+          style={{ backgroundColor: wl.hex }}
+        />
+
+        <span className="min-w-0 flex-1 text-[15px] leading-relaxed text-muted">
+          <span className="mr-2 font-display text-[16px] text-paper">{project.name}</span>
+          {project.description}
+          {project.status !== "Shipped" && (
+            <span className="ml-2 whitespace-nowrap font-mono text-[10px] uppercase tracking-wider text-faint">
+              · {project.status}
+            </span>
+          )}
+        </span>
+
+        <span className="hidden shrink-0 font-mono text-[11px] text-faint sm:block">
+          {project.year}
+        </span>
+
+        {primary && (
+          <SmartLink
+            href={project.links![primary]!}
+            className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+          >
+            <span aria-hidden="true">{PRIMARY_LABEL[primary]} ↗</span>
+            <span className="sr-only">{`${PRIMARY_LABEL[primary]} — ${project.name}`}</span>
+          </SmartLink>
+        )}
+      </div>
+    </li>
+  );
+}

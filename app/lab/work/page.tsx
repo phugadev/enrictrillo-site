@@ -1,5 +1,11 @@
 import { ProjectRow } from "@/components/ProjectRow";
-import { CatalogueEntry, LeadProject, SpecPlate, ThinRow } from "@/components/lab/WorkVariants";
+import {
+  CatalogueEntry,
+  LeadProject,
+  SpecPlate,
+  ThinEntry,
+  ThinRow,
+} from "@/components/lab/WorkVariants";
 import { CONTAINER } from "@/components/ui/Section";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { projects, type Project } from "@/lib/site";
@@ -163,6 +169,36 @@ export default function LabWorkPage() {
           <ul className="divide-y divide-hairline">
             {padded.map((p, i) => (
               <CatalogueEntry key={p.name} project={p} index={i} />
+            ))}
+          </ul>
+        </Denser>
+      </Variant>
+      <Variant
+        tag="E"
+        name="Lead entry, then thin rows"
+        note="D's entry for the project in front, C's tail for the rest. A thin row keeps index, band hue, name, description, year and one endpoint — and says the status only when it is not Shipped."
+      >
+        <div className="flex items-baseline justify-between">
+          <SectionLabel>Selected work</SectionLabel>
+          <span className="font-mono text-[12px] text-faint">{projects.length}</span>
+        </div>
+        <div className="mt-6">
+          <ul>
+            <CatalogueEntry project={projects[0]} index={0} />
+          </ul>
+          <ul className="mt-2 border-t border-hairline">
+            {projects.slice(1).map((p, i) => (
+              <ThinEntry key={p.name} project={p} index={i + 1} />
+            ))}
+          </ul>
+        </div>
+        <Denser>
+          <ul>
+            <CatalogueEntry project={padded[0]} index={0} />
+          </ul>
+          <ul className="mt-2 border-t border-hairline">
+            {padded.slice(1).map((p, i) => (
+              <ThinEntry key={p.name} project={p} index={i + 1} />
             ))}
           </ul>
         </Denser>
