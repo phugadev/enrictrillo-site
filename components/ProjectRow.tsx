@@ -103,7 +103,7 @@ export function ProjectRow({ project }: { project: Project }) {
   const wl = wavelengths[project.wavelength];
 
   return (
-    <li className="relative overflow-hidden rounded-xl bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-2">
+    <li className="relative overflow-hidden rounded-lg bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-2">
       <span
         aria-hidden="true"
         className="absolute inset-x-0 top-0 h-[3px]"
@@ -156,7 +156,7 @@ export function ProjectRow({ project }: { project: Project }) {
           {caseStudyHref && (
             <Link
               href={caseStudyHref}
-              className="rounded-full border border-hairline px-4 py-2 font-mono text-[12px] text-paper transition-colors hover:border-paper"
+              className="rounded border border-hairline px-4 py-2 font-mono text-[12px] text-paper transition-colors hover:border-paper"
             >
               Case study →
             </Link>

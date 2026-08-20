@@ -48,7 +48,7 @@ export function PostCard({
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group -mx-3 flex items-center justify-between gap-6 rounded-lg px-3 py-3 transition-colors hover:bg-surface"
+        className="group -mx-3 flex items-center justify-between gap-6 rounded px-3 py-3 transition-colors hover:bg-surface"
       >
         <span className="flex min-w-0 items-center gap-3">
           <WavelengthIcon wavelength={post.wavelength} />

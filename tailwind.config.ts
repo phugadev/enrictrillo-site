@@ -79,6 +79,13 @@ const config: Config = {
         critical: band("700"),
         warning: band("620"),
       },
+      borderRadius: {
+        // Structure vs tokens — see the radius note in @ruskel/tokens.
+        DEFAULT: "var(--radius)",
+        sm: "var(--radius-sm)",
+        lg: "var(--radius-lg)",
+        pill: "var(--radius-pill)",
+      },
       fontFamily: {
         // display and reading both resolve to the sans: the register model
         // gives headings and body to the same face, at different sizes.

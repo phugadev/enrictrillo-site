@@ -70,7 +70,7 @@ export default function Home() {
         >
           <a
             href={`mailto:${site.email}`}
-            className="rounded-full border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
+            className="rounded border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
           >
             {site.email}
           </a>
