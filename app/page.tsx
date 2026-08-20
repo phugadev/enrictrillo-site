@@ -134,7 +134,7 @@ export default function Home() {
                 All posts →
               </Link>
             </div>
-            <div className="mt-2">
+            <div className="rsk-focuslist mt-2">
               {posts.map((post) => (
                 <PostCard key={post.slug} post={post} as="h3" compact />
               ))}

@@ -235,3 +235,31 @@ body {
   text-underline-offset: 4px;
 }
 
+
+/* ── Focus list ────────────────────────────────────────────────────────────
+   Pointing at one item in a list dims the others, so the list behaves like
+   an instrument that follows attention rather than a stack of independent
+   rows. Lifted from desengs.com, where moving quickly down the list reads
+   as one continuous animation rather than a series of hover states.
+
+   Hover-capable pointers only: on touch there is no hover, and :hover
+   sticks after a tap, which would leave the rest of the list dimmed with no
+   way to clear it. Opacity alone — no transform, nothing that moves — so
+   there is nothing here that reduced-motion users need protecting from.
+   The transition is deliberately faster in than out (dimming should feel
+   instant, restoring should not flicker while the pointer crosses a gap). */
+@media (hover: hover) and (pointer: fine) {
+  .rsk-focuslist > * {
+    transition: opacity 260ms ease-out;
+  }
+
+  .rsk-focuslist:hover > * {
+    opacity: 0.45;
+    transition-duration: 120ms;
+  }
+
+  .rsk-focuslist:hover > *:hover,
+  .rsk-focuslist > *:focus-within {
+    opacity: 1;
+  }
+}

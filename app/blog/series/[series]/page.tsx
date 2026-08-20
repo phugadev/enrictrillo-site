@@ -54,7 +54,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
         first.
       </p>
 
-      <div className="mt-12 divide-y divide-hairline">
+      <div className="mt-12 rsk-focuslist divide-y divide-hairline">
         {found.posts.map((post) => (
           <PostCard key={post.slug} post={post} />
         ))}

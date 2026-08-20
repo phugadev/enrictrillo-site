@@ -72,7 +72,7 @@ export default function BlogIndex() {
               just another divider among the post separators below. */}
           <Hatch className="mt-10" />
 
-          <div className="mt-8 divide-y divide-hairline">
+          <div className="rsk-focuslist mt-8 divide-y divide-hairline">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
