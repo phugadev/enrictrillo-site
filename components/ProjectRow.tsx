@@ -1,9 +1,7 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { wavelengths, type Project } from "@/lib/site";
 import { getCaseStudyBySlug } from "@/lib/work";
 import { SmartLink } from "./ui/SmartLink";
-import { WavelengthDot } from "./ui/WavelengthDot";
 
 /**
  * Resolves `project.caseStudySlug` to a route, or `undefined` when the
@@ -79,23 +77,30 @@ const LINK_ORDER = [
 ] as const;
 
 /**
- * A project in Selected work — the section carrying the most persuasive
- * weight on the page, so it gets more presence than a plain text row: each
- * project sits in its own raised `bg-surface` panel (the same treatment
- * MdxComponents already uses for callouts) rather than blending into the
- * hairline-divided rows used everywhere else on the homepage, with a
- * band-coloured accent bar along the top edge and a small lift on hover so
- * the panel itself feels alive, not just the links inside it. Stack chips
- * reuse Toolkit's exact chip styling — same hover-to-band-colour behaviour —
- * so Work and Toolkit read as two views of one system instead of two
- * unrelated components.
+ * A project in Selected work, as one line of a ledger: year in the gutter, a
+ * band-coloured tick, then status, name and description running together as
+ * continuous text, with the destinations parked on the right.
  *
- * The name is plain text and the chips carry every destination — see the
- * original note this replaced: linking the name too would mean two tab stops
- * on the same URL while a project has one link, and an arbitrary choice of
- * target once it has three. A case study, when one exists, is the strongest
- * piece of proof here, so it's the one bordered pill (echoing the hero's
- * email CTA) rather than an underlined text link like the rest.
+ * This replaced a grid of raised `bg-surface` panels. The panels were the
+ * wrong shape for the content — two of them read as a page with two things
+ * on it, where a ruled list of two reads as the top of a list. A row also
+ * costs almost nothing per project, so the section can grow to ten without
+ * turning into a wall of cards, and it rhymes with `PostCard`'s compact row
+ * on Latest writing: same negative-margin hover band, same mono metadata at
+ * the edges. The instrument reading is the point — this is a log, not a
+ * gallery.
+ *
+ * The name stays plain text and the right-hand links carry every
+ * destination: linking the name too would mean two tab stops on the same URL
+ * while a project has one link, and an arbitrary choice of target once it
+ * has three. A case study, when one exists, is the strongest piece of proof
+ * here, so it's the one bordered control (structure, so near-square) among
+ * underlined text links.
+ *
+ * Stack is a plain mono line rather than the chips the panel used. At this
+ * density a row of pills is louder than the project name above it, and the
+ * chip treatment still earns its place in Toolkit, where the technologies
+ * *are* the content rather than a footnote to it.
  */
 export function ProjectRow({ project }: { project: Project }) {
   const links = LINK_ORDER.filter(({ key }) => project.links?.[key]);
@@ -103,78 +108,96 @@ export function ProjectRow({ project }: { project: Project }) {
   const wl = wavelengths[project.wavelength];
 
   return (
-    <li className="relative overflow-hidden rounded-lg bg-surface p-6 transition-all duration-200 hover:-translate-y-0.5 hover:bg-surface-2">
-      <span
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-[3px]"
-        style={{ backgroundColor: wl.hex }}
-      />
-      <div className="flex items-start justify-between gap-6">
-        <div className="flex items-center gap-2.5">
-          <WavelengthDot wavelength={project.wavelength} />
-          <h3 className="font-display text-[20px] text-paper">{project.name}</h3>
+    <li className="border-b border-hairline">
+      <div className="group -mx-3 flex gap-4 rounded px-3 py-5 transition-colors hover:bg-surface">
+        <span className="w-10 shrink-0 pt-1 font-mono text-[11px] uppercase tracking-wider text-faint">
+          {project.year}
+        </span>
+
+        {/* The band tick — the row's one piece of colour, running its full
+            height so the list reads as a spectrum down the left edge. */}
+        <span
+          aria-hidden="true"
+          className="w-px shrink-0 self-stretch opacity-70 transition-opacity group-hover:opacity-100"
+          style={{ backgroundColor: wl.hex }}
+        />
+
+        <div className="min-w-0 flex-1">
+          {/* A div, not a p: the name is a real heading, and an h3 inside a
+              p is invalid nesting the parser would break apart — a
+              hydration mismatch waiting to happen. */}
+          <div className="text-[15px] leading-relaxed text-muted">
+            <span
+              className={`mr-2.5 whitespace-nowrap rounded-full px-2 py-0.5 align-[2px] font-mono text-[10px] uppercase tracking-wider ${STATUS_STYLE[project.status]}`}
+            >
+              {project.status}
+            </span>
+            <h3 className="mr-2 inline font-display text-[16px] text-paper">{project.name}</h3>
+            {project.description}
+          </div>
+
+          {(project.stack || project.metrics?.length) && (
+            <p className="mt-1.5 font-mono text-[11px] text-faint">
+              {project.stack?.join(" · ")}
+              {project.stack && project.metrics?.length ? <span className="mx-2">|</span> : null}
+              {project.metrics?.map((metric, i) => (
+                <span key={metric}>
+                  {i > 0 ? <span className="mx-2">·</span> : null}
+                  <Metric text={metric} hex={wl.hex} />
+                </span>
+              ))}
+            </p>
+          )}
+
+          {(links.length > 0 || caseStudyHref) && (
+            <div className="mt-3 flex flex-wrap items-center gap-4 sm:hidden">
+              <Destinations caseStudyHref={caseStudyHref} links={links} project={project} />
+            </div>
+          )}
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <span
-            className={`rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider ${STATUS_STYLE[project.status]}`}
-          >
-            {project.status}
-          </span>
-          <span className="font-mono text-[11px] text-faint">{project.year}</span>
+
+        {/* Right-hand rail on sm and up; the same destinations fall under the
+            description on narrow screens, where a rail would squeeze the
+            text to a couple of words a line. */}
+        <div className="hidden shrink-0 items-start gap-4 sm:flex">
+          <Destinations caseStudyHref={caseStudyHref} links={links} project={project} />
         </div>
       </div>
-
-      <p className="mt-3 text-[14px] leading-relaxed text-muted">{project.description}</p>
-
-      {project.stack && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-[var(--chip)] hover:text-[var(--chip)]"
-              style={{ "--chip": wl.hex } as CSSProperties}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {project.metrics?.length ? (
-        <p className="mt-4 font-mono text-[12px] text-muted">
-          {project.metrics.map((metric, i) => (
-            <span key={metric}>
-              {i > 0 ? <span className="text-faint">  ·  </span> : null}
-              <Metric text={metric} hex={wl.hex} />
-            </span>
-          ))}
-        </p>
-      ) : null}
-
-      {(links.length > 0 || caseStudyHref) && (
-        <div className="mt-5 flex flex-wrap items-center gap-4 border-t border-hairline pt-5">
-          {caseStudyHref && (
-            <Link
-              href={caseStudyHref}
-              className="rounded border border-hairline px-4 py-2 font-mono text-[12px] text-paper transition-colors hover:border-paper"
-            >
-              Case study →
-            </Link>
-          )}
-          {links.map(({ key, label }) => (
-            <SmartLink
-              key={key}
-              href={project.links![key]!}
-              // "Live" repeated down the list is ambiguous out of context, so
-              // the accessible name carries the project too.
-              className="font-mono text-[12px] text-faint underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
-            >
-              <span aria-hidden="true">{label} ↗</span>
-              <span className="sr-only">{`${label} — ${project.name}`}</span>
-            </SmartLink>
-          ))}
-        </div>
-      )}
     </li>
+  );
+}
+
+function Destinations({
+  caseStudyHref,
+  links,
+  project,
+}: {
+  caseStudyHref?: string;
+  links: readonly { key: "live" | "repo" | "npm"; label: string }[];
+  project: Project;
+}) {
+  return (
+    <>
+      {caseStudyHref && (
+        <Link
+          href={caseStudyHref}
+          className="rounded border border-hairline px-3 py-1.5 font-mono text-[11px] text-paper transition-colors hover:border-paper"
+        >
+          Case study →
+        </Link>
+      )}
+      {links.map(({ key, label }) => (
+        <SmartLink
+          key={key}
+          href={project.links![key]!}
+          // "GitHub" repeated down the list is ambiguous out of context, so
+          // the accessible name carries the project too.
+          className="font-mono text-[11px] text-faint underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+        >
+          <span aria-hidden="true">{label} ↗</span>
+          <span className="sr-only">{`${label} — ${project.name}`}</span>
+        </SmartLink>
+      ))}
+    </>
   );
 }
