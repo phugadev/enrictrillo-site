@@ -82,6 +82,12 @@ const luminous = { ...neutrals, ...resolve(block('\\[data-exposure="luminous"\\]
  * shared `[data-exposure]` block (selection, syntax colours) aliases onto the
  * per-exposure text ring, which itself aliases onto the neutral ramp.
  */
+// The shared [data-exposure] block holds exposure-agnostic values. Since
+// 0.3.0 that includes the syntax ring as literal oklch() rather than aliases,
+// so it has to go through resolve() as well as the alias pass.
+const sharedBlock = strip(css).match(/\[data-exposure\]\s*\{([\s\S]*?)\n\}/g)?.join("\n") ?? "";
+Object.assign(luminous, resolve(sharedBlock));
+
 const aliasSources = [
   block('\\[data-exposure="luminous"\\]'),
   // The bare [data-exposure] block holds the exposure-agnostic aliases —
@@ -181,6 +187,8 @@ export const palette = {
     string: "${pick("code-string")}",
     number: "${pick("code-number")}",
     function: "${pick("code-function")}",
+    type: "${pick("code-type")}",
+    special: "${pick("code-special")}",
     punctuation: "${pick("code-punctuation")}",
   },
 } as const;
