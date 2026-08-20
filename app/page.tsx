@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { About } from "@/components/About";
 import { Credentials } from "@/components/Credentials";
-import { ProjectRow } from "@/components/ProjectRow";
+import { ProjectEntry } from "@/components/ProjectEntry";
 import { Now } from "@/components/Now";
 // DESIGN TRIAL — see PR description. Revert by dropping this import and the
 // <Expertise /> line below.
@@ -99,9 +99,9 @@ export default function Home() {
                 tells a reader the list is short on purpose. */}
             <span className="font-mono text-[12px] text-faint">{projects.length}</span>
           </div>
-          <ul className="mt-4 border-t border-hairline">
-            {projects.map((project) => (
-              <ProjectRow key={project.name} project={project} />
+          <ul className="mt-6 divide-y divide-hairline">
+            {projects.map((project, i) => (
+              <ProjectEntry key={project.name} project={project} index={i} />
             ))}
           </ul>
         </Section>
