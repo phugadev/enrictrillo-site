@@ -253,13 +253,16 @@ body {
     transition: opacity 260ms ease-out;
   }
 
-  .rsk-focuslist:hover > * {
+  /*
+    Keyed on `:has(> *:hover)` rather than on the list's own `:hover`. The
+    list is wider than its rows and taller than their text, so hovering the
+    container alone — the gap beside a short row, the padding at the edge —
+    used to dim every row at once with nothing lit to explain why. This only
+    dims when a row is genuinely under the pointer.
+  */
+  .rsk-focuslist:has(> *:hover) > *:not(:hover),
+  .rsk-focuslist:has(> *:focus-visible) > *:not(:focus-visible) {
     opacity: 0.45;
     transition-duration: 120ms;
-  }
-
-  .rsk-focuslist:hover > *:hover,
-  .rsk-focuslist > *:focus-within {
-    opacity: 1;
   }
 }

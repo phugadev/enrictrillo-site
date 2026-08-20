@@ -2,8 +2,8 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
+import { PostPreviewMark } from "./ui/PostPreviewMark";
 import { WavelengthDot } from "./ui/WavelengthDot";
-import { WavelengthIcon } from "./ui/WavelengthIcon";
 
 /** How long a post keeps the "New" pill on the homepage teaser. */
 const NEW_WINDOW_DAYS = 21;
@@ -52,8 +52,12 @@ export function PostCard({
    */
   as?: "h2" | "h3";
   /**
-   * Single-line row (wavelength-tinted icon + title + date) with the
-   * excerpt and metadata line dropped. Used on the homepage teaser, where
+   * Single-line row (preview mark + title + date) with the excerpt and
+   * metadata line dropped. Hover does nothing to the row itself — no lift,
+   * no background, no arrow appearing. The list handles it: `.rsk-focuslist`
+   * dims every row you are not pointing at, which says "this one" by taking
+   * attention off the others rather than by decorating the one under the
+   * cursor. Three separate hover affordances on one row was two too many. Used on the homepage teaser, where
    * the excerpt is more of an activity signal than something a reader needs
    * to decide whether to click — unlike /blog and the wavelength/series
    * pages, which keep the full treatment. Picks up a "New" pill for posts
@@ -65,11 +69,11 @@ export function PostCard({
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group -mx-3 flex items-center justify-between gap-6 rounded px-3 py-3 transition-colors hover:bg-surface"
+        className="group flex items-center justify-between gap-6 py-3"
       >
         <span className="flex min-w-0 items-center gap-3">
-          <WavelengthIcon wavelength={post.wavelength} />
-          <Heading className="flex min-w-0 items-center gap-2 font-display text-[16px] leading-snug text-paper transition-all duration-150 group-hover:translate-x-0.5 group-hover:text-white">
+          <PostPreviewMark wavelength={post.wavelength} />
+          <Heading className="flex min-w-0 items-center gap-2 font-display text-[16px] leading-snug text-paper">
             <span className="truncate">{post.title}</span>
             {isRecent(post.date) && (
               <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
@@ -78,10 +82,7 @@ export function PostCard({
             )}
           </Heading>
         </span>
-        <span className="flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-faint">
-          <span className="opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
-            →
-          </span>
+        <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
           {format(parseDate(post.date), "d MMM yyyy")}
         </span>
       </Link>
