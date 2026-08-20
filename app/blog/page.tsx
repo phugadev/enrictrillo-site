@@ -3,6 +3,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { SeriesChips } from "@/components/SeriesChips";
 import { WavelengthChips } from "@/components/WavelengthChips";
+import { Hatch } from "@/components/ui/Hatch";
 import { CONTAINER } from "@/components/ui/Section";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
@@ -66,7 +67,12 @@ export default function BlogIndex() {
             <SeriesChips />
           </div>
 
-          <div className="mt-12 divide-y divide-hairline">
+          {/* Separates filtering from results. The homepage uses Spectrometer
+              for this job; here there was nothing, and a plain rule read as
+              just another divider among the post separators below. */}
+          <Hatch className="mt-10" />
+
+          <div className="mt-8 divide-y divide-hairline">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
