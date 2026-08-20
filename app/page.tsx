@@ -93,8 +93,13 @@ export default function Home() {
           before any lower-stakes content gets in the way of it. */}
       <Reveal>
         <Section id="work">
-          <SectionLabel>Selected work</SectionLabel>
-          <ul className="mt-6 grid items-start gap-4 sm:grid-cols-2">
+          <div className="flex items-baseline justify-between">
+            <SectionLabel>Selected work</SectionLabel>
+            {/* The count, the way an instrument labels a channel — it also
+                tells a reader the list is short on purpose. */}
+            <span className="font-mono text-[12px] text-faint">{projects.length}</span>
+          </div>
+          <ul className="mt-4 border-t border-hairline">
             {projects.map((project) => (
               <ProjectRow key={project.name} project={project} />
             ))}
