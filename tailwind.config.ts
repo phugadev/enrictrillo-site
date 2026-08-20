@@ -45,7 +45,13 @@ const proseColors = {
   "--tw-prose-kbd": "var(--rsk-text)",
   "--tw-prose-pre-code": "var(--rsk-text)",
   "--tw-prose-headings": "var(--rsk-text)",
-  "--tw-prose-links": "var(--rsk-text-590)",
+  // Links are body text with an amber underline, not amber text. Coloured
+  // link text at AA on ink lands on a muddy gold — the text ring is pulled
+  // back from the gamut ceiling precisely so it can be read, which costs it
+  // the chroma that made amber worth using. Moving the signal to the
+  // underline keeps full-contrast type and lets the accent sit at mark
+  // strength, where it is actually vivid. See .prose a in globals.css.
+  "--tw-prose-links": "var(--rsk-text)",
   "--tw-prose-bold": "var(--rsk-text)",
   "--tw-prose-quotes": "var(--rsk-text-prose)",
   "--tw-prose-quote-borders": "var(--rsk-rule)",

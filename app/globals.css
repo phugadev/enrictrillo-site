@@ -135,15 +135,28 @@ body {
   color: var(--rsk-text);
 }
 
+/*
+  Links carry their signal in the underline, not the text.
+
+  Amber link *text* has to come from the TEXT ring — pulled back from the
+  gamut ceiling so it passes AA — and at that chroma on ink it reads as
+  muddy gold rather than as the interface band. The underline has no such
+  constraint: it is a mark, so it can sit at full mark strength and be
+  properly vivid, while the words stay at 16.3:1.
+
+  590nm is still the right band. A link is what the user touches.
+*/
 .prose a {
+  color: var(--rsk-text);
   text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--rsk-text-590) 33.3%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--rsk-mark-590) 55%, transparent);
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   transition: text-decoration-color 150ms ease;
 }
 
 .prose a:hover {
-  text-decoration-color: var(--rsk-text-590);
+  text-decoration-color: var(--rsk-mark-590);
 }
 
 .prose blockquote {
@@ -218,7 +231,7 @@ body {
 
 .prose :where(h1, h2, h3, h4) a:hover {
   text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--rsk-text-590) 53.3%, transparent);
+  text-decoration-color: color-mix(in oklab, var(--rsk-mark-590) 55%, transparent);
   text-underline-offset: 4px;
 }
 
