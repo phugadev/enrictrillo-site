@@ -54,9 +54,13 @@ export function Expertise() {
               <div
                 tabIndex={0}
                 aria-describedby={tooltipId}
-                className="group inline-flex cursor-help items-center gap-2 rounded-full border border-hairline px-2.5 py-1.5 font-mono text-[11px] text-muted outline-none transition-colors focus-visible:border-faint"
+                className="group inline-flex cursor-help items-center gap-2 rounded border border-hairline py-1 pl-1 pr-3 font-mono text-[11px] text-muted outline-none transition-colors focus-visible:border-faint"
               >
-                {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-faint" /> : null}
+                {Icon ? (
+                  <span className="rsk-tile rsk-tile--sm">
+                    <Icon className="h-3.5 w-3.5 shrink-0" />
+                  </span>
+                ) : null}
                 <span>{item.label}</span>
 
                 <div
