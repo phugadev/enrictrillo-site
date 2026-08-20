@@ -31,22 +31,13 @@ export default function NotFound() {
         out of date.
       </p>
 
-      <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 font-mono text-[13px]">
+      <div className="mt-9 font-mono text-[13px]">
         <Link
           href="/"
-          className="rounded-full border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
+          className="inline-block rounded-full border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
         >
           Home
         </Link>
-        <Link href="/blog" className="text-muted transition-colors hover:text-paper">
-          Writing →
-        </Link>
-        <a
-          href={`mailto:${site.email}`}
-          className="text-muted transition-colors hover:text-paper"
-        >
-          {site.email}
-        </a>
       </div>
     </PageShell>
   );
