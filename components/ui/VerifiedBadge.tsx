@@ -7,33 +7,22 @@
  */
 
 /*
-  The outer edge is a twelve-lobed scallop rather than a plain circle: each
-  lobe is one quadratic arc between two notch points on the inner radius
-  (7.7), with the control point placed so the curve's midpoint lands exactly
-  on the outer radius (9.6). Even lobe count keeps it symmetric about both
-  axes, so the badge sits level next to the name at any size. Generated
-  geometry, inlined — there is nothing to recompute at runtime.
+  The mark is a single evenodd path in two subpaths. The first is the
+  scalloped outer edge: twelve lobes drawn as alternating arcs, the wider
+  4.62-radius arcs at the points and the tighter 3.84-radius arcs across the
+  notches, which gives the edge its starburst rhythm rather than the even
+  flower a uniform radius produces. The second subpath is the tick, and
+  because the fill rule is evenodd it knocks out of the fill instead of
+  being stroked on top — so the tick is the background showing through and
+  stays crisp at 16px, with no stroke weight to tune per size.
 */
-const SCALLOP =
-  "M17.70 10.00Q21.36 13.04 16.67 13.85Q18.32 18.32 13.85 16.67Q13.04 21.36 10.00 17.70Q6.96 21.36 6.15 16.67Q1.68 18.32 3.33 13.85Q-1.36 13.04 2.30 10.00Q-1.36 6.96 3.33 6.15Q1.68 1.68 6.15 3.33Q6.96 -1.36 10.00 2.30Q13.04 -1.36 13.85 3.33Q18.32 1.68 16.67 6.15Q21.36 6.96 17.70 10.00Z";
+const BADGE =
+  "M12.00 1.00A4.62 4.62 0 0 1 14.58 3.22A3.84 3.84 0 0 1 17.95 2.75A4.62 4.62 0 0 1 18.92 6.01A3.84 3.84 0 0 1 22.01 7.43A4.62 4.62 0 0 1 21.06 10.70A3.84 3.84 0 0 1 22.89 13.57A4.62 4.62 0 0 1 20.32 15.80A3.84 3.84 0 0 1 20.31 19.20A4.62 4.62 0 0 1 16.95 19.70A3.84 3.84 0 0 1 15.10 22.55A4.62 4.62 0 0 1 12.00 21.15A3.84 3.84 0 0 1 8.90 22.55A4.62 4.62 0 0 1 7.05 19.70A3.84 3.84 0 0 1 3.69 19.20A4.62 4.62 0 0 1 3.68 15.80A3.84 3.84 0 0 1 1.11 13.57A4.62 4.62 0 0 1 2.94 10.70A3.84 3.84 0 0 1 1.99 7.43A4.62 4.62 0 0 1 5.08 6.01A3.84 3.84 0 0 1 6.05 2.75A4.62 4.62 0 0 1 9.42 3.22A3.84 3.84 0 0 1 12.00 1.00Z M10.55 16.05 L6.95 12.45 L8.6 10.8 L10.55 12.75 L15.4 7.9 L17.05 9.55 Z";
 
 export function VerifiedBadge({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className={className}>
-      <path d={SCALLOP} className="fill-compute" />
-      {/*
-        The tick is stroked by class, not by a stroke= attribute: presentation
-        attributes do not resolve var(), so the old `stroke="var(--c-paper)"`
-        was never applying. Ink is the system's foreground on any mark.
-      */}
-      <path
-        d="M6.3 10.2l2.3 2.3L13.7 7.4"
-        fill="none"
-        className="stroke-ink"
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <path d={BADGE} fillRule="evenodd" className="fill-compute" />
     </svg>
   );
 }
