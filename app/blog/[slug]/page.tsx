@@ -4,7 +4,9 @@ import { PageShell } from "@/components/PageShell";
 import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
 import { PostNav } from "@/components/PostNav";
+import { PostToc } from "@/components/PostToc";
 import { CONTAINER } from "@/components/ui/Section";
+import { getHeadings } from "@/lib/headings";
 import { JsonLd, blogPostingSchema } from "@/lib/schema";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
 import { site } from "@/lib/site";
@@ -59,6 +61,10 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
 
   const { newer, older } = getAdjacentPosts(slug);
 
+  // Extracted from the MDX at build time rather than scraped out of the DOM
+  // after hydration — see lib/headings.ts for why it re-runs the real pipeline.
+  const headings = await getHeadings(content);
+
   return (
     // Post pages read narrower than CONTAINER (see the max-w-2xl below) —
     // long-form wants a tighter measure than the homepage's cards. But the
@@ -67,8 +73,11 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     // edges, the same way it does on every other page. A plain max-w-2xl
     // mx-auto here centers independently and drifts 48px off the chrome.
     <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <div className="max-w-2xl">
+      {/* `relative` so the margin ToC can hang off the right edge of the
+          column and stay stuck to it for the length of the post. */}
+      <div className="relative max-w-2xl">
         <JsonLd data={blogPostingSchema(meta)} />
+        {headings.length > 1 && <PostToc headings={headings} wavelength={meta.wavelength} />}
         <PostHeader meta={meta} />
 
         <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">
