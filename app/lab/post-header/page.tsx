@@ -9,32 +9,36 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { Hatch } from "@/components/ui/Hatch";
 import { Zigzag } from "@/components/ui/Zigzag";
 import {
+  PostHeaderA,
   PostHeaderB,
-  PostHeaderC,
-  PostHeaderD,
   type SeriesPosition,
 } from "@/components/lab/PostHeaderVariants";
-import { getAllSeries, getPostBySlug, seriesSlug } from "@/lib/posts";
+import { getAllPosts, getAllSeries, getPostBySlug, seriesSlug } from "@/lib/posts";
 import { site } from "@/lib/site";
 
 /**
- * SCRATCH ROUTE. Four candidate post headers side by side on one real post, so
- * the choice is made by looking rather than by describing. Same method that
+ * SCRATCH ROUTE. Candidate post headers side by side on one real post, so the
+ * choice is made by looking rather than by describing. Same method that
  * settled the selected-work section: build all of them, put them on a lab
  * page, pick one, wire the winner in, delete the rest.
  *
- * Nothing here is imported by a shipping page. When a variant wins it moves
- * into components/ proper and this whole directory goes with the losers.
+ * The comparison has been through a round. C (episode frame) and D (one line,
+ * then the writing) are gone as standalone variants — not because either lost
+ * but because both won, and the shipped `components/PostHeader.tsx` is now the
+ * hybrid of them. It is rendered first here, on the same specimen and at the
+ * same measure as the rest, because the question this page still answers is
+ * whether what shipped beats what didn't.
  *
- * The post pages are untouched by this branch — PostHeader.tsx is imported
- * below as variant A precisely so the baseline is the live component and not a
- * copy of it that can drift while the comparison is open.
+ * A stays as the letterhead it was, moved into components/lab/ now that the
+ * real file no longer holds it. B stays because its argument was never settled
+ * — it is about the band, which the hybrid treats as a two-word label, and
+ * that trade is still open.
  */
 
 /**
  * Which post everything is rendered on. The Watchman ingest post is the useful
- * specimen: it is in a series (so the series treatments in B/C/D have real
- * data rather than a placeholder), it has a long title that wraps to two
+ * specimen: it is in a series (so the series treatments have real data rather
+ * than a placeholder), it has a long title that wraps to two
  * lines at the measure, and it is in the systems band — a mid-spectrum colour
  * rather than one of the two extremes, which is the honest test of the band
  * treatments.
@@ -42,10 +46,21 @@ import { site } from "@/lib/site";
 const SPECIMEN = "watchman-ingest-at-forty-thousand-events-a-second";
 
 /**
+ * The counter-specimen is found rather than named: the newest published post
+ * with no series. The hybrid's whole claim about the frame is a claim about
+ * those posts, so one gets rendered rather than described — and looking it up
+ * means the section cannot quietly start showing a series frame the day that
+ * post joins a series.
+ */
+function seriesless() {
+  return getAllPosts().find((p) => !p.series);
+}
+
+/**
  * Same face and the same gate as app/blog/[slug]/layout.tsx. Without both, the
  * `font-serif` in every headline below resolves to the sans (that is what the
- * gate is *for* — see the note at the top of app/globals.css) and all four
- * variants would be judged in the wrong voice.
+ * gate is *for* — see the note at the top of app/globals.css) and every
+ * variant would be judged in the wrong voice.
  */
 const authored = Instrument_Serif({
   subsets: ["latin"],
@@ -146,10 +161,12 @@ export default async function PostHeaderLab() {
     ({ meta, content } = getPostBySlug(SPECIMEN));
   } catch {
     // The slug is hard-coded, so a rename of the post is the only way here.
-    // Failing loudly beats rendering four headers for a post that no longer
+    // Failing loudly beats rendering headers for a post that no longer
     // exists and quietly making a design decision on stale metadata.
     notFound();
   }
+
+  const loner = seriesless();
 
   const series = seriesPosition(meta.series, meta.slug);
   const body = opening(content);
@@ -164,20 +181,29 @@ export default async function PostHeaderLab() {
           <header className="mb-16">
             <SectionLabel>Lab · post header</SectionLabel>
             <p className="mt-4 font-reading text-[16px] leading-relaxed text-prose">
-              Four treatments of everything above a post headline, on one real
-              post — <span className="text-paper">{meta.title}</span>. A is what
-              ships today. B, C and D are arguments, not restyles. Pick one; the
-              other three get deleted with this route.
+              Everything above a post headline, on one real post —{" "}
+              <span className="text-paper">{meta.title}</span>. First is what
+              ships: the C/D hybrid, an episode frame over a byline over the
+              headline, with the break underneath. Then the letterhead it
+              replaced, and B, whose argument about the band is still open.
             </p>
           </header>
 
           <div className="space-y-20">
             <Variant
-              letter="A"
-              name="Letterhead (shipping today)"
+              letter="✓"
+              name="Shipped — episode frame, byline, then the writing"
               header={<PostHeader meta={meta} />}
               body={body}
-              note="Baseline — components/PostHeader.tsx, unchanged. Argues that a post is an entry in a log: a fixed label column, aligned values, closed by a rule. Its strength is that it is unmistakably not a template, and it reads as an instrument. Its costs are that the band is just a coloured row among five, the series is styled identically to the reading time, and the headline starts roughly 120px down — below the fold on a phone."
+              note="What ships: components/PostHeader.tsx. D's spine — one line of chrome, the headline early, the break below it — with C's episode frame restored above the byline, because 'first of three about a system I actually run' is the fact that turns a page view into a session. The frame is a MEMBERSHIP frame rather than a series frame, which is what fixes C: a post with no series fills the same strip with its band and its position among the four bands (see below), so nothing is ever absent. The byline is the author metadata A carried as a From row, set as a byline instead of a table field."
+            />
+
+            <Variant
+              letter="A"
+              name="Letterhead (what shipped before)"
+              header={<PostHeaderA meta={meta} />}
+              body={body}
+              note="The previous shipping header, now living in components/lab/. Argues that a post is an entry in a log: a fixed label column, aligned values, closed by a rule. Its strength is that it is unmistakably not a template, and it reads as an instrument. Its costs are that the band is just a coloured row among five, the series is styled identically to the reading time, and the headline starts roughly 120px down — below the fold on a phone."
             />
 
             <Variant
@@ -185,25 +211,33 @@ export default async function PostHeaderLab() {
               name="Spectrum scale"
               header={<PostHeaderB meta={meta} series={series} />}
               body={body}
-              note="Argues the band should be seen before it is read, and that a taxonomy only means something when you can see the options you are not in. Four ticks, ascending nm, the post's band lit — the same calibration as the Spectrometer, so the two instruments agree. Everything else collapses to one dense line, because once the band has apparatus, three labelled rows are scaffolding around nine words."
-            />
-
-            <Variant
-              letter="C"
-              name="Episode frame"
-              header={<PostHeaderC meta={meta} series={series} />}
-              body={body}
-              note="Argues that for a post inside a body of work, 'first of three about a system I actually run' is the fact worth the most vertical space — it is what turns a page view into a session, and A files it fourth in a table. Frame is structure, so 4px near-square, and the whole strip is a destination rather than a button. Weakness: two of the seven published posts have no series, and for those it degrades to D."
-            />
-
-            <Variant
-              letter="D"
-              name="One line, then the writing"
-              header={<PostHeaderD meta={meta} series={series} />}
-              body={body}
-              note="Argues the boundary is in the wrong place. One unlabelled line carries everything A's table does — nobody needs to be told that 4 Mar 2026 is a date — and the headline arrives immediately. The break then goes below the headline, because the headline belongs to the writing rather than to the chrome. Costs the From line: a byline on every post of a site under one name restates the domain."
+              note="Still open, which is why it survives the cull. Argues the band should be seen before it is read, and that a taxonomy only means something when you can see the options you are not in. Four ticks, ascending nm, the post's band lit — the same calibration as the Spectrometer, so the two instruments agree. The shipped header only spends that apparatus on posts with no series; B spends it on every post, and pays for it with the series."
             />
           </div>
+
+          {/* ------------------------------------------------------------- */}
+
+          {/* The case that killed C as a default, shown rather than argued.
+              Two of the seven published posts have no series, and the whole
+              claim of the hybrid is that those look deliberate rather than
+              short of a row. Rendered on its own real post — different band,
+              different title length — because a seriesless header faked from
+              the specimen by deleting a field is not evidence. */}
+          {loner && (
+            <section className="mt-24 border-t border-hairline pt-10">
+              <SectionLabel>Shipped · the seriesless case</SectionLabel>
+              <p className="mt-4 font-reading text-[16px] leading-relaxed text-prose">
+                The same component on{" "}
+                <span className="text-paper">{loner.title}</span>, which belongs
+                to no series. The frame stays, at the same height and in the
+                same place, carrying the band and its position among the four; the band
+                drops out of the byline below rather than being said twice.
+              </p>
+              <div className="mt-10">
+                <PostHeader meta={loner} />
+              </div>
+            </section>
+          )}
 
           {/* ------------------------------------------------------------- */}
 
