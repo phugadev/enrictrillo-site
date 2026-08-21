@@ -10,6 +10,15 @@ import { wavelengthOrder, wavelengths, type Wavelength } from "@/lib/site";
  * anyone.
  *
  * `active` is undefined on /blog (the unfiltered view).
+ *
+ * Hover brightens the label and nothing else. The border used to light up
+ * too, which put two filter rows on /blog answering the pointer in the same
+ * way — and the border is the wrong thing to move here, because on these
+ * chips it is already carrying state: an active band fills and borders
+ * itself in its own colour. A border that means "selected" cannot also mean
+ * "you are pointing at me". The series row keeps its border hover, which is
+ * what now tells the two rows apart at a glance; it is also the row that
+ * disappears on a filtered page, along with the hatch.
  */
 export function WavelengthChips({ active }: { active?: Wavelength }) {
   const counts = new Map(getPostsByWavelength().map((b) => [b.wavelength, b.posts.length]));
@@ -21,7 +30,7 @@ export function WavelengthChips({ active }: { active?: Wavelength }) {
         aria-current={active ? undefined : "page"}
         className={`rounded-full border px-3.5 py-2 font-mono text-[12px] transition-colors ${
           active
-            ? "border-hairline text-muted hover:border-muted hover:text-paper"
+            ? "border-hairline text-muted hover:text-paper"
             : "border-paper bg-paper text-ink"
         }`}
       >
