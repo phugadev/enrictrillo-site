@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import { getAllSeries, seriesSlug, type PostMeta } from "@/lib/posts";
 import { site, wavelengths, wavelengthOrder, type Wavelength } from "@/lib/site";
-import { Avatar } from "@/components/Avatar";
 import { Zigzag } from "@/components/ui/Zigzag";
 
 /**
@@ -117,7 +116,8 @@ function Frame({
 }: {
   href: string;
   name: string;
-  position: string;
+  /** Omitted on the band frame, which has nothing to count — see below. */
+  position?: string;
   run: React.ReactNode;
 }) {
   return (
@@ -128,8 +128,8 @@ function Frame({
       <span className="font-mono text-[11px] uppercase tracking-wider">
         <span className="text-paper underline decoration-hairline underline-offset-4 transition-colors group-hover:decoration-muted">
           {name}
-        </span>{" "}
-        <span className="text-faint">· {position}</span>
+        </span>
+        {position && <span className="text-faint"> · {position}</span>}
       </span>
       {run}
     </Link>
@@ -189,12 +189,13 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
           run={run}
         />
       ) : (
-        <Frame
-          href={`/blog/wavelength/${meta.wavelength}`}
-          name={wl.label}
-          position={`${wl.nm}nm`}
-          run={run}
-        />
+        /* Band label alone, no nm. The frame's job on a seriesless post is
+           to say what this belongs to; `405nm` is the taxonomy explaining
+           its own notation, and it was doing that at full volume on exactly
+           the posts with the least to say about it. The run already carries
+           the position among the four, and the nm value is still one click
+           away on the band page itself. */
+        <Frame href={`/blog/wavelength/${meta.wavelength}`} name={wl.label} run={run} />
       )}
 
       {/*
@@ -202,25 +203,24 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
         labels, because "4 Mar 2026" has never needed to be told it is a date.
 
         The name leads, which is what makes it read as a byline rather than as
-        a fifth field; the portrait is the site's existing Avatar at byline
-        size, and it is the reason this line cannot be mistaken for chrome. The
-        band label keeps its colour but loses the 6px dot it carried in D: with
-        a round portrait already at the head of the line, a second small disc
-        two words later is clutter, and the vivid band colour is not lost —
-        it is up in the run, at the strength it is meant to be seen at.
+        a fifth field. It shipped with the site's Avatar at 18px in front of
+        it and that portrait is now gone: the avatar's dispersion ring is a
+        full spectrum, so at byline size it read as a small coloured halo —
+        the only rainbow on a page whose entire colour signal is meant to be
+        one band. A name in paper against four muted fields is enough to make
+        the line a byline; it does not need a face to prove it, and the face
+        is already at the top of the homepage where it is doing real work.
+
+        The band label keeps its colour and carries no 6px dot: the vivid
+        band colour is up in the run, at the strength it is meant to be seen
+        at, and repeating it as a disc down here would be the taxonomy said
+        three times in two lines.
 
         When the post has no series the band is already named in the frame
         above, so it drops out of this line rather than being said twice.
       */}
       <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-wider text-muted">
-        <span className="flex items-center gap-2">
-          {/* The portrait is hidden from assistive tech: its alt text is the
-              name and role, and the name is right beside it in real type. */}
-          <span aria-hidden="true" className="flex">
-            <Avatar size={18} />
-          </span>
-          <span className="text-paper">{site.name}</span>
-        </span>
+        <span className="text-paper">{site.name}</span>
         {series && (
           <>
             <Sep />
