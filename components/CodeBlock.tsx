@@ -28,10 +28,22 @@ function CheckIcon() {
   );
 }
 
-function CopyButton({ target }: { target: React.RefObject<HTMLElement | null> }) {
+function CopyButton({
+  target,
+  floating,
+}: {
+  target: React.RefObject<HTMLElement | null>;
+  /** True in the headerless case, where the button has no bar to sit in and
+   *  parks itself over the top-right corner of the block instead. */
+  floating?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
+    // textContent, deliberately. The line numbers are ::before generated
+    // content, which is not in the DOM and therefore not in textContent — so
+    // the clipboard gets the code and nothing else, with no stripping pass to
+    // keep in sync with the gutter's formatting.
     const code = target.current?.querySelector("code")?.textContent ?? "";
     try {
       await navigator.clipboard.writeText(code);
@@ -49,6 +61,7 @@ function CopyButton({ target }: { target: React.RefObject<HTMLElement | null> })
       onClick={handleCopy}
       aria-label={copied ? "Copied" : "Copy code"}
       data-copied={copied || undefined}
+      data-floating={floating || undefined}
       className="rsk-codeframe__copy"
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
@@ -88,20 +101,43 @@ export function CodeBlock({ children, ...rest }: ComponentPropsWithoutRef<"figur
         title = props.children as ReactNode;
         return;
       }
-      // Fall back to the language when the fence carries no title.
-      if (!title && typeof props["data-language"] === "string") {
-        title = props["data-language"] as string;
-      }
     }
     rest_children.push(child);
   });
 
+  // THE HEADER TRIGGER: an explicit `title=` on the fence, nothing else.
+  //
+  // The header used to fall back to the language name, so every block wore a
+  // bar reading BASH or TS. That bar was 32px of chrome carrying information
+  // the reader already has — the syntax colouring, the prompt, the `SELECT`
+  // are all louder about what language this is than a label in 11px caps —
+  // and it made a two-line snippet look like a file the reader was supposed
+  // to go and find. A header is a *filename slot*: it exists to say "this is
+  // lib/ingest/batcher.ts", which is a claim about the codebase that the code
+  // itself cannot make.
+  //
+  // The rejected alternative was a length threshold (header over N lines).
+  // That ties a semantic decision — is this an excerpt from a real file, or a
+  // free-standing illustration — to a number that has nothing to do with it,
+  // and it means adding two lines to a snippet silently grows a title bar.
+  // Author intent is the better signal, and it is already expressible in the
+  // fence.
+  //
+  // In the headerless case the copy button does not disappear: it moves onto
+  // the block itself (see .rsk-codeframe__copy[data-floating] in globals.css),
+  // stays in the tab order, and stays visible where hover does not exist.
+  const hasHeader = title !== null;
+
   return (
-    <figure {...rest} ref={frameRef} className="rsk-codeframe">
-      <div className="rsk-codeframe__head">
-        <span className="rsk-codeframe__name">{title ?? "code"}</span>
-        <CopyButton target={frameRef} />
-      </div>
+    <figure {...rest} ref={frameRef} className="rsk-codeframe" data-headless={!hasHeader || undefined}>
+      {hasHeader ? (
+        <div className="rsk-codeframe__head">
+          <span className="rsk-codeframe__name">{title}</span>
+          <CopyButton target={frameRef} />
+        </div>
+      ) : (
+        <CopyButton target={frameRef} floating />
+      )}
       {rest_children}
     </figure>
   );
