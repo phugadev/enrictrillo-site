@@ -102,6 +102,21 @@ body {
   color: var(--rsk-code-text);
 }
 
+/*
+  Code blocks run at 14px, a step up from the token layer's --rsk-text-sm
+  (13px). 13px is right for interface metadata, but a fenced block is meant
+  to be *read* — at the mono face's smaller x-height it was sitting a step
+  below the prose around it, and the reader was doing more work on the part
+  of the page that carries the actual engineering.
+
+  Set on the frame's own pre rather than in @ruskel/ui, so the package keeps
+  its own scale and this stays a site-level reading decision.
+*/
+.rsk-codeframe > pre,
+.rsk-codeframe .rsk-codeframe__body {
+  font-size: 14px;
+}
+
 /* The frame owns the border and radius now — see components/CodeBlock.tsx
    and .rsk-codeframe. The pre keeps only its own padding and scroll. */
 .prose pre {
