@@ -144,20 +144,28 @@ body {
 }
 
 /*
-  Links carry their signal in the underline, not the text.
+  Links carry their signal in the underline, not the text — and at rest that
+  underline is grey.
 
-  Amber link *text* has to come from the TEXT ring — pulled back from the
-  gamut ceiling so it passes AA — and at that chroma on ink it reads as
-  muddy gold rather than as the interface band. The underline has no such
-  constraint: it is a mark, so it can sit at full mark strength and be
-  properly vivid, while the words stay at 16.3:1.
+  The amber rest state was the surviving half of the link decision: text
+  neutral, 590nm in the rule, on the reasoning that a link is what the user
+  touches. It was right about *where* the signal goes and wrong about when.
+  Amber at rest paints the band onto every proper noun in a paragraph, and a
+  band colour is supposed to mean something — the taxonomy stops working when
+  it is also the house colour for "this is a link". Grey is what the drawing
+  is made of everywhere else on this site: the hatch, the rules, the
+  spectrometer's tick marks. An underline is a drawn line, so it takes the
+  drawing colour.
 
-  590nm is still the right band. A link is what the user touches.
+  590nm survives on hover, which is the moment the sentence about touching is
+  actually true: point at a link and the rule warms to the interface band.
+  So the accent still exists, it is just no longer spent on every link in
+  view at once.
 */
 .prose a {
   color: var(--rsk-text);
   text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--rsk-mark-590) 55%, transparent);
+  text-decoration-color: var(--rsk-text-faint);
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   transition: text-decoration-color 150ms ease;

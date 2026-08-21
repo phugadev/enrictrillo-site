@@ -19,11 +19,41 @@ import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { Reveal } from "@/components/ui/Reveal";
 import { site, projects } from "@/lib/site";
 import { getAllPosts } from "@/lib/posts";
+import { parseDate } from "@/lib/dates";
 
 const LATEST_COUNT = 3;
 
+/** How recent a post has to be to be worth flagging on the homepage. */
+const NEW_WINDOW_DAYS = 21;
+
+/**
+ * The page is static, so `Date.now()` below is *build* time, not read time —
+ * without this the pill would be frozen at whatever it was on the last
+ * deploy and could sit on a post for months. Twelve hours is the cheapest
+ * honest answer: two regenerations a day, each one a re-render of a page
+ * that reads three files off disk. Nothing here justifies making the list
+ * client-side or hydrating a date.
+ */
+export const revalidate = 43200;
+
 export default function Home() {
   const posts = getAllPosts().slice(0, LATEST_COUNT);
+
+  /**
+   * Only the newest post can wear the pill, and only inside the window.
+   *
+   * The window alone is not enough: publish three posts in a fortnight and
+   * all three light up, which tells a reader nothing except that the site
+   * had a good week. Capping it at one keeps the pill meaning "start here,
+   * this is the thing I just put up" — and in a quiet stretch, nobody gets
+   * it, which is the honest outcome rather than a badge that is always on.
+   *
+   * `getAllPosts()` is already sorted newest-first, so this is one date
+   * comparison per render, not a scan.
+   */
+  const newestIsRecent =
+    posts.length > 0 &&
+    Date.now() - parseDate(posts[0].date).getTime() < NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 
   return (
     <PageShell>
@@ -37,7 +67,7 @@ export default function Home() {
           <div className="min-w-0">
             <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-paper">
               {site.name}
-              <VerifiedBadge className="h-4 w-4" />
+              <VerifiedBadge className="h-[18px] w-[18px]" />
             </p>
             <SectionLabel as="p" className="mt-1">
               {site.role} — {site.location}
@@ -135,8 +165,14 @@ export default function Home() {
               </Link>
             </div>
             <div className="rsk-focuslist mt-2">
-              {posts.map((post) => (
-                <PostCard key={post.slug} post={post} as="h3" compact />
+              {posts.map((post, i) => (
+                <PostCard
+                  key={post.slug}
+                  post={post}
+                  as="h3"
+                  compact
+                  flagNew={i === 0 && newestIsRecent}
+                />
               ))}
             </div>
           </Section>

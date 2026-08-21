@@ -4,14 +4,6 @@ import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
 import { WavelengthDot } from "./ui/WavelengthDot";
 
-/** How long a post keeps the "New" pill on the homepage teaser. */
-const NEW_WINDOW_DAYS = 21;
-
-function isRecent(iso: string): boolean {
-  const ageMs = Date.now() - parseDate(iso).getTime();
-  return ageMs < NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
-}
-
 /**
  * The dotted leader between a row's title and its date — the device a
  * contents page or an index uses to carry the eye across a gap that would
@@ -63,6 +55,7 @@ export function PostCard({
   showWavelength = true,
   as: Heading = "h2",
   compact = false,
+  flagNew = false,
 }: {
   post: PostMeta;
   showWavelength?: boolean;
@@ -85,10 +78,19 @@ export function PostCard({
    * cursor. Three separate hover affordances on one row was two too many. Used on the homepage teaser, where
    * the excerpt is more of an activity signal than something a reader needs
    * to decide whether to click — unlike /blog and the wavelength/series
-   * pages, which keep the full treatment. Picks up a "New" pill for posts
-   * published within the last three weeks.
+   * pages, which keep the full treatment. Takes the "New" pill when the
+   * list-builder hands it one — see `flagNew`.
    */
   compact?: boolean;
+  /**
+   * Draws the "New" pill. The *policy* — how new is new, and how many posts
+   * may claim it at once — deliberately lives with whoever builds the list
+   * (app/page.tsx), not here. A card cannot know whether it is the newest
+   * thing on the page, and a rule of the form "anything inside N days" hands
+   * the pill to three posts at once in a busy month, at which point it has
+   * stopped saying anything.
+   */
+  flagNew?: boolean;
 }) {
   if (compact) {
     return (
@@ -96,7 +98,7 @@ export function PostCard({
         <WavelengthDot wavelength={post.wavelength} className="translate-y-[-1px]" />
         <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-paper">
           <span className="truncate">{post.title}</span>
-          {isRecent(post.date) && (
+          {flagNew && (
             <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
               New
             </span>
@@ -113,10 +115,16 @@ export function PostCard({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group -mx-3 block rounded px-3 py-5 transition-colors hover:bg-surface"
+      /* No hover treatment on the row itself, the same discipline the compact
+         shape already follows: `.rsk-focuslist` dims every row you are *not*
+         pointing at, which says "this one" by taking attention off the others.
+         A background wash on top of that was a second answer to a question
+         already answered — and it was the loud one, since it redraws a panel
+         under the text while the dimming only changes what is around it. */
+      className="group block py-5"
     >
       <div className="flex items-baseline gap-3">
-        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-paper transition-colors group-hover:text-white">
+        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-paper">
           {/* Hidden on the band pages: every post there is the same band,
               so the dot would repeat one colour down the page and mean
               nothing. */}
