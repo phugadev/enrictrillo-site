@@ -72,7 +72,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     // stays on CONTAINER so the column lines up with Nav and Footer on both
     // edges, the same way it does on every other page. A plain max-w-2xl
     // mx-auto here centers independently and drifts 48px off the chrome.
-    <PageShell mainClassName={`${CONTAINER} py-16`}>
+    <PageShell mainClassName={`${CONTAINER} py-16`} reading>
       {/* `relative` so the margin ToC can hang off the right edge of the
           column and stay stuck to it for the length of the post. The rail is
           absolutely positioned and a fixed width, so it reserves its own space

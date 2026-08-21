@@ -16,9 +16,23 @@ import { ScrollProgress } from "./ScrollProgress";
 export function PageShell({
   children,
   mainClassName,
+  reading = false,
 }: {
   children: ReactNode;
   mainClassName?: string;
+  /**
+   * Draws the reading-progress bar. Off everywhere except posts.
+   *
+   * A progress bar answers "how much of this is left", which is only a
+   * question on a page that is read start to finish. On the homepage and on
+   * /blog it was measuring a scroll through a set of independent sections —
+   * a number with nothing behind it. And on a post at `xl` the ToC rail now
+   * marks the reader's position with the section name attached, which is the
+   * same answer with more information in it, so the bar hides itself there
+   * (`xl:hidden`) rather than being the second thing on screen tracking the
+   * same scroll.
+   */
+  reading?: boolean;
 }) {
   return (
     <>
@@ -28,7 +42,7 @@ export function PageShell({
       >
         Skip to content
       </a>
-      <ScrollProgress />
+      {reading && <ScrollProgress className="xl:hidden" />}
       <Nav />
       <AvailabilityBar />
       <main id="content" className={mainClassName}>

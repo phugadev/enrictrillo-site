@@ -5,6 +5,7 @@ import { CodeBlock } from "./CodeBlock";
 import { Diagram } from "./Diagram";
 import { InfoIcon, SuccessIcon, TipIcon, WarningIcon } from "./ui/CalloutIcons";
 import { Cell, Plate } from "./ui/Plate";
+import { Zigzag } from "./ui/Zigzag";
 
 const FIGURE = "my-8";
 const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
@@ -181,5 +182,35 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
 
 // CodeBlock intercepts `figure`, not `pre`: rehype-pretty-code emits the
 // title as a sibling of the pre, so a pre-level override can never reach it.
+/**
+ * `---` in a post renders as a dinkus rather than a rule.
+ *
+ * A full-measure horizontal line is the same mark the site uses for
+ * *structure* — the hatch, the rules under section labels, the divider above
+ * the end-of-post nav — and it was saying "a region of the page has ended"
+ * in the middle of an argument, where nothing structural had happened at
+ * all. The zigzag is short and centred on purpose: it is the author's beat,
+ * not the layout's. See the rule written down in components/ui/Zigzag.tsx —
+ * it must never span the column, or it becomes a saw blade doing Hatch's job
+ * badly.
+ */
+function Break() {
+  return (
+    <div className="my-12 flex w-full items-center justify-center text-hairline-strong">
+      <Zigzag />
+    </div>
+  );
+}
+
 // Non-code figures pass straight through.
-export const mdxComponents = { img: MdxImage, Figure, Compare, Plate, Cell, Callout, Diagram, figure: CodeBlock };
+export const mdxComponents = {
+  img: MdxImage,
+  Figure,
+  Compare,
+  Plate,
+  Cell,
+  Callout,
+  Diagram,
+  figure: CodeBlock,
+  hr: Break,
+};

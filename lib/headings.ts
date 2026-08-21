@@ -19,6 +19,19 @@ export type Heading = {
  */
 const EXTRACTED_LEVELS = new Set(["h2", "h3"]);
 
+/**
+ * Headings the outline drops even though they are real h2s in the rendered
+ * page. Only one so far: remark-gfm generates a "Footnotes" section whenever
+ * a post uses `[^1]`, and it is machinery, not a section anyone wrote. It was
+ * always in this list — as a 1px line in the old rail nobody could tell — but
+ * the rail now prints every label, and an outline of the argument that ends
+ * with "Footnotes" is describing the renderer rather than the post.
+ *
+ * Matched on the slug rather than the text: `footnote-label` is the id
+ * remark-gfm gives it, and it is stable in a way the visible string is not.
+ */
+const GENERATED_IDS = new Set(["footnote-label"]);
+
 type HastNode = {
   type: string;
   tagName?: string;
@@ -58,7 +71,7 @@ export async function getHeadings(source: string): Promise<Heading[]> {
       if (node.type === "element" && node.tagName && EXTRACTED_LEVELS.has(node.tagName)) {
         const id = node.properties?.id;
         const text = textOf(node).trim();
-        if (typeof id === "string" && text) {
+        if (typeof id === "string" && text && !GENERATED_IDS.has(id)) {
           found.push({ id, text, depth: node.tagName === "h2" ? 2 : 3 });
         }
         return;

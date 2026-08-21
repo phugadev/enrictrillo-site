@@ -30,7 +30,9 @@ export function About() {
       <SectionLabel>About</SectionLabel>
       <div className="mt-6">
         <div className="max-w-xl">
-          <div className="space-y-4 text-[16px] leading-relaxed text-muted">
+          {/* text-prose for the same reason the hero paragraph takes it: these are
+            paragraphs, and text-muted is the grey reserved for metadata. */}
+        <div className="space-y-4 text-[16px] leading-relaxed text-prose">
             <p>
               I'm {site.name}, a {site.role.toLowerCase()} based in {site.location}, working through{" "}
               {site.company}.

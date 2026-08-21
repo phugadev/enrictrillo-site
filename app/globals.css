@@ -386,17 +386,32 @@ body {
   vertical-align: middle;
 }
 
-/* rehype-autolink-headings wraps each heading in an <a>; keep it invisible
-   until hover so headings don't render as underlined links. */
+/*
+  rehype-autolink-headings wraps each heading in an <a>; keep it invisible
+  until hover so headings don't render as underlined links.
+
+  Note `text-decoration-line`, not the `text-decoration` shorthand. The
+  shorthand resets `text-decoration-color` along with everything else, which
+  put the anchor back on `currentColor` — so the 150ms colour transition
+  inherited from `.prose a` had a paper-coloured rule to start from and an
+  accent to land on, and every heading hover flashed from near-white to
+  amber before settling. Setting the line and the colour independently means
+  the colour never changes at all: the rule is grey the whole time and hover
+  only decides whether it is drawn.
+
+  Grey rather than 590nm because on a heading the *appearance* of the rule is
+  already the affordance. Body links earn the accent on hover because they
+  are underlined at rest and have nothing else to change.
+*/
 .prose :where(h1, h2, h3, h4) a {
   color: inherit;
-  text-decoration: none;
+  text-decoration-line: none;
+  text-decoration-color: var(--rsk-text-faint);
+  text-underline-offset: 4px;
 }
 
 .prose :where(h1, h2, h3, h4) a:hover {
-  text-decoration: underline;
-  text-decoration-color: color-mix(in oklab, var(--rsk-mark-590) 55%, transparent);
-  text-underline-offset: 4px;
+  text-decoration-line: underline;
 }
 
 

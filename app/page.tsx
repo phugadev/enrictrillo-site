@@ -84,7 +84,12 @@ export default function Home() {
           end to end.
         </h1>
         <p
-          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-muted"
+          /* text-prose, not text-muted. This is a paragraph someone reads, and
+             muted is the metadata grey — dates, labels, counts. Running the
+             one paragraph that has to do the persuading two steps dimmer
+             than any paragraph inside an article was the hierarchy
+             backwards. */
+          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-prose"
           style={{ animationDelay: "160ms" }}
         >
           Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as

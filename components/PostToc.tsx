@@ -49,6 +49,20 @@ export function useActiveHeading(
     if (elements.length === 0) return;
 
     const measure = () => {
+      // The last section is unreachable by the reading line alone. A heading
+      // near the end of a post may never get its top above 96px, because the
+      // page simply runs out of scroll first — the footnotes, the end nav and
+      // the footer are not tall enough to push it up there. The reader is
+      // plainly *in* that section, looking at it, and the rail was still
+      // marking the one before. Hitting the bottom of the document is the
+      // honest answer to "which section am I in": the last one.
+      const doc = document.documentElement;
+      const atBottom = window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
+      if (atBottom) {
+        setActiveId(elements[elements.length - 1].id);
+        return;
+      }
+
       let passed: string | null = null;
       for (const el of elements) {
         if (el.getBoundingClientRect().top < READING_LINE) passed = el.id;
@@ -65,9 +79,31 @@ export function useActiveHeading(
     // Resizing reflows the article without moving the scroll position, so no
     // heading crosses the line and the observer stays quiet.
     window.addEventListener("resize", measure);
+
+    /*
+      And a scroll listener, which the original deliberately did without.
+      It is here for exactly one thing: the bottom of the document is a
+      boundary no heading ever crosses, so no observer entry is ever emitted
+      for it — the last few pixels of scroll are invisible to an
+      IntersectionObserver watching headings. rAF-throttled, passive, and it
+      does the same measure the observer does, so there is one definition of
+      "active" rather than two that can disagree.
+    */
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        measure();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", measure);
+      window.removeEventListener("scroll", onScroll);
     };
   }, [key]);
 
@@ -77,18 +113,29 @@ export function useActiveHeading(
 /**
  * The rail's reserved geometry, in one place because three things depend on it
  * agreeing: this component, the lab variants, and the arithmetic in the comment
- * below. `ml-8` is the gutter between the prose and the rail; `w-60` (240px) is
- * the rail itself.
+ * below. `ml-20` is the gutter between the prose and the rail; `w-60` (240px)
+ * is the rail itself.
+ *
+ * WHY THE GUTTER IS 80px AND NOT 32px. The article column is not the widest
+ * thing in the article. Code frames and tables break out past the reading
+ * measure at `lg` and up — `width: calc(100% + 3rem)` in globals.css, which
+ * grows them 48px to the right so they sit flush with CONTAINER instead of
+ * with the prose. A gutter measured from the *column* therefore left only
+ * 32px minus those 48px, and a fenced block ran under the rail. The gutter is
+ * measured from the widest thing the article can contain: 48px of breakout
+ * plus the 32px of air the rail actually wants.
  *
  * At the `xl` breakpoint (1280px layout width) the container is `max-w-3xl`
  * (768px) centred, so the article column — `max-w-2xl`, 672px, left-aligned
- * inside it — runs 280→952. The rail therefore occupies 984→1224, leaving a
- * 56px gutter to the viewport edge. Nothing here can reach the prose and
+ * inside it — runs 256→928 and a broken-out code frame reaches 976. The rail
+ * therefore occupies 1008→1248, clearing the widest possible content by 32px
+ * and leaving 32px to the viewport edge. Nothing here can reach the prose and
  * nothing can push past the right edge into horizontal scroll, and because the
  * width is a constant rather than a hover state, that stays true in every
  * state the rail has.
  */
-export const RAIL = "sticky top-28 ml-8 w-60 max-h-[calc(100vh-9rem)] overflow-y-auto overscroll-contain";
+export const RAIL =
+  "sticky top-28 ml-20 w-60 max-h-[calc(100vh-9rem)] overflow-y-auto overscroll-contain";
 
 /**
  * The rail's outer positioning, shared with the lab variants.
