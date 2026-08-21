@@ -2,7 +2,6 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
-import { PostPreviewMark } from "./ui/PostPreviewMark";
 import { WavelengthDot } from "./ui/WavelengthDot";
 
 /** How long a post keeps the "New" pill on the homepage teaser. */
@@ -14,9 +13,31 @@ function isRecent(iso: string): boolean {
 }
 
 /**
+ * The dotted leader between a row's title and its date — the device a
+ * contents page or an index uses to carry the eye across a gap that would
+ * otherwise be dead space. Lifted from desengs.com, where it is what makes
+ * a wide list read as one horizontal line per item rather than as two
+ * columns that happen to share a row.
+ *
+ * Empty and aria-hidden: it is a ruled line, not content. It sits on the
+ * baseline for free — an empty inline-level flex item in a baseline row
+ * aligns its bottom margin edge to the baseline, which is exactly where the
+ * bottom border lands.
+ */
+function Leader() {
+  return (
+    <span
+      aria-hidden="true"
+      className="min-w-[1.5rem] flex-1 border-b border-dotted border-hairline-strong"
+    />
+  );
+}
+
+/**
  * A post in a list. Two shapes, and the difference is who is reading.
  *
- * `compact` (the homepage teaser) is title and date, nothing else. A reader
+ * `compact` (the homepage teaser) is band dot, title, leader and date —
+ * nothing else. A reader
  * on the homepage has not decided to read anything yet — the list is an
  * activity signal, proof the work is ongoing, and an excerpt there competes
  * with the section that is actually meant to convert them.
@@ -52,8 +73,12 @@ export function PostCard({
    */
   as?: "h2" | "h3";
   /**
-   * Single-line row (preview mark + title + date) with the excerpt and
-   * metadata line dropped. Hover does nothing to the row itself — no lift,
+   * Single-line row (band dot + title + dotted leader + date) with the
+   * excerpt and metadata line dropped. The leading mark used to be a framed
+   * tile of four bars standing in for a page of text; it is now the same
+   * 6px band dot the toolkit rows and the full card use, so one mark means
+   * "this thing carries a wavelength" everywhere on the site instead of two
+   * marks meaning it in two idioms. Hover does nothing to the row itself — no lift,
    * no background, no arrow appearing. The list handles it: `.rsk-focuslist`
    * dims every row you are not pointing at, which says "this one" by taking
    * attention off the others rather than by decorating the one under the
@@ -67,21 +92,17 @@ export function PostCard({
 }) {
   if (compact) {
     return (
-      <Link
-        href={`/blog/${post.slug}`}
-        className="group flex items-center justify-between gap-6 py-3"
-      >
-        <span className="flex min-w-0 items-center gap-3">
-          <PostPreviewMark wavelength={post.wavelength} />
-          <Heading className="flex min-w-0 items-center gap-2 font-display text-[16px] leading-snug text-paper">
-            <span className="truncate">{post.title}</span>
-            {isRecent(post.date) && (
-              <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
-                New
-              </span>
-            )}
-          </Heading>
-        </span>
+      <Link href={`/blog/${post.slug}`} className="group flex items-baseline gap-3 py-2.5">
+        <WavelengthDot wavelength={post.wavelength} className="translate-y-[-1px]" />
+        <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-paper">
+          <span className="truncate">{post.title}</span>
+          {isRecent(post.date) && (
+            <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
+              New
+            </span>
+          )}
+        </Heading>
+        <Leader />
         <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
           {format(parseDate(post.date), "d MMM yyyy")}
         </span>
@@ -94,7 +115,7 @@ export function PostCard({
       href={`/blog/${post.slug}`}
       className="group -mx-3 block rounded px-3 py-5 transition-colors hover:bg-surface"
     >
-      <div className="flex items-baseline justify-between gap-6">
+      <div className="flex items-baseline gap-3">
         <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-paper transition-colors group-hover:text-white">
           {/* Hidden on the band pages: every post there is the same band,
               so the dot would repeat one colour down the page and mean
@@ -104,7 +125,8 @@ export function PostCard({
           )}
           <span>{post.title}</span>
         </Heading>
-        <span className="flex shrink-0 items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+        <Leader />
+        <span className="flex shrink-0 items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
           {post.series && <span className="hidden sm:inline">{post.series}</span>}
           <span>{format(parseDate(post.date), "d MMM yyyy")}</span>
         </span>
