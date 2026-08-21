@@ -50,7 +50,7 @@ The original writer did one `INSERT` per event inside a transaction per event. P
 
 The fix is a batcher that accumulates events in memory and flushes on whichever comes first: a size threshold or a time threshold.
 
-```ts title="lib/ingest/batcher.ts"
+```ts title="lib/ingest/batcher.ts" {3,12-13}
 type Flush<T> = (batch: T[]) => Promise<void>;
 
 export function createBatcher<T>(flush: Flush<T>, maxSize = 2_000, maxWaitMs = 250) {

@@ -117,6 +117,154 @@ body {
   font-size: 14px;
 }
 
+/*
+  ══ The gutter, the hovered line, and the highlighted line ══════════════
+
+  Three things a fenced block needs before it reads as something you can
+  work *through* rather than just look at: a number to point at, a response
+  to the pointer so your eye keeps its place across a wide line, and a way
+  for the author to say "this line is the point".
+
+  All three want the same thing structurally: a line has to be a full-width
+  band. rehype-pretty-code already sets `display: grid` inline on the <code>
+  (that is why the whitespace between its `<span data-line>` children doesn't
+  produce blank rows — whitespace-only text never becomes an anonymous grid
+  item), so each line is a row that stretches the container's width. The
+  catch is that "the container's width" is the visible width of the scrolling
+  <pre>, not the width of the longest line, so on a block that scrolls the
+  bands used to stop at the fold. `width: max-content` sizes the grid to its
+  widest line and `min-width: 100%` keeps it filling the frame when it fits.
+
+  The horizontal padding then has to move off the <pre> and onto the lines,
+  or the band would start 12px in from the frame edge and leave a stripe of
+  bare surface beside every highlight.
+*/
+.rsk-codeframe > pre {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.rsk-codeframe pre code {
+  width: max-content;
+  min-width: 100%;
+  counter-reset: rsk-code-line;
+}
+
+.rsk-codeframe [data-line] {
+  padding-inline: var(--rsk-pad-x-md);
+}
+
+/*
+  Line numbers are generated content, and that is the whole design.
+
+  ::before is not in the DOM, so it is not in `code.textContent` — which is
+  exactly what the copy button reads. The numbers therefore cannot reach the
+  clipboard, with no stripping pass to keep in sync, and cannot be dragged
+  into a selection either (user-select: none is belt to that brace, for the
+  browsers that will happily select generated content). They are also absent
+  from the accessibility tree for free, so no aria-hidden is needed.
+
+  The gutter only appears on blocks with more than one line — the attribute
+  is set by rehypeCountCodeLines in components/Mdx.tsx, where the tree can
+  still be counted. min-width rather than width so a block that runs past 99
+  lines widens its gutter instead of colliding with the code.
+*/
+.rsk-codeframe[data-line-numbers] [data-line]::before {
+  counter-increment: rsk-code-line;
+  content: counter(rsk-code-line);
+  display: inline-block;
+  min-width: 2ch;
+  margin-right: var(--rsk-pad-x-md);
+  text-align: right;
+  color: var(--rsk-text-faint);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/*
+  The hovered line. Pure CSS, no transition — a band that fades in lags the
+  pointer and reads as sluggish rather than responsive, and a transition here
+  would be one more thing for the reduced-motion block up top to neutralise.
+
+  Guarded behind (hover: hover) so a touch device doesn't get a band stuck
+  under the last tap.
+
+  Neutral, like every other piece of code-block chrome: the four-band
+  taxonomy means something, and "the line your mouse is over" is not a claim
+  about interface, systems, compute or intelligence.
+*/
+@media (hover: hover) {
+  .rsk-codeframe [data-line]:hover {
+    background: color-mix(in oklab, var(--rsk-text) 5%, transparent);
+  }
+}
+
+/*
+  Explicit highlights from the fence meta — ```ts {2-3}.
+
+  @ruskel/ui already paints these with --code-highlight, but at 10% of text
+  on a surface only a shade off it, the band alone is easy to miss on a
+  glance. The inset rule down the leading edge is what actually does the
+  pointing: it survives being scrolled past horizontally, and it reads as a
+  margin mark rather than as a selection.
+*/
+.rsk-codeframe [data-highlighted-line] {
+  width: auto;
+  background: var(--code-highlight);
+  box-shadow: inset 2px 0 0 0 var(--rsk-rule-strong);
+}
+
+/* A highlighted line still answers the pointer, one step up from its
+   resting state rather than losing the highlight to the hover colour. */
+@media (hover: hover) {
+  .rsk-codeframe [data-highlighted-line]:hover {
+    background: color-mix(in oklab, var(--rsk-text) 15%, transparent);
+  }
+}
+
+/*
+  The headerless block's copy button.
+
+  With no title bar to sit in (see the header-trigger note in
+  components/CodeBlock.tsx) the control parks over the top-right corner of
+  the code. It is never display:none and never removed from the tab order —
+  it is opacity alone — so it stays reachable by keyboard, reveals itself on
+  focus, and stays put while the "copied" tick is showing so the confirmation
+  isn't invisible the moment the pointer leaves.
+
+  Where hover does not exist there is nothing to reveal it, so it is simply
+  always visible. Its own surface and hairline keep it legible over whatever
+  the first line of code happens to be.
+*/
+.rsk-codeframe {
+  position: relative;
+}
+
+.rsk-codeframe__copy[data-floating] {
+  position: absolute;
+  top: var(--rsk-pad-x-sm);
+  right: var(--rsk-pad-x-sm);
+  z-index: 1;
+  background: var(--rsk-code-bg);
+  border: var(--rsk-hairline) solid var(--rsk-rule);
+  /* Structure radius: this is a control, not a token. */
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.rsk-codeframe:hover .rsk-codeframe__copy[data-floating],
+.rsk-codeframe__copy[data-floating]:focus-visible,
+.rsk-codeframe__copy[data-floating][data-copied] {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .rsk-codeframe__copy[data-floating] {
+    opacity: 1;
+  }
+}
+
 /* The frame owns the border and radius now — see components/CodeBlock.tsx
    and .rsk-codeframe. The pre keeps only its own padding and scroll. */
 .prose pre {

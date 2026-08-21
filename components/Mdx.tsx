@@ -46,6 +46,40 @@ function rehypeWrapTables() {
 }
 
 /**
+ * Records how many lines a fenced block holds, on the block's own figure.
+ *
+ * Line numbers only earn their place once there is more than one line: on a
+ * one-liner the "1" is pure decoration, a gutter that indexes nothing. But CSS
+ * has no way to ask "does this element have more than one child of that kind"
+ * — :has() can test for *presence*, not for a count — so the decision has to be
+ * made where the tree is still a tree. rehype-pretty-code has already wrapped
+ * every line in a `<span data-line>` by the time this runs, so counting them is
+ * exact: it is the renderer's own idea of a line, not a guess from newlines in
+ * the source (a trailing newline, a fence that ends mid-line, and a block that
+ * shiki decided to split differently would all be off by one).
+ *
+ * The count is published as data-line-count for anything that wants the number,
+ * and the boolean data-line-numbers is what the stylesheet actually keys on, so
+ * the threshold lives here in prose rather than as a magic number in a selector.
+ */
+function rehypeCountCodeLines() {
+  return (tree: HastNode) => {
+    visit(tree, "element", (node: HastNode) => {
+      if (node.tagName !== "figure") return;
+      if (!node.properties || !("data-rehype-pretty-code-figure" in node.properties)) return;
+
+      let lines = 0;
+      visit(node, "element", (inner: HastNode) => {
+        if (inner.properties && "data-line" in inner.properties) lines += 1;
+      });
+
+      node.properties["data-line-count"] = String(lines);
+      if (lines > 1) node.properties["data-line-numbers"] = "true";
+    });
+  };
+}
+
+/**
  * Renders an MDX string as a server component.
  *
  * Uses @mdx-js/mdx directly rather than next-mdx-remote: that package resolves
@@ -111,6 +145,9 @@ export async function Mdx({ source }: { source: string }) {
       // block GitHub's blue-grey #24292e — the only bluish grey on the site,
       // and a visible seam against the filename bar sitting on top of it.
       [rehypePrettyCode, { theme: ruskelSyntax, keepBackground: false }],
+      // Must run after rehype-pretty-code — it counts the `data-line` spans
+      // that plugin creates.
+      rehypeCountCodeLines,
       rehypeUnwrapImages,
       rehypeWrapTables,
     ],
