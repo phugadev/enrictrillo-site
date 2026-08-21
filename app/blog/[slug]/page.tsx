@@ -74,7 +74,11 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     // mx-auto here centers independently and drifts 48px off the chrome.
     <PageShell mainClassName={`${CONTAINER} py-16`}>
       {/* `relative` so the margin ToC can hang off the right edge of the
-          column and stay stuck to it for the length of the post. */}
+          column and stay stuck to it for the length of the post. The rail is
+          absolutely positioned and a fixed width, so it reserves its own space
+          in the margin without ever being part of this column's flow — the
+          article's position and its alignment with Nav and Footer are the same
+          with the ToC as without it, at every breakpoint. */}
       <div className="relative max-w-2xl">
         <JsonLd data={blogPostingSchema(meta)} />
         {headings.length > 1 && <PostToc headings={headings} wavelength={meta.wavelength} />}
