@@ -175,6 +175,14 @@ export type Project = {
    * dead link.
    */
   caseStudySlug?: string;
+  /**
+   * An internal route that *is* the artifact rather than an account of it —
+   * /system for Ruskel, which is rendered by the thing it documents. Distinct
+   * from `caseStudySlug`: a case study is writing about work, a specimen is
+   * the work, running. Rendered with the same emphasis as a case study
+   * because both are destinations on this site rather than addresses off it.
+   */
+  specimen?: { label: string; href: string };
 };
 
 export const projects: Project[] = [
@@ -188,6 +196,23 @@ export const projects: Project[] = [
     year: "2026",
     links: { repo: "https://github.com/phugadev/watchman" },
     caseStudySlug: "watchman",
+  },
+  {
+    name: "Ruskel",
+    description:
+      "A design system with decisions in it, not just components — one spectrum solved against contrast windows, two exposures, and a rule for which value belongs where.",
+    stack: ["CSS", "OKLCH", "shadcn", "npm"],
+    wavelength: "interface",
+    status: "Shipped",
+    year: "2026",
+    /* The band is 590nm and it is not a coin toss: a design system is what
+       the user touches. It is also the only project here whose evidence a
+       stranger can check in thirty seconds — the packages are public, and
+       this site declares them as dependencies, so the page making the claim
+       is rendered by the thing being claimed. Hence /system as an endpoint
+       rather than a case study: the specimen sheet IS the proof. */
+    links: { npm: "https://www.npmjs.com/package/@ruskel/ui", repo: "https://github.com/phugadev/ruskel" },
+    specimen: { label: "Specimen", href: "/system" },
   },
   {
     name: "supasteeltokens",

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { wavelengths, type Project } from "@/lib/site";
 import { getCaseStudyBySlug } from "@/lib/work";
 import { Hatch } from "./ui/Hatch";
-import { SmartLink } from "./ui/SmartLink";
+import { address, Endpoint } from "./ui/Endpoint";
 
 /**
  * Resolves `project.caseStudySlug` to a route, or `undefined` when the
@@ -85,51 +85,6 @@ const ENDPOINT_ORDER = [
 ] as const;
 
 /** github.com/phugadev/watchman — the address, minus the ceremony. */
-function address(href: string) {
-  return href
-    .replace(/^https?:\/\//, "")
-    .replace(/^www\./, "")
-    .replace(/\/$/, "");
-}
-
-/**
- * One destination. Not a button: a labelled endpoint with its actual address
- * beneath it, the way documentation lists one. A row of identical bordered
- * pills reading "Live" and "GitHub" is the single most template-looking
- * thing a portfolio can do, and the address is genuine information — it
- * tells a reader whether they're about to land on a repo, a registry or a
- * running service before they click.
- */
-function Endpoint({
-  label,
-  href,
-  sub,
-  arrow = "↗",
-  emphasis = false,
-}: {
-  label: string;
-  href: string;
-  sub: string;
-  arrow?: string;
-  emphasis?: boolean;
-}) {
-  return (
-    <SmartLink
-      href={href}
-      className={`group/ep block min-w-[13rem] max-w-full border-t pt-2 transition-colors hover:border-paper ${
-        emphasis ? "border-paper/40" : "border-hairline"
-      }`}
-    >
-      <span className="block font-mono text-[11px] uppercase tracking-wider text-paper">
-        {label} <span aria-hidden="true">{arrow}</span>
-      </span>
-      <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-muted">
-        {sub}
-      </span>
-    </SmartLink>
-  );
-}
-
 function MetaLine({ children }: { children: ReactNode }) {
   return <p className="mt-3 font-mono text-[11px] text-faint">{children}</p>;
 }
@@ -214,6 +169,15 @@ export function ProjectEntry({ project, index }: { project: Project; index: numb
               too narrow for an npm address, and a grid leaves empty columns
               on entries with a single endpoint. */}
           <div className="flex flex-wrap gap-x-10 gap-y-4">
+            {project.specimen && (
+              <Endpoint
+                label={project.specimen.label}
+                href={project.specimen.href}
+                sub={project.specimen.href}
+                arrow="→"
+                emphasis
+              />
+            )}
             {caseStudyHref && (
               <Endpoint
                 label="Case study"
