@@ -23,6 +23,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    // /system is a real page about real work, unlike /lab — it belongs in
+    // here. Its lastModified is genuinely "whenever the package moved", and
+    // the package version is what the page prints, so "now" is honest enough.
+    {
+      url: `${site.url}/system`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     // Band and series indexes are real, linkable pages — they belong here too.
     ...getPostsByWavelength().map((band) => ({
       url: `${site.url}/blog/wavelength/${band.wavelength}`,
