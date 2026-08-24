@@ -337,9 +337,9 @@ export default function SystemPage() {
 
         <Note>
           Editorial exposure. The mark measures{" "}
-          {ratioOf("rsk-mark-590", "editorial").toFixed(2)}:1 as type; the text ring measures{" "}
-          {ratioOf("rsk-text-590", "editorial").toFixed(2)}:1. On ink those same two tokens
-          measure {ratioOf("rsk-mark-590").toFixed(2)}:1 and {ratioOf("rsk-text-590").toFixed(2)}
+          {ratioOf("rsk-spectrum-590-solid", "editorial").toFixed(2)}:1 as type; the text ring measures{" "}
+          {ratioOf("rsk-spectrum-590-text", "editorial").toFixed(2)}:1. On ink those same two tokens
+          measure {ratioOf("rsk-spectrum-590-solid").toFixed(2)}:1 and {ratioOf("rsk-spectrum-590-text").toFixed(2)}
           :1 — which is why one ring cannot serve both grounds.
         </Note>
       </Section>
