@@ -38,7 +38,7 @@ const body = Inter({
 const mono = IBM_Plex_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-mono",
+  variable: "--font-mono-face",
   display: "swap",
 });
 
