@@ -1,0 +1,46 @@
+# enrictrillo.com — verification
+#
+# The site is migrating from Ruskel to Minima, which means hundreds of class
+# names moving across sixty-odd component files. Until now nothing checked any
+# of it: a typo in a className is invisible to TypeScript, but a broken import
+# or a bad prop is not, and neither is a build that stops compiling.
+#
+# This is the floor, not the ceiling. It runs what the repository can actually
+# run today — there is no ESLint here, and inventing a config as part of adding
+# CI would be a different change.
+
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch makes the previous run irrelevant.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Types
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
