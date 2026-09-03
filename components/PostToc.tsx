@@ -150,7 +150,7 @@ export const RAIL_OUTER = "absolute left-full top-0 hidden h-full xl:block";
 
 /** Label type, shared by all three variants so only the marker differs. */
 export const RAIL_LABEL =
-  "font-mono text-[11px] leading-[1.5] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden";
+  "font-mono text-[11px] leading-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden";
 
 /**
  * The margin table of contents: a permanently legible list of the post's h2/h3
@@ -268,7 +268,7 @@ export function TocRail({
                 // scroll finishes. Marking it now means the item you clicked
                 // lights up on the click rather than at the end of the glide.
                 onClick={() => onSelect?.(heading.id)}
-                className={`group relative block rounded-sm py-[7px] pr-1 outline-none focus-visible:ring-1 focus-visible:ring-hairline-strong ${
+                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-hairline-strong ${
                   heading.depth === 3 ? "pl-7" : "pl-4"
                 }`}
               >

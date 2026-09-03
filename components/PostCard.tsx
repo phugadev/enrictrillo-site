@@ -20,7 +20,7 @@ function Leader() {
   return (
     <span
       aria-hidden="true"
-      className="min-w-[1.5rem] flex-1 border-b border-dotted border-hairline-strong"
+      className="min-w-6 flex-1 border-b border-dotted border-hairline-strong"
     />
   );
 }
@@ -95,7 +95,7 @@ export function PostCard({
   if (compact) {
     return (
       <Link href={`/blog/${post.slug}`} className="group flex items-baseline gap-3 py-2.5">
-        <WavelengthDot wavelength={post.wavelength} className="translate-y-[-1px]" />
+        <WavelengthDot wavelength={post.wavelength} className="-translate-y-px" />
         <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-paper">
           <span className="truncate">{post.title}</span>
           {flagNew && (

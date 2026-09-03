@@ -62,7 +62,7 @@ export function TocComparison({
       {VARIANTS.map(({ id, name, note, Component }) => (
         <div key={id} className="w-60">
           <p className="mb-1 font-mono text-[11px] text-paper">{name}</p>
-          <p className="mb-5 font-mono text-[11px] leading-[1.5] text-faint">{note}</p>
+          <p className="mb-5 font-mono text-[11px] leading-normal text-faint">{note}</p>
           <Component headings={headings} wavelength={wavelength} activeId={pinned} />
         </div>
       ))}
@@ -95,7 +95,7 @@ export function TocLive({
       {/* Pills, because these are tokens rather than structure. Sticky under
           the nav so you can swap variants without scrolling back up — the
           whole point is to judge them mid-post. */}
-      <div className="sticky top-16 z-30 mb-8 flex gap-2 bg-ink/90 py-3 backdrop-blur">
+      <div className="sticky top-16 z-30 mb-8 flex gap-2 bg-ink/90 py-3 backdrop-blur-sm">
         {VARIANTS.map((v) => (
           <button
             key={v.id}
