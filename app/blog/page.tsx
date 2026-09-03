@@ -49,8 +49,8 @@ export default function BlogIndex() {
 
   return (
     <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <h1 className="font-display text-[32px] font-medium tracking-tight text-paper">Writing</h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-muted">
+      <h1 className="font-display text-[32px] font-medium tracking-tight text-foreground">Writing</h1>
+      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-subtle-foreground">
         Build logs, architecture notes and engineering write-ups — filed by wavelength, the same
         taxonomy the work is organised by.
       </p>
@@ -72,7 +72,7 @@ export default function BlogIndex() {
               just another divider among the post separators below. */}
           <Hatch className="mt-10" />
 
-          <div className="rsk-focuslist mt-8 divide-y divide-hairline">
+          <div className="rsk-focuslist mt-8 divide-y divide-border">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}

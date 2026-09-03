@@ -36,15 +36,15 @@ export default function WorkIndex() {
 
   return (
     <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <h1 className="font-display text-[32px] font-medium tracking-tight text-paper">
+      <h1 className="font-display text-[32px] font-medium tracking-tight text-foreground">
         Case studies
       </h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-muted">{description}</p>
+      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-subtle-foreground">{description}</p>
 
       {studies.length === 0 ? (
         <p className="mt-14 font-mono text-[13px] text-faint">Nothing published yet.</p>
       ) : (
-        <div className="mt-12 divide-y divide-hairline">
+        <div className="mt-12 divide-y divide-border">
           {studies.map((study) => (
             <Link key={study.slug} href={`/work/${study.slug}`} className="group flex gap-4 py-6">
               <span className="pt-2">
@@ -55,10 +55,10 @@ export default function WorkIndex() {
                   <span>{study.year}</span>
                   {study.stack && <span className="truncate">{study.stack.join(" · ")}</span>}
                 </div>
-                <h2 className="font-display text-[19px] leading-snug text-paper transition-colors group-hover:text-white">
+                <h2 className="font-display text-[19px] leading-snug text-foreground transition-colors group-hover:text-white">
                   {study.title}
                 </h2>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{study.excerpt}</p>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-subtle-foreground">{study.excerpt}</p>
               </div>
             </Link>
           ))}

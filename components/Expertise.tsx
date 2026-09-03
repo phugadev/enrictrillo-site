@@ -71,7 +71,7 @@ export function Expertise() {
               <div
                 tabIndex={0}
                 aria-describedby={tooltipId}
-                className="group inline-flex cursor-help items-center gap-2 rounded-pill border border-hairline px-3 py-1.5 font-mono text-[11px] text-muted outline-hidden transition-colors focus-visible:border-faint"
+                className="group inline-flex cursor-help items-center gap-2 rounded-pill border border-border px-3 py-1.5 font-mono text-[11px] text-subtle-foreground outline-hidden transition-colors focus-visible:border-faint"
               >
                 {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-faint" /> : null}
                 <span>{item.label}</span>
@@ -79,7 +79,7 @@ export function Expertise() {
                 <div
                   id={tooltipId}
                   role="tooltip"
-                  className="pointer-events-none invisible absolute inset-x-0 bottom-full z-10 mb-2 rounded-lg bg-surface-2 px-4 py-3 text-[11px] leading-relaxed text-paper opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100 sm:right-auto sm:w-max sm:max-w-xs"
+                  className="pointer-events-none invisible absolute inset-x-0 bottom-full z-10 mb-2 rounded-lg bg-fill px-4 py-3 text-[11px] leading-relaxed text-foreground opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 group-focus-visible:visible group-focus-visible:opacity-100 sm:right-auto sm:w-max sm:max-w-xs"
                 >
                   {item.description}
                 </div>

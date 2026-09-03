@@ -30,9 +30,9 @@ export function About() {
       <SectionLabel>About</SectionLabel>
       <div className="mt-6">
         <div className="max-w-xl">
-          {/* text-prose for the same reason the hero paragraph takes it: these are
-            paragraphs, and text-muted is the grey reserved for metadata. */}
-        <div className="space-y-4 text-[16px] leading-relaxed text-prose">
+          {/* text-muted-foreground for the same reason the hero paragraph takes it: these are
+            paragraphs, and text-subtle-foreground is the grey reserved for metadata. */}
+        <div className="space-y-4 text-[16px] leading-relaxed text-muted-foreground">
             <p>
               I'm {site.name}, a {site.role.toLowerCase()} based in {site.location}, working through{" "}
               {site.company}.
@@ -57,7 +57,7 @@ export function About() {
                     <dt className="font-mono text-[11px] uppercase tracking-wider text-faint">
                       {fact.label}
                     </dt>
-                    <dd className="text-[14px] text-paper sm:mt-1">{fact.value}</dd>
+                    <dd className="text-[14px] text-foreground sm:mt-1">{fact.value}</dd>
                   </div>
                 ))}
               </dl>

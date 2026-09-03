@@ -41,7 +41,7 @@ export default async function TocLab() {
         <h1 className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
           Lab — margin table of contents
         </h1>
-        <p className="mt-4 max-w-2xl font-reading text-[16px] leading-[1.7] text-prose">
+        <p className="mt-4 max-w-2xl font-reading text-[16px] leading-[1.7] text-muted-foreground">
           Three ways to mark where you are in a rail that is always readable and
           always in its own reserved 240px column. Same width, same type, same
           indent in all three — only the marker differs. Below, the real post

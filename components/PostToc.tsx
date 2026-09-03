@@ -255,7 +255,7 @@ export function TocRail({
       {/* The spine. It is the `ul`'s own left border rather than a separate
           absolutely positioned element, so it can never end up a different
           height from the list it belongs to. */}
-      <ul className="border-l border-hairline">
+      <ul className="border-l border-border">
         {headings.map((heading) => {
           const active = heading.id === activeId;
 
@@ -268,7 +268,7 @@ export function TocRail({
                 // scroll finishes. Marking it now means the item you clicked
                 // lights up on the click rather than at the end of the glide.
                 onClick={() => onSelect?.(heading.id)}
-                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-hairline-strong ${
+                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-border-strong ${
                   heading.depth === 3 ? "pl-7" : "pl-4"
                 }`}
               >
@@ -282,7 +282,7 @@ export function TocRail({
                 />
                 <span
                   className={`${RAIL_LABEL} transition-colors duration-200 ease-out motion-reduce:transition-none ${
-                    active ? "text-paper" : "text-muted group-hover:text-prose"
+                    active ? "text-foreground" : "text-subtle-foreground group-hover:text-muted-foreground"
                   }`}
                 >
                   {heading.text}

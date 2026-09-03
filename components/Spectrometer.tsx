@@ -34,9 +34,9 @@ export function Spectrometer() {
         against the next block even when a future non-Section component
         follows it directly.
       */}
-      <div className="relative h-16 overflow-hidden rounded-lg border border-hairline">
+      <div className="relative h-16 overflow-hidden rounded-lg border border-border">
         <div className="absolute inset-0 opacity-[0.14]" style={{ background: bandGradient }} />
-        <div className="animate-scan absolute inset-y-0 w-px bg-paper/50" aria-hidden="true" />
+        <div className="animate-scan absolute inset-y-0 w-px bg-foreground/50" aria-hidden="true" />
 
         <ul className="relative grid h-full grid-cols-4 items-end pb-2.5">
           {ASCENDING.map((wavelength) => {
@@ -50,8 +50,8 @@ export function Spectrometer() {
                   aria-hidden="true"
                 />
                 <span className="mt-1.5 block font-mono text-[10.5px] tracking-wide">
-                  <span className="hidden text-muted sm:inline">{wl.nm}nm </span>
-                  <span className="text-muted">{wl.label}</span>
+                  <span className="hidden text-subtle-foreground sm:inline">{wl.nm}nm </span>
+                  <span className="text-subtle-foreground">{wl.label}</span>
                 </span>
               </>
             );

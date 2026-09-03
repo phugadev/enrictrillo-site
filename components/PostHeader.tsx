@@ -123,10 +123,10 @@ function Frame({
   return (
     <Link
       href={href}
-      className="group flex items-center justify-between gap-4 rounded border border-hairline px-4 py-2.5 transition-colors hover:border-hairline-strong"
+      className="group flex items-center justify-between gap-4 rounded border border-border px-4 py-2.5 transition-colors hover:border-border-strong"
     >
       <span className="font-mono text-[11px] uppercase tracking-wider">
-        <span className="text-paper underline decoration-hairline underline-offset-4 transition-colors group-hover:decoration-muted">
+        <span className="text-foreground underline decoration-border underline-offset-4 transition-colors group-hover:decoration-subtle-foreground">
           {name}
         </span>
         {position && <span className="text-faint"> · {position}</span>}
@@ -173,7 +173,7 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
       {segments.map((lit, i) => (
         <span
           key={i}
-          className={`h-0.5 w-5 ${lit ? BAND_MARK[meta.wavelength] : "bg-hairline-strong"}`}
+          className={`h-0.5 w-5 ${lit ? BAND_MARK[meta.wavelength] : "bg-border-strong"}`}
         />
       ))}
     </span>
@@ -219,8 +219,8 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
         When the post has no series the band is already named in the frame
         above, so it drops out of this line rather than being said twice.
       */}
-      <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-wider text-muted">
-        <span className="text-paper">{site.name}</span>
+      <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground">
+        <span className="text-foreground">{site.name}</span>
         {series && (
           <>
             <Sep />
@@ -233,12 +233,12 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
         <span>{read}</span>
       </p>
 
-      <h1 className="mt-5 font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-paper sm:text-[46px]">
+      <h1 className="mt-5 font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-foreground sm:text-[46px]">
         {meta.title}
       </h1>
 
       {/* The break, below the headline rather than above it. */}
-      <div className="mt-8 flex justify-center text-hairline-strong">
+      <div className="mt-8 flex justify-center text-border-strong">
         <Zigzag />
       </div>
     </header>

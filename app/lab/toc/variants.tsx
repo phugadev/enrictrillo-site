@@ -60,7 +60,7 @@ export function VariantBlock({ headings, wavelength, activeId, onSelect }: Varia
                 aria-current={active ? "true" : undefined}
                 onClick={() => onSelect?.(heading.id)}
                 // rounded-sm, not a pill: this is structure, not a token.
-                className={`group relative block rounded-sm py-[7px] pr-2 outline-hidden transition-colors duration-200 ease-out focus-visible:ring-1 focus-visible:ring-hairline-strong motion-reduce:transition-none ${
+                className={`group relative block rounded-sm py-[7px] pr-2 outline-hidden transition-colors duration-200 ease-out focus-visible:ring-1 focus-visible:ring-border-strong motion-reduce:transition-none ${
                   heading.depth === 3 ? "pl-7" : "pl-3"
                 } ${active ? "bg-surface" : "hover:bg-surface/50"}`}
               >
@@ -70,7 +70,7 @@ export function VariantBlock({ headings, wavelength, activeId, onSelect }: Varia
                   style={active ? { backgroundColor: accent } : undefined}
                 />
                 <span
-                  className={`${RAIL_LABEL} ${active ? "text-paper" : "text-muted group-hover:text-prose"}`}
+                  className={`${RAIL_LABEL} ${active ? "text-foreground" : "text-subtle-foreground group-hover:text-muted-foreground"}`}
                 >
                   {heading.text}
                 </span>
@@ -112,7 +112,7 @@ export function VariantTicks({ headings, wavelength, activeId, onSelect }: Varia
                 href={`#${heading.id}`}
                 aria-current={active ? "true" : undefined}
                 onClick={() => onSelect?.(heading.id)}
-                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-hairline-strong ${
+                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-border-strong ${
                   heading.depth === 3 ? "pl-11" : "pl-8"
                 }`}
               >
@@ -120,7 +120,7 @@ export function VariantTicks({ headings, wavelength, activeId, onSelect }: Varia
                   aria-hidden="true"
                   className={`absolute top-[15px] h-px transition-all duration-200 ease-out motion-reduce:transition-none ${
                     heading.depth === 3 ? "left-4" : "left-0"
-                  } ${active ? "" : "bg-hairline-strong group-hover:bg-muted"}`}
+                  } ${active ? "" : "bg-border-strong group-hover:bg-subtle-foreground"}`}
                   style={{
                     width: active ? 24 : heading.depth === 3 ? 10 : 16,
                     ...(active ? { backgroundColor: accent, height: 2 } : null),
@@ -128,7 +128,7 @@ export function VariantTicks({ headings, wavelength, activeId, onSelect }: Varia
                 />
                 <span
                   className={`${RAIL_LABEL} transition-colors duration-200 ease-out motion-reduce:transition-none ${
-                    active ? "text-paper" : "text-muted group-hover:text-prose"
+                    active ? "text-foreground" : "text-subtle-foreground group-hover:text-muted-foreground"
                   }`}
                 >
                   {heading.text}

@@ -37,7 +37,7 @@ function Note({ children }: { children: ReactNode }) {
 }
 
 function Body({ children }: { children: ReactNode }) {
-  return <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-prose">{children}</p>;
+  return <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-muted-foreground">{children}</p>;
 }
 
 /**
@@ -49,7 +49,7 @@ function Body({ children }: { children: ReactNode }) {
  */
 function BandTable() {
   return (
-    <div className="mt-8 divide-y divide-hairline border-y border-hairline">
+    <div className="mt-8 divide-y divide-border border-y border-border">
       <div className="grid grid-cols-[1fr_auto] items-baseline gap-4 py-2 font-mono text-[10px] uppercase tracking-wider text-faint sm:grid-cols-[7rem_1fr_auto_auto]">
         <span>Band</span>
         <span className="hidden sm:block">Text ring — read</span>
@@ -70,7 +70,7 @@ function BandTable() {
               className="h-2 w-2 shrink-0 -translate-y-px rounded-full"
               style={{ background: "var(--rsk-mark)" }}
             />
-            <span className="text-paper">{band.label}</span>
+            <span className="text-foreground">{band.label}</span>
           </span>
 
           {/* The text ring, doing the only job it has: being read. Same hue,
@@ -99,14 +99,14 @@ function RadiusScale() {
         <div key={step.token} className="flex items-center gap-4">
           <span
             aria-hidden="true"
-            className="h-9 w-14 shrink-0 border border-hairline-strong bg-surface"
+            className="h-9 w-14 shrink-0 border border-border-strong bg-surface"
             style={{ borderRadius: `var(${step.token})` }}
           />
           <div className="min-w-0">
-            <dt className="font-mono text-[11px] uppercase tracking-wider text-paper">
+            <dt className="font-mono text-[11px] uppercase tracking-wider text-foreground">
               {step.token} <span className="text-faint">{step.value}</span>
             </dt>
-            <dd className="text-[13px] text-muted">{step.role}</dd>
+            <dd className="text-[13px] text-subtle-foreground">{step.role}</dd>
           </div>
         </div>
       ))}
@@ -132,7 +132,7 @@ function ExposurePair() {
           key={exposure}
           data-exposure={exposure}
           data-band="interface"
-          className="rounded border border-hairline p-5"
+          className="rounded border border-border p-5"
           style={{ background: "var(--rsk-ground)" }}
         >
           <p
@@ -169,8 +169,8 @@ function ExposurePair() {
 /** Health is form. The only hue in this row is the one reserved for alarm. */
 function HealthRow() {
   const states: { label: string; className: string; style?: Record<string, string> }[] = [
-    { label: "Fine", className: "border border-hairline-strong" },
-    { label: "Watch", className: "border-[3px] border-paper" },
+    { label: "Fine", className: "border border-border-strong" },
+    { label: "Watch", className: "border-[3px] border-foreground" },
     { label: "Critical", className: "border-[3px] border-critical bg-critical" },
   ];
 
@@ -179,7 +179,7 @@ function HealthRow() {
       {states.map((state) => (
         <div key={state.label} className="flex items-center gap-3">
           <span aria-hidden="true" className={`block h-4 w-4 rounded-full ${state.className}`} />
-          <span className="font-mono text-[11px] uppercase tracking-wider text-muted">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-subtle-foreground">
             {state.label}
           </span>
         </div>
@@ -212,11 +212,11 @@ export default function SystemPage() {
           Ruskel — tokens {version.tokens} · ui {version.ui}
         </p>
 
-        <h1 className="mt-5 max-w-2xl font-display text-[40px] font-medium leading-[1.12] tracking-tight text-paper sm:text-[52px]">
+        <h1 className="mt-5 max-w-2xl font-display text-[40px] font-medium leading-[1.12] tracking-tight text-foreground sm:text-[52px]">
           Components are the easy half.
         </h1>
 
-        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-prose">
+        <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
           shadcn gives you components — the foundation of a design system — but no decisions.
           Ruskel is the decisions: one spectrum solved against contrast windows rather than
           picked, two exposures, and rules that say which value belongs where. I build
@@ -266,20 +266,20 @@ export default function SystemPage() {
         <Plate caption="The rule is only worth having because it makes the wrong version obvious.">
           <Cell verdict="no" label="Container as token, token as container">
             <span className="flex flex-wrap items-center gap-3">
-              <span className="rounded-pill border border-hairline-strong bg-surface px-4 py-2 text-[13px] text-muted">
+              <span className="rounded-pill border border-border-strong bg-surface px-4 py-2 text-[13px] text-subtle-foreground">
                 A panel holding content
               </span>
-              <span className="rounded border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted">
+              <span className="rounded border border-border px-2.5 py-1 font-mono text-[11px] text-subtle-foreground">
                 TypeScript
               </span>
             </span>
           </Cell>
           <Cell verdict="yes" label="Container 4px, token pill">
             <span className="flex flex-wrap items-center gap-3">
-              <span className="rounded border border-hairline-strong bg-surface px-4 py-2 text-[13px] text-muted">
+              <span className="rounded border border-border-strong bg-surface px-4 py-2 text-[13px] text-subtle-foreground">
                 A panel holding content
               </span>
-              <span className="rounded-pill border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted">
+              <span className="rounded-pill border border-border px-2.5 py-1 font-mono text-[11px] text-subtle-foreground">
                 TypeScript
               </span>
             </span>

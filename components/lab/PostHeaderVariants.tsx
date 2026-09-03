@@ -59,7 +59,7 @@ const BAND_TEXT: Record<Wavelength, string> = {
  *  the only variable in the comparison. */
 function Headline({ children }: { children: React.ReactNode }) {
   return (
-    <h1 className="font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-paper sm:text-[46px]">
+    <h1 className="font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-foreground sm:text-[46px]">
       {children}
     </h1>
   );
@@ -93,7 +93,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   return (
     <>
       <dt className="text-faint">{label}</dt>
-      <dd className="text-muted">{children}</dd>
+      <dd className="text-subtle-foreground">{children}</dd>
     </>
   );
 }
@@ -122,7 +122,7 @@ export function PostHeaderA({ meta }: { meta: PostMeta }) {
           <Row label="Series">
             <Link
               href={`/blog/series/${seriesSlug(meta.series)}`}
-              className="underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+              className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-subtle-foreground"
             >
               {meta.series}
             </Link>
@@ -131,9 +131,9 @@ export function PostHeaderA({ meta }: { meta: PostMeta }) {
         <Row label="Read">{read}</Row>
       </dl>
 
-      <hr className="mt-5 border-hairline" />
+      <hr className="mt-5 border-border" />
 
-      <h1 className="mt-8 font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-paper sm:text-[46px]">
+      <h1 className="mt-8 font-serif text-[36px] font-normal leading-[1.08] tracking-[-0.005em] text-foreground sm:text-[46px]">
         {meta.title}
       </h1>
     </header>
@@ -196,7 +196,7 @@ export function PostHeaderB({
                   actually carries the reading at a glance. Colour alone
                   would be the only signal for a reader who can't see it. */}
               <span
-                className={active ? "w-px" : "w-px bg-hairline-strong"}
+                className={active ? "w-px" : "w-px bg-border-strong"}
                 style={{
                   height: active ? 14 : 6,
                   ...(active ? { backgroundColor: w.hex } : {}),
@@ -209,9 +209,9 @@ export function PostHeaderB({
 
       {/* The baseline the ticks sit on — the scale's own rule, which is also
           the boundary between chrome and writing. One line doing two jobs. */}
-      <hr className="border-hairline" />
+      <hr className="border-border" />
 
-      <p className="mt-5 flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-wider text-muted">
+      <p className="mt-5 flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground">
         <span className={BAND_TEXT[meta.wavelength]}>{wl.label}</span>
         <Sep />
         <time dateTime={meta.date}>{format(parseDate(meta.date), "d MMM yyyy")}</time>
@@ -222,7 +222,7 @@ export function PostHeaderB({
             <Sep />
             <Link
               href={`/blog/series/${series.slug}`}
-              className="underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+              className="underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-subtle-foreground"
             >
               {series.name} {series.index}/{series.total}
             </Link>

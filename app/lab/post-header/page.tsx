@@ -132,9 +132,9 @@ function Variant({
   body: string;
 }) {
   return (
-    <section className="border-t border-hairline pt-10">
+    <section className="border-t border-border pt-10">
       <div className="mb-10 flex items-baseline gap-3">
-        <span className="font-mono text-[12px] font-medium uppercase tracking-wider text-paper">
+        <span className="font-mono text-[12px] font-medium uppercase tracking-wider text-foreground">
           {letter}
         </span>
         <span className="font-mono text-[12px] uppercase tracking-wider text-faint">{name}</span>
@@ -148,7 +148,7 @@ function Variant({
 
       {/* The argument, in the margin voice — mono, quiet, clearly not part of
           the specimen it is describing. */}
-      <p className="mt-10 border-l border-hairline pl-4 font-mono text-[12px] leading-relaxed text-muted">
+      <p className="mt-10 border-l border-border pl-4 font-mono text-[12px] leading-relaxed text-subtle-foreground">
         {note}
       </p>
     </section>
@@ -180,9 +180,9 @@ export default async function PostHeaderLab() {
         <div className="max-w-2xl">
           <header className="mb-16">
             <SectionLabel>Lab · post header</SectionLabel>
-            <p className="mt-4 font-reading text-[16px] leading-relaxed text-prose">
+            <p className="mt-4 font-reading text-[16px] leading-relaxed text-muted-foreground">
               Everything above a post headline, on one real post —{" "}
-              <span className="text-paper">{meta.title}</span>. First is what
+              <span className="text-foreground">{meta.title}</span>. First is what
               ships: the C/D hybrid, an episode frame over a byline over the
               headline, with the break underneath. Then the letterhead it
               replaced, and B, whose argument about the band is still open.
@@ -224,11 +224,11 @@ export default async function PostHeaderLab() {
               different title length — because a seriesless header faked from
               the specimen by deleting a field is not evidence. */}
           {loner && (
-            <section className="mt-24 border-t border-hairline pt-10">
+            <section className="mt-24 border-t border-border pt-10">
               <SectionLabel>Shipped · the seriesless case</SectionLabel>
-              <p className="mt-4 font-reading text-[16px] leading-relaxed text-prose">
+              <p className="mt-4 font-reading text-[16px] leading-relaxed text-muted-foreground">
                 The same component on{" "}
-                <span className="text-paper">{loner.title}</span>, which belongs
+                <span className="text-foreground">{loner.title}</span>, which belongs
                 to no series. The frame stays, at the same height and in the
                 same place, carrying the band and its position among the four; the band
                 drops out of the byline below rather than being said twice.
@@ -241,9 +241,9 @@ export default async function PostHeaderLab() {
 
           {/* ------------------------------------------------------------- */}
 
-          <section className="mt-24 border-t border-hairline pt-10">
+          <section className="mt-24 border-t border-border pt-10">
             <SectionLabel>Specimen · zigzag vs hatch</SectionLabel>
-            <p className="mt-4 font-reading text-[16px] leading-relaxed text-prose">
+            <p className="mt-4 font-reading text-[16px] leading-relaxed text-muted-foreground">
               Separate question, parked here because D uses the zigzag. These
               two look adjacent and are not the same thing — the argument for
               keeping both is that they are separating different kinds of
@@ -258,7 +258,7 @@ export default async function PostHeaderLab() {
                 <div className="mt-4">
                   <Hatch />
                 </div>
-                <p className="mt-4 font-mono text-[12px] leading-relaxed text-muted">
+                <p className="mt-4 font-mono text-[12px] leading-relaxed text-subtle-foreground">
                   Spans the measure. 315° repeat off --rsk-rule-strong. Says one
                   region of the page has ended and another begins — chrome
                   talking about layout. Already shipping.
@@ -269,10 +269,10 @@ export default async function PostHeaderLab() {
                 <figcaption className="font-mono text-[11px] uppercase tracking-wider text-faint">
                   Zigzag — prose break
                 </figcaption>
-                <div className="mt-4 flex justify-center text-hairline-strong">
+                <div className="mt-4 flex justify-center text-border-strong">
                   <Zigzag />
                 </div>
-                <p className="mt-4 font-mono text-[12px] leading-relaxed text-muted">
+                <p className="mt-4 font-mono text-[12px] leading-relaxed text-subtle-foreground">
                   Centred at its natural 112px, not spanning. The modern dinkus:
                   says the argument turns here — the author talking about the
                   writing. Full-measure it stops being a mark and becomes a saw
@@ -289,11 +289,11 @@ export default async function PostHeaderLab() {
                 </figcaption>
                 <div className="mt-4">
                   <Hatch />
-                  <p className="my-6 font-reading text-[18px] leading-[1.75] text-prose">
+                  <p className="my-6 font-reading text-[18px] leading-[1.75] text-muted-foreground">
                     A paragraph between them, so the spacing is judged with type
                     around it rather than on bare ground.
                   </p>
-                  <div className="flex justify-center text-hairline-strong">
+                  <div className="flex justify-center text-border-strong">
                     <Zigzag />
                   </div>
                 </div>

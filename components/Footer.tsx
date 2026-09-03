@@ -13,7 +13,7 @@ const LINKS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-hairline">
+    <footer className="border-t border-border">
       <div className={`${CONTAINER} py-10`}>
         <Availability />
         <div className="mt-5 flex flex-col gap-1 font-mono text-[12px] text-faint sm:flex-row sm:items-center sm:justify-between">
@@ -26,7 +26,7 @@ export function Footer() {
               <SmartLink
                 key={link.label}
                 href={link.href}
-                className="transition-colors hover:text-muted"
+                className="transition-colors hover:text-subtle-foreground"
               >
                 {link.label}
               </SmartLink>

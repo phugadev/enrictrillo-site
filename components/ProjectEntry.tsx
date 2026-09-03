@@ -126,7 +126,7 @@ export function ProjectEntry({ project, index }: { project: Project; index: numb
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-            <h3 className="font-display text-[22px] leading-tight text-paper">{project.name}</h3>
+            <h3 className="font-display text-[22px] leading-tight text-foreground">{project.name}</h3>
             <span
               className="font-mono text-[11px] uppercase tracking-wider"
               style={{ color: wl.hex }}
@@ -146,7 +146,7 @@ export function ProjectEntry({ project, index }: { project: Project; index: numb
             <span>{project.year}</span>
           </p>
 
-          <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-muted">
+          <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-subtle-foreground">
             {project.description}
           </p>
 

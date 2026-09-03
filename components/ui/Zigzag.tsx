@@ -53,7 +53,7 @@ export function Zigzag({
       viewBox={`0 0 ${width} 6`}
       fill="none"
       // currentColor, so the colour comes from a token utility on the caller
-      // (text-hairline-strong at time of writing) rather than being baked in
+      // (text-border-strong at time of writing) rather than being baked in
       // here. Same contract as every other mark in components/ui.
       stroke="currentColor"
       strokeWidth={1.5}

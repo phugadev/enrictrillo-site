@@ -20,7 +20,7 @@ function Leader() {
   return (
     <span
       aria-hidden="true"
-      className="min-w-6 flex-1 border-b border-dotted border-hairline-strong"
+      className="min-w-6 flex-1 border-b border-dotted border-border-strong"
     />
   );
 }
@@ -96,7 +96,7 @@ export function PostCard({
     return (
       <Link href={`/blog/${post.slug}`} className="group flex items-baseline gap-3 py-2.5">
         <WavelengthDot wavelength={post.wavelength} className="-translate-y-px" />
-        <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-paper">
+        <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-foreground">
           <span className="truncate">{post.title}</span>
           {flagNew && (
             <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
@@ -124,7 +124,7 @@ export function PostCard({
       className="group block py-5"
     >
       <div className="flex items-baseline gap-3">
-        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-paper">
+        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-foreground">
           {/* Hidden on the band pages: every post there is the same band,
               so the dot would repeat one colour down the page and mean
               nothing. */}
@@ -140,7 +140,7 @@ export function PostCard({
         </span>
       </div>
       <p
-        className={`mt-1.5 max-w-prose text-[14px] leading-relaxed text-muted ${
+        className={`mt-1.5 max-w-prose text-[14px] leading-relaxed text-subtle-foreground ${
           showWavelength ? "pl-[18px]" : ""
         }`}
       >

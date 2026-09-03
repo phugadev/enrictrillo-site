@@ -26,7 +26,7 @@ export function SeriesChips() {
           <Link
             key={s.slug}
             href={`/blog/series/${s.slug}`}
-            className="inline-flex items-center gap-2 rounded-full border border-hairline px-3.5 py-2 font-mono text-[12px] text-muted transition-colors hover:border-muted hover:text-paper"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[12px] text-subtle-foreground transition-colors hover:border-subtle-foreground hover:text-foreground"
           >
             {s.name}
             <span className="text-faint">{s.posts.length}</span>

@@ -18,8 +18,8 @@ export function Now() {
       <SectionLabel>Now</SectionLabel>
       <ul className="mt-6 space-y-3">
         {now.map((item) => (
-          <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-muted">
-            <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-hairline" />
+          <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-subtle-foreground">
+            <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-border" />
             <span>{item}</span>
           </li>
         ))}

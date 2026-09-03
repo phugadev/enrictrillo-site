@@ -9,7 +9,7 @@ import { Zigzag } from "./ui/Zigzag";
 
 const FIGURE = "my-8";
 const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
-const FRAME = "rounded-lg border border-hairline";
+const FRAME = "rounded-lg border border-border";
 
 /** Prose column width, so the browser can pick a sensible source. */
 const SIZES = "(max-width: 768px) 100vw, 672px";
@@ -84,7 +84,7 @@ type CompareItem = {
   outcome: "good" | "bad";
 };
 
-const CHIP = "inline-flex w-fit items-center rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-faint";
+const CHIP = "inline-flex w-fit items-center rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-faint";
 
 /**
  * A "wrong way / right way" pair of panels for the rare post making a single,
@@ -174,7 +174,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
         <p className="font-mono text-[11px] font-medium uppercase tracking-wider" style={{ color: hex }}>
           {label}
         </p>
-        <div className="mt-1 text-[15px] leading-relaxed text-prose">{children}</div>
+        <div className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{children}</div>
       </div>
     </div>
   );
@@ -196,7 +196,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
  */
 function Break() {
   return (
-    <div className="my-12 flex w-full items-center justify-center text-hairline-strong">
+    <div className="my-12 flex w-full items-center justify-center text-border-strong">
       <Zigzag />
     </div>
   );
