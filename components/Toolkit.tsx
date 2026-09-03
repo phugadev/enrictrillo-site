@@ -30,7 +30,7 @@ export function Toolkit() {
               <dt className="flex items-baseline gap-2.5 font-mono text-[11px] uppercase tracking-wider">
                 <span
                   aria-hidden="true"
-                  className="h-1.5 w-1.5 shrink-0 translate-y-[-1px] rounded-full"
+                  className="h-1.5 w-1.5 shrink-0 -translate-y-px rounded-full"
                   style={{ backgroundColor: wl.hex }}
                 />
                 <span style={{ color: wl.hex }}>{wl.label}</span>
@@ -41,7 +41,7 @@ export function Toolkit() {
                 {items.map((item) => (
                   <span
                     key={item}
-                    className="cursor-default select-none rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-[var(--chip)] hover:text-[var(--chip)]"
+                    className="cursor-default select-none rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-(--chip) hover:text-(--chip)"
                     style={{ "--chip": wl.hex } as CSSProperties}
                   >
                     {item}

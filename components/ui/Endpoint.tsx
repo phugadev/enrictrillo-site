@@ -35,7 +35,7 @@ export function Endpoint({
   return (
     <SmartLink
       href={href}
-      className={`group/ep block min-w-[13rem] max-w-full border-t pt-2 transition-colors hover:border-paper ${
+      className={`group/ep block min-w-52 max-w-full border-t pt-2 transition-colors hover:border-paper ${
         emphasis ? "border-paper/40" : "border-hairline"
       }`}
     >

@@ -1,5 +1,5 @@
-@import "@ruskel/tokens";
-@import "@ruskel/ui";
+@import '@ruskel/tokens' layer(base);
+@import '@ruskel/ui' layer(base);
 
 /*
   next/font emits hashed family names, so the token layer's declared stacks
@@ -10,10 +10,7 @@
   token, which stays on the sans stack until an ancestor carries
   data-voice="author". Overwriting it here would defeat the guard.
 */
-:root {
-  --rsk-font-sans: var(--font-body), system-ui, sans-serif;
-  --rsk-font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
-}
+@import 'tailwindcss';
 
 /*
   --font-serif is scoped by next/font to the post layout's wrapper, not to
@@ -21,13 +18,35 @@
   computed-value time and it inherited down empty, so the gate opened onto
   nothing. Map it on the same element that carries both.
 */
-[data-voice="author"] {
-  --rsk-serif-face: var(--font-serif), Georgia, "Times New Roman", serif;
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer base {
+  :root {
+    --rsk-font-sans: var(--font-body), system-ui, sans-serif;
+    --rsk-font-mono: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+  }
+  [data-voice='author'] {
+    --rsk-serif-face: var(--font-serif), Georgia, 'Times New Roman', serif;
+  }
+}
 
 html {
   scroll-behavior: smooth;

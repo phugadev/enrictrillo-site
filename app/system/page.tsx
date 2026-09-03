@@ -67,7 +67,7 @@ function BandTable() {
             {/* The mark, doing the only job a mark has: being seen. */}
             <span
               aria-hidden="true"
-              className="h-2 w-2 shrink-0 translate-y-[-1px] rounded-full"
+              className="h-2 w-2 shrink-0 -translate-y-px rounded-full"
               style={{ background: "var(--rsk-mark)" }}
             />
             <span className="text-paper">{band.label}</span>
@@ -327,7 +327,7 @@ export default function SystemPage() {
                 Retrieval quality is the whole ballgame in a RAG system.
               </span>
             </Cell>
-            <Cell verdict="yes" label="Text ring">
+            <Cell verdict="yes" label="Text ring-3">
               <span style={{ color: "var(--rsk-text-590)" }}>
                 Retrieval quality is the whole ballgame in a RAG system.
               </span>

@@ -60,7 +60,7 @@ export function VariantBlock({ headings, wavelength, activeId, onSelect }: Varia
                 aria-current={active ? "true" : undefined}
                 onClick={() => onSelect?.(heading.id)}
                 // rounded-sm, not a pill: this is structure, not a token.
-                className={`group relative block rounded-sm py-[7px] pr-2 outline-none transition-colors duration-200 ease-out focus-visible:ring-1 focus-visible:ring-hairline-strong motion-reduce:transition-none ${
+                className={`group relative block rounded-sm py-[7px] pr-2 outline-hidden transition-colors duration-200 ease-out focus-visible:ring-1 focus-visible:ring-hairline-strong motion-reduce:transition-none ${
                   heading.depth === 3 ? "pl-7" : "pl-3"
                 } ${active ? "bg-surface" : "hover:bg-surface/50"}`}
               >
@@ -112,7 +112,7 @@ export function VariantTicks({ headings, wavelength, activeId, onSelect }: Varia
                 href={`#${heading.id}`}
                 aria-current={active ? "true" : undefined}
                 onClick={() => onSelect?.(heading.id)}
-                className={`group relative block rounded-sm py-[7px] pr-1 outline-none focus-visible:ring-1 focus-visible:ring-hairline-strong ${
+                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-hairline-strong ${
                   heading.depth === 3 ? "pl-11" : "pl-8"
                 }`}
               >
