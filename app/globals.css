@@ -1858,3 +1858,24 @@ body {
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
 }
+
+/*
+  A fourth text level, composed here rather than taken from Minima.
+
+  Ruskel had four (text, prose, muted, faint); Minima has three, deliberately —
+  Charter 7.2 fixes the count, and deviation D1 records how much work it already
+  took to get a third out of a scale defining two text steps. This site uses the
+  quietest tier heavily (48 call sites, mostly mono metadata) and collapsing it
+  into --subtle-foreground would flatten two levels into one.
+
+  So it is composed from the ramp, which Charter 3.7 permits: the ramps allow
+  product-level composition, the system does not encode it. --gray-9 is the rung
+  directly below step 10, which --subtle-foreground resolves to. Ruskel's faint
+  measured 0.556 and this is 0.60, so the tier reads a touch brighter.
+
+  If it survives the whole migration and still earns its place, that is evidence
+  for a fourth level in Minima. It is not evidence yet.
+*/
+@theme {
+  --color-faint: var(--gray-9);
+}

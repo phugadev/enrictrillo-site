@@ -68,9 +68,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en-GB"
-      // The site is dark-only, so it runs the luminous exposure of @ruskel/tokens.
+      // The site is dark-only. `data-exposure` is Ruskel's switch and still
+      // drives the wavelength bands; `dark` is Minima's, and without it the
+      // token layer resolves to its light values — white on white.
       data-exposure="luminous"
-      className={`${body.variable} ${mono.variable}`}
+      className={`dark ${body.variable} ${mono.variable}`}
     >
       {/*
         suppressHydrationWarning covers only <body>'s own attributes, not its
@@ -79,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         otherwise throws a hydration mismatch on every page load in dev. Real
         mismatches inside the tree still surface normally.
       */}
-      <body className="bg-ink font-body text-paper antialiased" suppressHydrationWarning>
+      <body className="bg-background font-body text-foreground antialiased" suppressHydrationWarning>
         {children}
         {/* Entity data for search and assistants — see lib/schema.tsx */}
         <JsonLd data={personSchema()} />

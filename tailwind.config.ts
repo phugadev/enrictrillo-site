@@ -11,19 +11,18 @@ import type { Config } from "tailwindcss";
  */
 
 /**
- * Tailwind v3 cannot apply an alpha modifier to a plain `var()` colour, and
- * the `<alpha-value>` placeholder needs channel-triplet variables — which
- * OKLCH tokens are not. `color-mix` covers both cases from one definition, so
- * `bg-ink` and `bg-ink/85` both keep working.
+ * A plain `var()` reference. This used to be a colour *function* returning a
+ * `color-mix`, because Tailwind v3 could not apply an alpha modifier to a
+ * bare `var()` colour.
+ *
+ * v4 can, and — importantly — v4's `@config` compatibility layer does not
+ * support function-based colour values at all. It does not error on them; it
+ * resolves them to nothing. Every band utility (`bg-systems`, `text-compute`
+ * and the rest) rendered transparent from the moment this project moved to
+ * v4, while the underlying tokens stayed perfectly correct. Nothing failed
+ * loudly, so nothing caught it.
  */
-const token = (name: string) =>
-  // Tailwind resolves colour *functions* at build time, but its `Config` type
-  // models colours as strings only, so the cast is required. It is a gap in
-  // the types, not a lie about the value.
-  ((({ opacityValue }: { opacityValue?: string }) =>
-    opacityValue === undefined
-      ? `var(--rsk-${name})`
-      : `color-mix(in oklab, var(--rsk-${name}) calc(${opacityValue} * 100%), transparent)`) as unknown as string);
+const token = (name: string) => `var(--rsk-${name})`;
 
 /**
  * A band resolves to two values. `DEFAULT` is the vivid mark, for fills, dots,
@@ -65,17 +64,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: token("ground"),
-        surface: token("surface"),
-        "surface-2": token("surface-2"),
-        hairline: token("rule"),
-        "hairline-strong": token("rule-strong"),
 
-        paper: token("text"),
-        prose: token("text-prose"),
-        muted: token("text-muted"),
-        faint: token("text-faint"),
-        ray: token("n-08"),
 
         interface: band("590"),
         systems: band("520"),

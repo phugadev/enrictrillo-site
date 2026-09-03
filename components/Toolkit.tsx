@@ -41,7 +41,7 @@ export function Toolkit() {
                 {items.map((item) => (
                   <span
                     key={item}
-                    className="cursor-default select-none rounded-full border border-hairline px-2.5 py-1 font-mono text-[11px] text-muted transition-colors hover:border-(--chip) hover:text-(--chip)"
+                    className="cursor-default select-none rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-subtle-foreground transition-colors hover:border-(--chip) hover:text-(--chip)"
                     style={{ "--chip": wl.hex } as CSSProperties}
                   >
                     {item}

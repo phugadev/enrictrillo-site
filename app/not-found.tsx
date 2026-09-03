@@ -22,11 +22,11 @@ export default function NotFound() {
     <PageShell mainClassName={`${CONTAINER} py-24 sm:py-32`}>
       <SectionLabel as="p">Error 404</SectionLabel>
 
-      <h1 className="mt-4 font-display text-[32px] font-medium leading-tight tracking-tight text-paper sm:text-[38px]">
+      <h1 className="mt-4 font-display text-[32px] font-medium leading-tight tracking-tight text-foreground sm:text-[38px]">
         No signal at this wavelength.
       </h1>
 
-      <p className="mt-4 max-w-md text-[16px] leading-relaxed text-muted">
+      <p className="mt-4 max-w-md text-[16px] leading-relaxed text-subtle-foreground">
         That page doesn&rsquo;t exist — it may have moved, or the link that brought you here may be
         out of date.
       </p>
@@ -34,7 +34,7 @@ export default function NotFound() {
       <div className="mt-9 font-mono text-[13px]">
         <Link
           href="/"
-          className="inline-block rounded-full border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
+          className="inline-block rounded-full border border-border px-5 py-2.5 text-foreground transition-colors hover:border-foreground"
         >
           Home
         </Link>

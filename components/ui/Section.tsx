@@ -6,7 +6,7 @@ export const CONTAINER = "mx-auto max-w-3xl px-6";
 /**
  * A section of the page, separated from the one above by whitespace alone.
  *
- * This used to carry a hairline rule (`border-t border-hairline`) inside the
+ * This used to carry a hairline rule (`border-t border-border`) inside the
  * container to mark the boundary. Dropped because every section boundary on
  * the page picked up a rule, including the one directly under the
  * Spectrometer's own bordered panel — two adjacent rules read as a visual

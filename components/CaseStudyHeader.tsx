@@ -12,7 +12,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   return (
     <>
       <dt className="text-faint">{label}</dt>
-      <dd className="text-muted">{children}</dd>
+      <dd className="text-subtle-foreground">{children}</dd>
     </>
   );
 }
@@ -45,7 +45,7 @@ export function CaseStudyHeader({ meta }: { meta: CaseStudyMeta }) {
                 <SmartLink
                   key={key}
                   href={meta.links![key]!}
-                  className="text-muted underline decoration-hairline underline-offset-4 transition-colors hover:text-paper hover:decoration-muted"
+                  className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-subtle-foreground"
                 >
                   {label} ↗
                 </SmartLink>
@@ -55,9 +55,9 @@ export function CaseStudyHeader({ meta }: { meta: CaseStudyMeta }) {
         )}
       </dl>
 
-      <hr className="mt-5 border-hairline" />
+      <hr className="mt-5 border-border" />
 
-      <h1 className="mt-8 font-display text-[32px] font-medium leading-tight tracking-tight text-paper sm:text-[38px]">
+      <h1 className="mt-8 font-display text-[32px] font-medium leading-tight tracking-tight text-foreground sm:text-[38px]">
         {meta.title}
       </h1>
     </header>

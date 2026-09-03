@@ -65,7 +65,7 @@ export default function Home() {
         <div className="mb-8 flex animate-fade-up items-center gap-4">
           <Avatar />
           <div className="min-w-0">
-            <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-paper">
+            <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-foreground">
               {site.name}
               <VerifiedBadge className="h-[18px] w-[18px]" />
             </p>
@@ -76,7 +76,7 @@ export default function Home() {
         </div>
 
         <h1
-          className="animate-fade-up font-display text-[40px] font-medium leading-[1.15] tracking-tight text-paper sm:text-[52px]"
+          className="animate-fade-up font-display text-[40px] font-medium leading-[1.15] tracking-tight text-foreground sm:text-[52px]"
           style={{ animationDelay: "80ms" }}
         >
           Production software,
@@ -84,12 +84,12 @@ export default function Home() {
           end to end.
         </h1>
         <p
-          /* text-prose, not text-muted. This is a paragraph someone reads, and
+          /* text-muted-foreground, not text-subtle-foreground. This is a paragraph someone reads, and
              muted is the metadata grey — dates, labels, counts. Running the
              one paragraph that has to do the persuading two steps dimmer
              than any paragraph inside an article was the hierarchy
              backwards. */
-          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-prose"
+          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-muted-foreground"
           style={{ animationDelay: "160ms" }}
         >
           Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as
@@ -105,11 +105,11 @@ export default function Home() {
         >
           <a
             href={`mailto:${site.email}`}
-            className="rounded border border-hairline px-5 py-2.5 text-paper transition-colors hover:border-paper"
+            className="rounded border border-border px-5 py-2.5 text-foreground transition-colors hover:border-foreground"
           >
             {site.email}
           </a>
-          <Link href="/blog" className="text-muted transition-colors hover:text-paper">
+          <Link href="/blog" className="text-subtle-foreground transition-colors hover:text-foreground">
             Read the writing →
           </Link>
         </div>
@@ -134,7 +134,7 @@ export default function Home() {
                 tells a reader the list is short on purpose. */}
             <span className="font-mono text-[12px] text-faint">{projects.length}</span>
           </div>
-          <ul className="mt-6 divide-y divide-hairline">
+          <ul className="mt-6 divide-y divide-border">
             {projects.map((project, i) => (
               <ProjectEntry key={project.name} project={project} index={i} />
             ))}
@@ -165,7 +165,7 @@ export default function Home() {
           <Section>
             <div className="flex items-center justify-between">
               <SectionLabel>Latest writing</SectionLabel>
-              <Link href="/blog" className="font-mono text-[12px] text-muted hover:text-paper">
+              <Link href="/blog" className="font-mono text-[12px] text-subtle-foreground hover:text-foreground">
                 All posts →
               </Link>
             </div>

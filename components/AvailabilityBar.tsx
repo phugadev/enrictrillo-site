@@ -39,9 +39,9 @@ export function AvailabilityBar() {
       {/* balance: on mobile, where this wraps to two lines, the default
           greedy wrap left a lone orphaned word centred on its own line. */}
       <p
-        className={`${CONTAINER} py-4 text-center font-mono text-[12px] leading-[1.7] text-muted text-balance`}
+        className={`${CONTAINER} py-4 text-center font-mono text-[12px] leading-[1.7] text-subtle-foreground text-balance`}
       >
-        <span className="mr-2 inline-block rounded-full bg-systems px-1.5 py-0.5 text-[10px] font-medium uppercase leading-normal tracking-wider text-ink">
+        <span className="mr-2 inline-block rounded-full bg-systems px-1.5 py-0.5 text-[10px] font-medium uppercase leading-normal tracking-wider text-background">
           Open
         </span>
         {label}

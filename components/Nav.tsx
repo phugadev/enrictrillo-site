@@ -14,13 +14,13 @@ import { CONTAINER } from "./ui/Section";
  */
 export function Nav() {
   return (
-    <header className="sticky top-0 z-20 bg-ink/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 bg-background/85 backdrop-blur-md">
       <div
-        className={`${CONTAINER} flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-hairline py-4`}
+        className={`${CONTAINER} flex flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b border-border py-4`}
       >
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2.5 font-display text-[15px] tracking-tight text-paper"
+          className="flex shrink-0 items-center gap-2.5 font-display text-[15px] tracking-tight text-foreground"
         >
           <DispersionMark />
           {site.name}
@@ -28,10 +28,10 @@ export function Nav() {
 
         <nav
           aria-label="Primary"
-          className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-wider text-muted sm:gap-6 sm:text-[12px]"
+          className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground sm:gap-6 sm:text-[12px]"
         >
           {site.nav.map((item) => (
-            <Link key={item.href} href={item.href} className="transition-colors hover:text-paper">
+            <Link key={item.href} href={item.href} className="transition-colors hover:text-foreground">
               {item.label}
             </Link>
           ))}

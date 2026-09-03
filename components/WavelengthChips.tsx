@@ -30,8 +30,8 @@ export function WavelengthChips({ active }: { active?: Wavelength }) {
         aria-current={active ? undefined : "page"}
         className={`rounded-full border px-3.5 py-2 font-mono text-[12px] transition-colors ${
           active
-            ? "border-hairline text-muted hover:text-paper"
-            : "border-paper bg-paper text-ink"
+            ? "border-border text-subtle-foreground hover:text-foreground"
+            : "border-foreground bg-foreground text-background"
         }`}
       >
         All
@@ -59,7 +59,7 @@ export function WavelengthChips({ active }: { active?: Wavelength }) {
           return (
             <span
               key={wavelength}
-              className="inline-flex cursor-default items-center gap-2 rounded-full border border-hairline px-3.5 py-2 font-mono text-[12px] text-faint opacity-60"
+              className="inline-flex cursor-default items-center gap-2 rounded-full border border-border px-3.5 py-2 font-mono text-[12px] text-faint opacity-60"
             >
               {inner}
             </span>

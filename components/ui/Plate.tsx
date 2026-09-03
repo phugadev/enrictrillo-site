@@ -38,7 +38,7 @@ export function Cell({
 }) {
   return (
     <div className="rsk-plate__cell">
-      <div className="text-[14px] leading-[1.55] text-prose">{children}</div>
+      <div className="text-[14px] leading-[1.55] text-muted-foreground">{children}</div>
       {verdict || label ? (
         <div className="rsk-plate__foot">
           {verdict ? (

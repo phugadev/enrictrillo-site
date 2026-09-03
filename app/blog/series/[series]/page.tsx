@@ -46,15 +46,15 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
   return (
     <PageShell mainClassName={`${CONTAINER} py-16`}>
       <SectionLabel as="p">Series</SectionLabel>
-      <h1 className="mt-3 font-display text-[32px] font-medium tracking-tight text-paper">
+      <h1 className="mt-3 font-display text-[32px] font-medium tracking-tight text-foreground">
         {found.name}
       </h1>
-      <p className="mt-3 text-[15px] leading-relaxed text-muted">
+      <p className="mt-3 text-[15px] leading-relaxed text-subtle-foreground">
         {found.posts.length} {found.posts.length === 1 ? "post" : "posts"} in this series, newest
         first.
       </p>
 
-      <div className="mt-12 rsk-focuslist divide-y divide-hairline">
+      <div className="mt-12 rsk-focuslist divide-y divide-border">
         {found.posts.map((post) => (
           <PostCard key={post.slug} post={post} />
         ))}
@@ -62,7 +62,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
 
       <Link
         href="/blog"
-        className="mt-12 inline-block font-mono text-[12px] text-muted transition-colors hover:text-paper"
+        className="mt-12 inline-block font-mono text-[12px] text-subtle-foreground transition-colors hover:text-foreground"
       >
         ← All writing
       </Link>

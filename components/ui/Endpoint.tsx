@@ -35,14 +35,14 @@ export function Endpoint({
   return (
     <SmartLink
       href={href}
-      className={`group/ep block min-w-52 max-w-full border-t pt-2 transition-colors hover:border-paper ${
-        emphasis ? "border-paper/40" : "border-hairline"
+      className={`group/ep block min-w-52 max-w-full border-t pt-2 transition-colors hover:border-foreground ${
+        emphasis ? "border-foreground/40" : "border-border"
       }`}
     >
-      <span className="block font-mono text-[11px] uppercase tracking-wider text-paper">
+      <span className="block font-mono text-[11px] uppercase tracking-wider text-foreground">
         {label} <span aria-hidden="true">{arrow}</span>
       </span>
-      <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-muted">
+      <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-subtle-foreground">
         {sub}
       </span>
     </SmartLink>

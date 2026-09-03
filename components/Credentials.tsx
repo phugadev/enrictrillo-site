@@ -19,7 +19,7 @@ export function Credentials() {
   return (
     <Section>
       <SectionLabel>Certified</SectionLabel>
-      <ul className="mt-6 divide-y divide-hairline">
+      <ul className="mt-6 divide-y divide-border">
         {sorted.map((credential) => {
           const row = (
             <span className="flex items-baseline justify-between gap-6 py-4">
@@ -29,7 +29,7 @@ export function Credentials() {
                   className="translate-y-[-2px]"
                 />
                 <span>
-                  <span className="font-display text-[16px] text-paper">{credential.name}</span>{" "}
+                  <span className="font-display text-[16px] text-foreground">{credential.name}</span>{" "}
                   <span className="font-mono text-[11px] uppercase tracking-wider text-faint">
                     {credential.issuer}
                   </span>

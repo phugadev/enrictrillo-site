@@ -33,7 +33,7 @@ const NEUTRAL_HEX = "#7A7C85"; // palette.faint — not re-imported to keep this
  */
 export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (string | undefined)[] }) {
   return (
-    <div className="not-prose my-8 flex flex-col rounded-lg border border-hairline bg-surface p-6 sm:flex-row sm:items-center">
+    <div className="not-prose my-8 flex flex-col rounded-lg border border-border bg-surface p-6 sm:flex-row sm:items-center">
       {nodes.map((node, i) => {
         const hex = node.wavelength ? wavelengths[node.wavelength].hex : NEUTRAL_HEX;
         return (

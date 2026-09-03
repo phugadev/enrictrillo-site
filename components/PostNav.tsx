@@ -19,7 +19,7 @@ function NavLink({ post, side }: { post: PostMeta; side: "left" | "right" }) {
       </span>
       <span className="flex items-center gap-2.5">
         <WavelengthDot wavelength={post.wavelength} />
-        <span className="font-display text-[16px] leading-snug text-muted transition-colors group-hover:text-paper">
+        <span className="font-display text-[16px] leading-snug text-subtle-foreground transition-colors group-hover:text-foreground">
           {post.title}
         </span>
       </span>
@@ -33,7 +33,7 @@ export function PostNav({ newer, older }: { newer?: PostMeta; older?: PostMeta }
   return (
     <nav
       aria-label="More writing"
-      className="mt-16 border-t border-hairline sm:grid sm:grid-cols-2 sm:gap-8"
+      className="mt-16 border-t border-border sm:grid sm:grid-cols-2 sm:gap-8"
     >
       {/* Placeholder keeps `newer` in the right column when there's no older post. */}
       {older ? <NavLink post={older} side="left" /> : <span className="hidden sm:block" />}
