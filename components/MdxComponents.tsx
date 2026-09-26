@@ -186,7 +186,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
  * in the middle of an argument, where nothing structural had happened at
  * all. The zigzag is short and centred on purpose: it is the author's beat,
  * not the layout's. See the rule written down in components/ui/Zigzag.tsx —
- * it must never span the column, or it becomes a saw blade doing Hatch's job
+ * it must never span the column, or it becomes a saw blade doing a full-width rule's job
  * badly.
  */
 function Break() {
