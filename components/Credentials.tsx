@@ -1,50 +1,36 @@
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
-import { Section } from "./ui/Section";
-import { SectionLabel } from "./ui/SectionLabel";
+import { Section } from "./layout";
 import { SmartLink } from "./ui/SmartLink";
 import { WavelengthDot } from "./ui/WavelengthDot";
 import { credentials } from "@/lib/site";
 
-/**
- * Earned credentials only — see the note on `credentials` in lib/site.ts.
- * Hides itself entirely while nothing is banked, so the homepage never shows
- * an empty heading.
- */
+/** Hides itself while no credentials are banked. */
 export function Credentials() {
   if (credentials.length === 0) return null;
 
   const sorted = [...credentials].sort((a, b) => (a.earned < b.earned ? 1 : -1));
 
   return (
-    <Section>
-      <SectionLabel>Certified</SectionLabel>
-      <ul className="mt-6 divide-y divide-border">
+    <Section label="Certified">
+      <ul className="divide-y divide-border rounded-panel border border-border bg-card">
         {sorted.map((credential) => {
           const row = (
-            <span className="flex items-baseline justify-between gap-6 py-4">
-              <span className="flex items-baseline gap-2.5">
-                <WavelengthDot
-                  wavelength={credential.wavelength}
-                  className="translate-y-[-2px]"
-                />
-                <span>
-                  <span className="font-display text-[16px] text-foreground">{credential.name}</span>{" "}
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-faint">
-                    {credential.issuer}
-                  </span>
-                </span>
+            <span className="flex items-center justify-between gap-gutter px-gutter py-gutter">
+              <span className="flex min-w-0 items-center gap-inset">
+                <WavelengthDot wavelength={credential.wavelength} />
+                <span className="truncate type-subheading text-foreground">{credential.name}</span>
+                <span className="signal hidden type-label-sm text-faint sm:inline">{credential.issuer}</span>
               </span>
-              <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
+              <span className="figure shrink-0 type-caption-sm text-faint">
                 {format(parseDate(`${credential.earned}-01`), "MMM yyyy")}
               </span>
             </span>
           );
-
           return (
             <li key={`${credential.issuer}-${credential.name}`}>
               {credential.href ? (
-                <SmartLink href={credential.href} className="block">
+                <SmartLink href={credential.href} className="block transition-colors duration-quick hover:bg-gray-tint">
                   {row}
                 </SmartLink>
               ) : (

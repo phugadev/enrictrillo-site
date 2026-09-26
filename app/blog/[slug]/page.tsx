@@ -5,7 +5,7 @@ import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
 import { PostNav } from "@/components/PostNav";
 import { PostToc } from "@/components/PostToc";
-import { CONTAINER } from "@/components/ui/Section";
+import { PAGE } from "@/components/layout";
 import { getHeadings } from "@/lib/headings";
 import { JsonLd, blogPostingSchema } from "@/lib/schema";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
@@ -65,30 +65,31 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   // after hydration — see lib/headings.ts for why it re-runs the real pipeline.
   const headings = await getHeadings(content);
 
+  const hasToc = headings.length > 1;
+
   return (
-    // Post pages read narrower than CONTAINER (see the max-w-2xl below) —
-    // long-form wants a tighter measure than the homepage's cards. But the
-    // measure being narrower doesn't mean the page should be: this outer div
-    // stays on CONTAINER so the column lines up with Nav and Footer on both
-    // edges, the same way it does on every other page. A plain max-w-2xl
-    // mx-auto here centers independently and drifts 48px off the chrome.
-    <PageShell mainClassName={`${CONTAINER} py-16`} reading>
-      {/* `relative` so the margin ToC can hang off the right edge of the
-          column and stay stuck to it for the length of the post. The rail is
-          absolutely positioned and a fixed width, so it reserves its own space
-          in the margin without ever being part of this column's flow — the
-          article's position and its alignment with Nav and Footer are the same
-          with the ToC as without it, at every breakpoint. */}
-      <div className="relative max-w-2xl">
-        <JsonLd data={blogPostingSchema(meta)} />
-        {headings.length > 1 && <PostToc headings={headings} wavelength={meta.wavelength} />}
-        <PostHeader meta={meta} />
-
-        <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">
-          <Mdx source={content} />
+    <PageShell reading>
+      <JsonLd data={blogPostingSchema(meta)} />
+      {/* The article keeps its measure and the table of contents takes a
+          column of its own beside it on wide screens, rather than hanging
+          off the edge of the text. */}
+      <div
+        className={`${PAGE} grid gap-section pt-section ${
+          hasToc ? "xl:grid-cols-[minmax(0,1fr)_13rem]" : ""
+        }`}
+      >
+        <article className="min-w-0 max-w-[46rem]">
+          <PostHeader meta={meta} />
+          <div className="prose mt-stack">
+            <Mdx source={content} />
+          </div>
+          <PostNav newer={newer} older={older} />
         </article>
-
-        <PostNav newer={newer} older={older} />
+        {hasToc && (
+          <aside className="hidden xl:block">
+            <PostToc headings={headings} wavelength={meta.wavelength} />
+          </aside>
+        )}
       </div>
     </PageShell>
   );

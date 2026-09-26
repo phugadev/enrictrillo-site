@@ -1,32 +1,24 @@
 import type { ReactNode } from "react";
 
 /**
- * A demonstration frame, from @ruskel/ui.
- *
- * Shows two (or more) states side by side so the reader compares rather than
- * taking the claim on trust — before/after, without/with, wrong/right. Cells
- * stack below 640px; the divider follows automatically because it is drawn
- * per-cell rather than on the container.
- *
- *   <Plate caption="A harness makes the difference legible.">
- *     <Cell verdict="no" label="No baseline">…</Cell>
- *     <Cell verdict="yes" label="Reproducible">…</Cell>
- *   </Plate>
+ * A plate: cells side by side on one raised panel, for comparing things a
+ * reader should see at once — two approaches, a before and an after. Cells
+ * are divided by hairlines rather than gaps so they read as one object.
  */
 export function Plate({ children, caption }: { children: ReactNode; caption?: string }) {
   return (
-    <div className="not-prose my-8">
-      <div className="rsk-plate">{children}</div>
-      {caption ? <p className="rsk-plate__caption">{caption}</p> : null}
-    </div>
+    <figure className="my-stack">
+      <div className="grid gap-px overflow-hidden rounded-panel border border-border bg-border shadow-raised sm:auto-cols-fr sm:grid-flow-col">
+        {children}
+      </div>
+      {caption ? (
+        <figcaption className="figure mt-inset text-center type-caption-sm text-faint">{caption}</figcaption>
+      ) : null}
+    </figure>
   );
 }
 
-/**
- * `verdict` is optional. When present it renders the status treatment — form
- * carries the meaning and the only hue is the reserved alarm, so a plate never
- * introduces a colour the rest of the system does not already use.
- */
+/** One cell. A verdict marks it as the approach that works, or does not. */
 export function Cell({
   children,
   verdict,
@@ -37,12 +29,19 @@ export function Cell({
   label?: string;
 }) {
   return (
-    <div className="rsk-plate__cell">
-      <div className="text-[14px] leading-[1.55] text-muted-foreground">{children}</div>
+    <div className="flex flex-col gap-gutter bg-card p-gutter">
+      <div className="type-body text-muted-foreground">{children}</div>
       {verdict || label ? (
-        <div className="rsk-plate__foot">
+        <div className="signal mt-auto flex items-center gap-inset type-label-sm text-subtle-foreground">
           {verdict ? (
-            <span className="rsk-plate__verdict" data-verdict={verdict} aria-hidden="true">
+            <span
+              aria-hidden="true"
+              className={`flex size-5 items-center justify-center rounded-full border ${
+                verdict === "yes"
+                  ? "border-green-border bg-green-fill text-green-text"
+                  : "border-red-border bg-red-fill text-red-text"
+              }`}
+            >
               {verdict === "yes" ? "✓" : "✕"}
             </span>
           ) : null}

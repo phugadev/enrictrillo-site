@@ -1,534 +1,341 @@
-@import '@ruskel/tokens' layer(base);
-@import '@ruskel/ui' layer(base);
-
-/*
-  next/font emits hashed family names, so the token layer's declared stacks
-  ("Inter", "IBM Plex Mono", "Instrument Serif") would never match. Point them
-  at the generated variables instead.
-
-  Note --rsk-serif-face, not --rsk-font-serif: the latter is the *gated*
-  token, which stays on the sans stack until an ancestor carries
-  data-voice="author". Overwriting it here would defeat the guard.
-*/
 @import 'tailwindcss';
 @import '../styles/minima.css';
 
 /*
-  --font-serif is scoped by next/font to the post layout's wrapper, not to
-  :root. Declaring --rsk-serif-face at :root therefore made it invalid at
-  computed-value time and it inherited down empty, so the gate opened onto
-  nothing. Map it on the same element that carries both.
+  This file is the site's own layer on top of Minima: the four wavelength
+  bands, the three faces, and the handful of reading and code-block decisions
+  that belong to this site rather than to a design system. Everything else —
+  colour roles, type, space, depth, motion, focus, prose — comes from
+  styles/minima.css, which is installed from the registry and never edited.
 */
-@config '../tailwind.config.ts';
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* ── The wavelength bands ─────────────────────────────────────────────────
+   The site files its work and writing under four bands of the spectrum. Each
+   band is one of Minima's hue ramps, used by role: `mark` for things that are
+   seen (dots, rules, fills), `tint` for coloured text, `fill` and `edge` for a
+   tinted chip. Colour spent on identity, which is what Minima keeps hue for.
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+     interface     590nm   amber
+     systems       520nm   green
+     compute       470nm   blue
+     intelligence  405nm   purple
 */
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+@theme inline {
+  --color-interface: var(--amber-mark);
+  --color-interface-tint: var(--amber-text);
+  --color-interface-fill: var(--amber-fill);
+  --color-interface-edge: var(--amber-border);
+
+  --color-systems: var(--green-mark);
+  --color-systems-tint: var(--green-text);
+  --color-systems-fill: var(--green-fill);
+  --color-systems-edge: var(--green-border);
+
+  --color-compute: var(--blue-mark);
+  --color-compute-tint: var(--blue-text);
+  --color-compute-fill: var(--blue-fill);
+  --color-compute-edge: var(--blue-border);
+
+  --color-intelligence: var(--purple-mark);
+  --color-intelligence-tint: var(--purple-text);
+  --color-intelligence-fill: var(--purple-fill);
+  --color-intelligence-edge: var(--purple-border);
+
+  /*
+    A fourth text level, below Minima's subtle-foreground. Minima took the
+    third from this site and keeps the fourth out: one consumer is not
+    evidence for a scale. 4.72:1 on the canvas and on cards; under 4.5 on
+    Minima's raised dark rungs, so it stays off overlays.
+  */
+  --color-faint: var(--gray-solid);
 }
 
-@layer base {
-  :root {
-    --rsk-font-sans: var(--font-body), system-ui, sans-serif;
-    --rsk-font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
-  }
-  [data-voice='author'] {
-    --rsk-serif-face: var(--font-serif), Georgia, 'Times New Roman', serif;
-  }
+/* ── Faces ────────────────────────────────────────────────────────────────
+   Minima ships no typeface; it borrows Tailwind's --font-sans and
+   --font-mono, so pointing those two at next/font is the whole of the swap.
+   The serif is a third face and a site concern: a person speaking, used for
+   article headlines only. next/font scopes it to the post layout, so the
+   family is declared on the element that carries the face, not on :root. */
+:root {
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
+}
+[data-voice='author'] {
+  --font-serif: var(--font-serif-face), Georgia, 'Times New Roman', serif;
 }
 
 html {
-  /* The root is the reader's, not ours. Ruskel set it to --rsk-text-base
-     (0.875rem) on [data-exposure], which made every rem on the site 14px:
-     Tailwind's spacing, and Minima's type and space ladders, all landed
-     12.5% under what they say. 100% is 16px by default and still follows the
-     reader's browser text size. Unlayered, so it beats Ruskel's base layer. */
+  /* The root is the reader's. Every size in Minima is a rem. */
   font-size: 100%;
   scroll-behavior: smooth;
-  /* The header is sticky at ~56px, so an un-offset anchor jump hides the
-     target's top rule and clips its heading. This also fixes keyboard focus
-     landing under the nav when tabbing near the top of a page. */
-  scroll-padding-top: 5rem;
+  /* The header is sticky, so an un-offset anchor jump hides the target. */
+  scroll-padding-top: 6rem;
 }
 
 body {
-  /* Running text stays 14px — now said on the body, where it belongs, instead
-     of by shrinking the root. It is Minima's body size (--type-body). */
   font-size: var(--type-body);
-  background-color: var(--rsk-ground);
-  color: var(--rsk-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
 }
 
-/* Spectrometer scanline. The prefers-reduced-motion block above already
-   neutralises this, so the strip is static for anyone who asks for that. */
+/* ── Motion ───────────────────────────────────────────────────────────────
+   Minima enforces reduced motion globally, keyframes included, so neither of
+   these needs its own guard. */
 @keyframes scan {
   from { left: 0%; }
   to   { left: 100%; }
 }
-
 .animate-scan {
   animation: scan 7s linear infinite;
 }
 
-/* Hero entrance — a one-time fade-and-rise on load, staggered per element
-   via inline `animation-delay`. Distinct from Reveal (components/ui/Reveal.tsx),
-   which is scroll-triggered for below-the-fold sections; the hero is always
-   visible on first paint, so this fires immediately rather than waiting on
-   an IntersectionObserver. The prefers-reduced-motion block above already
-   neutralises this along with every other animation on the site. */
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .animate-fade-up {
-  animation: fade-up 600ms ease-out both;
+  animation: fade-up var(--motion-slow) var(--ease-out) both;
 }
 
-/* Article prose refinements beyond typography plugin defaults */
-.prose :where(code):not(:where([class~="not-prose"] *))::before,
-.prose :where(code):not(:where([class~="not-prose"] *))::after {
-  content: "";
-}
+/* ── Reading ──────────────────────────────────────────────────────────────
+   Minima's prose does the article: measure, rhythm, code, lists, quotes.
+   These are the decisions it leaves to the site. Layered as components, and
+   after the theme, so they win over Minima's prose defaults at the same
+   specificity and still lose to any utility written in markup. */
+@layer components {
+  /*
+    Links carry their signal in the underline, not the text, and at rest the
+    underline is the drawing grey — the hatch, the rules, the ticks. A band
+    colour means something here, so it is not the house colour for "link".
+    The interface band warms the rule on hover, the moment a link is touched.
+  */
+  .prose a {
+    color: var(--foreground);
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-faint);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--motion-quick) var(--ease-out);
+  }
+  .prose a:hover {
+    color: var(--foreground);
+    text-decoration-color: var(--color-interface);
+  }
 
-/*
-  Inline code is neutral. It was tinted with the 405nm intelligence band,
-  which is decorative use of a taxonomy colour: a snippet of code is not
-  *about* intelligence, it is chrome. Same correction as ::selection and the
-  focus ring. It now matches the code frame's own surface, so inline and
-  block code read as the same material.
-*/
-.prose code {
-  background: var(--rsk-code-bg);
-  border: 1px solid var(--rsk-rule);
-  border-radius: 4px;
-  padding: 0.15em 0.4em;
-  font-size: 0.85em;
-  color: var(--rsk-code-text);
-}
+  /* rehype-autolink-headings wraps each heading in a link. The rule appears
+     on hover and stays grey: on a heading the rule itself is the affordance. */
+  .prose :where(h1, h2, h3, h4) a {
+    color: inherit;
+    text-decoration-line: none;
+    text-decoration-color: var(--color-faint);
+    text-underline-offset: 4px;
+  }
+  .prose :where(h1, h2, h3, h4) a:hover {
+    text-decoration-line: underline;
+  }
 
-/*
-  Code blocks run at 14px, a step up from the token layer's --rsk-text-sm
-  (13px). 13px is right for interface metadata, but a fenced block is meant
-  to be *read* — at the mono face's smaller x-height it was sitting a step
-  below the prose around it, and the reader was doing more work on the part
-  of the page that carries the actual engineering.
+  /* Tables scroll inside their wrapper rather than widening the column. */
+  .prose [data-table-wrapper] {
+    overflow-x: auto;
+  }
+  .prose [data-table-wrapper] table {
+    width: 100%;
+    min-width: max-content;
+    font-size: 0.9em;
+    border-collapse: collapse;
+  }
+  /* Tabular figures, so numbers line up down a column — a figure is read
+     by comparing it to the one above. */
+  .prose :is(th, td) {
+    font-variant-numeric: tabular-nums;
+    padding: 0.5em 0.9em 0.5em 0;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .prose th {
+    color: var(--foreground);
+    font-weight: 500;
+  }
 
-  Set on the frame's own pre rather than in @ruskel/ui, so the package keeps
-  its own scale and this stays a site-level reading decision.
-*/
-.rsk-codeframe > pre,
-.rsk-codeframe .rsk-codeframe__body {
-  font-size: 14px;
-}
+  /* GFM task lists: no bullet, the checkbox takes the interface band. */
+  .prose ul.contains-task-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .prose .task-list-item input[type='checkbox'] {
+    accent-color: var(--color-interface);
+    margin-right: 0.5em;
+    vertical-align: middle;
+  }
 
-/*
-  ══ The gutter, the hovered line, and the highlighted line ══════════════
-
-  Three things a fenced block needs before it reads as something you can
-  work *through* rather than just look at: a number to point at, a response
-  to the pointer so your eye keeps its place across a wide line, and a way
-  for the author to say "this line is the point".
-
-  All three want the same thing structurally: a line has to be a full-width
-  band. rehype-pretty-code already sets `display: grid` inline on the <code>
-  (that is why the whitespace between its `<span data-line>` children doesn't
-  produce blank rows — whitespace-only text never becomes an anonymous grid
-  item), so each line is a row that stretches the container's width. The
-  catch is that "the container's width" is the visible width of the scrolling
-  <pre>, not the width of the longest line, so on a block that scrolls the
-  bands used to stop at the fold. `width: max-content` sizes the grid to its
-  widest line and `min-width: 100%` keeps it filling the frame when it fits.
-
-  The horizontal padding then has to move off the <pre> and onto the lines,
-  or the band would start 12px in from the frame edge and leave a stripe of
-  bare surface beside every highlight.
-*/
-.rsk-codeframe > pre {
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.rsk-codeframe pre code {
-  width: max-content;
-  min-width: 100%;
-  counter-reset: rsk-code-line;
-}
-
-.rsk-codeframe [data-line] {
-  padding-inline: var(--rsk-pad-x-md);
-}
-
-/*
-  Line numbers are generated content, and that is the whole design.
-
-  ::before is not in the DOM, so it is not in `code.textContent` — which is
-  exactly what the copy button reads. The numbers therefore cannot reach the
-  clipboard, with no stripping pass to keep in sync, and cannot be dragged
-  into a selection either (user-select: none is belt to that brace, for the
-  browsers that will happily select generated content). They are also absent
-  from the accessibility tree for free, so no aria-hidden is needed.
-
-  The gutter only appears on blocks with more than one line — the attribute
-  is set by rehypeCountCodeLines in components/Mdx.tsx, where the tree can
-  still be counted. min-width rather than width so a block that runs past 99
-  lines widens its gutter instead of colliding with the code.
-*/
-.rsk-codeframe[data-line-numbers] [data-line]::before {
-  counter-increment: rsk-code-line;
-  content: counter(rsk-code-line);
-  display: inline-block;
-  min-width: 2ch;
-  margin-right: var(--rsk-pad-x-md);
-  text-align: right;
-  color: var(--rsk-text-faint);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/*
-  The hovered line. Pure CSS, no transition — a band that fades in lags the
-  pointer and reads as sluggish rather than responsive, and a transition here
-  would be one more thing for the reduced-motion block up top to neutralise.
-
-  Guarded behind (hover: hover) so a touch device doesn't get a band stuck
-  under the last tap.
-
-  Neutral, like every other piece of code-block chrome: the four-band
-  taxonomy means something, and "the line your mouse is over" is not a claim
-  about interface, systems, compute or intelligence.
-*/
-@media (hover: hover) {
-  .rsk-codeframe [data-line]:hover {
-    background: color-mix(in oklab, var(--rsk-text) 5%, transparent);
+  /* rehype-pretty-code renders its own title; the frame shows it instead. */
+  .prose [data-rehype-pretty-code-title] {
+    display: none;
   }
 }
 
 /*
-  Explicit highlights from the fence meta — ```ts {2-3}.
-
-  @ruskel/ui already paints these with --code-highlight, but at 10% of text
-  on a surface only a shade off it, the band alone is easy to miss on a
-  glance. The inset rule down the leading edge is what actually does the
-  pointing: it survives being scrolled past horizontally, and it reads as a
-  margin mark rather than as a selection.
-*/
-.rsk-codeframe [data-highlighted-line] {
-  width: auto;
-  background: var(--code-highlight);
-  box-shadow: inset 2px 0 0 0 var(--rsk-rule-strong);
-}
-
-/* A highlighted line still answers the pointer, one step up from its
-   resting state rather than losing the highlight to the hover colour. */
-@media (hover: hover) {
-  .rsk-codeframe [data-highlighted-line]:hover {
-    background: color-mix(in oklab, var(--rsk-text) 15%, transparent);
-  }
-}
-
-/*
-  The headerless block's copy button.
-
-  With no title bar to sit in (see the header-trigger note in
-  components/CodeBlock.tsx) the control parks over the top-right corner of
-  the code. It is never display:none and never removed from the tab order —
-  it is opacity alone — so it stays reachable by keyboard, reveals itself on
-  focus, and stays put while the "copied" tick is showing so the confirmation
-  isn't invisible the moment the pointer leaves.
-
-  Where hover does not exist there is nothing to reveal it, so it is simply
-  always visible. Its own surface and hairline keep it legible over whatever
-  the first line of code happens to be.
-*/
-.rsk-codeframe {
-  position: relative;
-}
-
-.rsk-codeframe__copy[data-floating] {
-  position: absolute;
-  top: var(--rsk-pad-x-sm);
-  right: var(--rsk-pad-x-sm);
-  z-index: 1;
-  background: var(--rsk-code-bg);
-  border: var(--rsk-hairline) solid var(--rsk-rule);
-  /* Structure radius: this is a control, not a token. */
-  border-radius: 4px;
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-.rsk-codeframe:hover .rsk-codeframe__copy[data-floating],
-.rsk-codeframe__copy[data-floating]:focus-visible,
-.rsk-codeframe__copy[data-floating][data-copied] {
-  opacity: 1;
-}
-
-@media (hover: none) {
-  .rsk-codeframe__copy[data-floating] {
-    opacity: 1;
-  }
-}
-
-/* The frame owns the border and radius now — see components/CodeBlock.tsx
-   and .rsk-codeframe. The pre keeps only its own padding and scroll. */
-.prose pre {
-  border: 0;
-  border-radius: 0;
-}
-
-/* The title moves into the frame header, so rehype's own title bar is not
-   rendered separately. Kept hidden rather than deleted because a fence
-   without a custom `pre` override would still emit it. */
-.prose [data-rehype-pretty-code-title] {
-  display: none;
-}
-
-.prose pre code {
-  background: transparent;
-  border: none;
-  padding: 0;
-  /* Without this, code inside a block inherits .prose code's own surface and
-     border, drawing a second frame around every fence. Syntax
-     tokens override it per-span anyway (rehype-pretty-code paints each one
-     inline), but any untagged text in the block — punctuation, whitespace —
-     would otherwise pick up the inline-code accent it isn't. */
-  color: var(--rsk-text);
-}
-
-/*
-  Links carry their signal in the underline, not the text — and at rest that
-  underline is grey.
-
-  The amber rest state was the surviving half of the link decision: text
-  neutral, 590nm in the rule, on the reasoning that a link is what the user
-  touches. It was right about *where* the signal goes and wrong about when.
-  Amber at rest paints the band onto every proper noun in a paragraph, and a
-  band colour is supposed to mean something — the taxonomy stops working when
-  it is also the house colour for "this is a link". Grey is what the drawing
-  is made of everywhere else on this site: the hatch, the rules, the
-  spectrometer's tick marks. An underline is a drawn line, so it takes the
-  drawing colour.
-
-  590nm survives on hover, which is the moment the sentence about touching is
-  actually true: point at a link and the rule warms to the interface band.
-  So the accent still exists, it is just no longer spent on every link in
-  view at once.
-*/
-.prose a {
-  color: var(--rsk-text);
-  text-decoration: underline;
-  text-decoration-color: var(--rsk-text-faint);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-  transition: text-decoration-color 150ms ease;
-}
-
-.prose a:hover {
-  text-decoration-color: var(--rsk-mark-590);
-}
-
-.prose blockquote {
-  font-style: normal;
-}
-
-/* GFM tables scroll inside their wrapper rather than widening the column. */
-.prose [data-table-wrapper] {
-  overflow-x: auto;
-  margin: 1.5em 0;
-}
-
-.prose [data-table-wrapper] table {
-  display: table;
-  width: 100%;
-  /* Fills the column when it fits, scrolls the wrapper when it doesn't. */
-  min-width: max-content;
-  margin: 0;
-  font-size: 0.9em;
-}
-
-/*
-  Tables and code blocks break out past the reading measure once there's room.
-  A six-column table at the prose width wraps every single cell onto three
-  lines, and a long code line scrolls almost immediately.
-
-  The post's own container is CONTAINER (components/ui/Section.tsx) — the same
-  768px measure as the rest of the site, so its content box lines up with Nav
-  and Footer. Prose itself is narrower (max-w-2xl, flush against the left edge
-  of that box, not centered within it — see app/blog/[slug]/page.tsx), leaving
-  a fixed 3rem of slack on the right before CONTAINER's own edge. Growing right
-  by exactly that gap lands a breakout flush with CONTAINER on both sides
-  without shifting left, which is what a symmetric negative-margin trick would
-  do here — the two boxes don't share a centre, so a shift built for a
-  self-centred column would overshoot CONTAINER's left edge instead of
-  meeting it.
+  Tables and code break out past the reading measure once there is room. The
+  article column is the reading measure; the page column beside it is wider,
+  and a breakout grows right into that slack rather than centring, because
+  the two columns share a left edge, not a centre.
 */
 @media (min-width: 1024px) {
   .prose [data-table-wrapper],
-  .prose figure[data-rehype-pretty-code-figure] {
-    width: calc(100% + 3rem);
+  .prose figure.codeframe {
+    width: calc(100% + 4rem);
     max-width: none;
   }
 }
 
-/* GFM task lists — drop the bullet, tint the checkbox to the brand accent. */
-.prose ul.contains-task-list {
-  list-style: none;
-  padding-left: 0;
+/* ── The code frame ───────────────────────────────────────────────────────
+   A fenced block as something you can work through, not just look at: a
+   title bar when the fence names a file, a copy button, line numbers that
+   never reach the clipboard, a band under the hovered line, and a margin
+   mark on lines the author highlights. */
+.codeframe {
+  position: relative;
+  margin-block: var(--prose-lead, 2rem);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-raised);
+}
+.codeframe__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-inset);
+  padding: 0.375rem 0.375rem 0.375rem var(--spacing-gutter);
+  border-bottom: 1px solid var(--border);
+  background: var(--gray-tint);
+}
+.codeframe__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--type-label-sm);
+  font-weight: var(--type-label-sm--font-weight);
+  letter-spacing: var(--type-label-sm--letter-spacing);
+  text-transform: uppercase;
+  color: var(--subtle-foreground);
+}
+.codeframe__copy {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  border-radius: var(--radius-control-sm);
+  background: transparent;
+  color: var(--subtle-foreground);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-quick) var(--ease-out),
+    color var(--motion-quick) var(--ease-out),
+    opacity var(--motion-quick) var(--ease-out);
+}
+.codeframe__copy:hover {
+  background: var(--gray-tint-hover);
+  color: var(--foreground);
+}
+.codeframe__copy[data-copied] {
+  color: var(--green-text);
+}
+.codeframe__copy svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
 }
 
-.prose .task-list-item {
-  padding-left: 0;
+/* With no title bar, the copy button parks over the top-right corner. It is
+   opacity alone, never display:none, so it stays in the tab order. */
+.codeframe__copy[data-floating] {
+  position: absolute;
+  top: var(--spacing-inset);
+  right: var(--spacing-inset);
+  z-index: 1;
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  opacity: 0;
+}
+.codeframe:hover .codeframe__copy[data-floating],
+.codeframe__copy[data-floating]:focus-visible,
+.codeframe__copy[data-floating][data-copied] {
+  opacity: 1;
+}
+@media (hover: none) {
+  .codeframe__copy[data-floating] {
+    opacity: 1;
+  }
 }
 
-.prose .task-list-item::marker {
-  content: "";
+/* The frame owns border, radius and ground; the pre inside keeps scroll. */
+.prose .codeframe > pre,
+.codeframe > pre {
+  margin: 0;
+  padding: var(--spacing-gutter) 0;
+  overflow-x: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+/* Lines are full-width bands, sized to the widest line so a highlight does
+   not stop at the fold of a block that scrolls. */
+.codeframe pre code {
+  display: grid;
+  width: max-content;
+  min-width: 100%;
+  counter-reset: code-line;
+}
+.codeframe [data-line] {
+  padding-inline: var(--spacing-gutter);
+}
+/* Generated content is not in textContent, so numbers never reach the
+   clipboard; only blocks of more than one line get a gutter. */
+.codeframe[data-line-numbers] [data-line]::before {
+  counter-increment: code-line;
+  content: counter(code-line);
+  display: inline-block;
+  min-width: 2ch;
+  margin-right: var(--spacing-gutter);
+  text-align: right;
+  color: var(--color-faint);
+  user-select: none;
+  -webkit-user-select: none;
+}
+@media (hover: hover) {
+  .codeframe [data-line]:hover {
+    background: var(--gray-tint);
+  }
+}
+.codeframe [data-highlighted-line] {
+  background: var(--gray-tint-hover);
+  box-shadow: inset 2px 0 0 0 var(--color-interface);
 }
 
-.prose .task-list-item input[type="checkbox"] {
-  accent-color: var(--rsk-mark-590);
-  margin-right: 0.5em;
-  vertical-align: middle;
-}
-
-/*
-  rehype-autolink-headings wraps each heading in an <a>; keep it invisible
-  until hover so headings don't render as underlined links.
-
-  Note `text-decoration-line`, not the `text-decoration` shorthand. The
-  shorthand resets `text-decoration-color` along with everything else, which
-  put the anchor back on `currentColor` — so the 150ms colour transition
-  inherited from `.prose a` had a paper-coloured rule to start from and an
-  accent to land on, and every heading hover flashed from near-white to
-  amber before settling. Setting the line and the colour independently means
-  the colour never changes at all: the rule is grey the whole time and hover
-  only decides whether it is drawn.
-
-  Grey rather than 590nm because on a heading the *appearance* of the rule is
-  already the affordance. Body links earn the accent on hover because they
-  are underlined at rest and have nothing else to change.
-*/
-.prose :where(h1, h2, h3, h4) a {
-  color: inherit;
-  text-decoration-line: none;
-  text-decoration-color: var(--rsk-text-faint);
-  text-underline-offset: 4px;
-}
-
-.prose :where(h1, h2, h3, h4) a:hover {
-  text-decoration-line: underline;
-}
-
-/* ── Focus list ────────────────────────────────────────────────────────────
-   Pointing at one item in a list dims the others, so the list behaves like
-   an instrument that follows attention rather than a stack of independent
-   rows. Lifted from desengs.com, where moving quickly down the list reads
-   as one continuous animation rather than a series of hover states.
-
-   Hover-capable pointers only: on touch there is no hover, and :hover
-   sticks after a tap, which would leave the rest of the list dimmed with no
-   way to clear it. Opacity alone — no transform, nothing that moves — so
-   there is nothing here that reduced-motion users need protecting from.
-   The transition is deliberately faster in than out (dimming should feel
-   instant, restoring should not flicker while the pointer crosses a gap). */
+/* ── Focus list ───────────────────────────────────────────────────────────
+   Pointing at one row dims the others, so the list follows attention.
+   Hover-capable fine pointers only: on touch :hover sticks after a tap. */
 @media (hover: hover) and (pointer: fine) {
-  .rsk-focuslist > * {
-    transition: opacity 260ms ease-out;
+  .focuslist > * {
+    transition: opacity var(--motion-slow) var(--ease-out);
   }
-
-  /*
-    Keyed on `:has(> *:hover)` rather than on the list's own `:hover`. The
-    list is wider than its rows and taller than their text, so hovering the
-    container alone — the gap beside a short row, the padding at the edge —
-    used to dim every row at once with nothing lit to explain why. This only
-    dims when a row is genuinely under the pointer.
-  */
-  .rsk-focuslist:has(> *:hover) > *:not(:hover),
-  .rsk-focuslist:has(> *:focus-visible) > *:not(:focus-visible) {
+  .focuslist:has(> *:hover) > *:not(:hover),
+  .focuslist:has(> *:focus-visible) > *:not(:focus-visible) {
     opacity: 0.45;
-    transition-duration: 120ms;
+    transition-duration: var(--motion-quick);
   }
-}
-/*
-  Minima's typography, pointed at this site's faces.
-
-  Minima ships no typeface: it borrows Tailwind's --font-sans and --font-mono,
-  so repointing those two is the whole of the swap. This is that swap. The
-  next/font mono is --font-mono-face rather than --font-mono so the face and
-  the token stay separate names.
-
-  The serif stays local. It is a third family and a site concern: Minima names
-  two, deliberately, and a wavelength of authorial voice is not a system idea.
-*/
-:root {
-  --font-sans: var(--font-body), system-ui, sans-serif;
-  --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
-}
-
-/*
-  Colour names this site uses that Minima does not bind as utilities.
-
-  faint — a fourth text level, below Minima's subtle-foreground. Ruskel had
-  four (text, prose, muted, faint). Minima took a third from this site and
-  keeps the fourth out: one consumer is not evidence for a scale. --gray-solid
-  is 0.60 in dark, the value this tier has carried since the colour move, and
-  measures 4.72:1 on the canvas and on cards. It drops under 4.5 on Minima's
-  raised dark rungs (overlay, selected), so it stays off those.
-
-  surface, fill, border-strong — Minima still declares --surface and --fill,
-  and border-strong is a ramp role, but none of the three is a Tailwind colour
-  any more. Aliased to the same values they resolved to before, so the call
-  sites (8, 1 and 15) do not move in this change.
-*/
-@theme inline {
-  --color-faint: var(--gray-solid);
-  --color-surface: var(--surface);
-  --color-fill: var(--fill);
-  --color-border-strong: var(--gray-border-strong);
-}
-
-/*
-  Tracking and leading, held where they were — temporarily.
-
-  The copy of Minima this site first installed re-pointed Tailwind's
-  tracking-* and leading-* scales; the current Minima does not, and leaves
-  them to Tailwind. Taking Tailwind's defaults here would restyle 80 call sites
-  as a side effect of changing how the theme is delivered. These are the old
-  values, kept so that change stays reviewable; they go when the type moves
-  onto Minima's type-* registers.
-*/
-@theme {
-  --tracking-tighter: -0.03em;
-  --tracking-tight: -0.015em;
-  --tracking-normal: 0em;
-  --tracking-wide: 0.04em;
-  --tracking-widest: 0.08em;
-  --leading-tight: 1.2;
-  --leading-snug: 1.4;
-  --leading-normal: 1.6;
-  --leading-relaxed: 1.75;
 }

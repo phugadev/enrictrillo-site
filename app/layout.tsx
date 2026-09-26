@@ -6,7 +6,8 @@ import { JsonLd, personSchema, websiteSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
 
 /**
- * Three faces, one per register — see @ruskel/tokens.
+ * Three faces, one per voice. Minima's reading register is the sans and its
+ * signal and figure registers are the mono; the serif is this site's own.
  *
  *   sans   Inter            the system speaking: nav, labels, headings, body
  *   mono   IBM Plex Mono    the machine stating: figures, states, nm, code
@@ -68,10 +69,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en-GB"
-      // The site is dark-only. `data-exposure` is Ruskel's switch and still
-      // drives the wavelength bands; `dark` is Minima's, and without it the
-      // token layer resolves to its light values — white on white.
-      data-exposure="luminous"
+      // Dark only: Minima keys its dark mode off this class. Comfortable
+      // density is Minima's roomier spacing ladder (20/40/80), the one meant
+      // for a page that is read rather than operated.
+      data-density="comfortable"
       className={`dark ${body.variable} ${mono.variable}`}
     >
       {/*
@@ -81,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         otherwise throws a hydration mismatch on every page load in dev. Real
         mismatches inside the tree still surface normally.
       */}
-      <body className="bg-background font-body text-foreground antialiased" suppressHydrationWarning>
+      <body className="bg-background font-sans text-foreground antialiased" suppressHydrationWarning>
         {children}
         {/* Entity data for search and assistants — see lib/schema.tsx */}
         <JsonLd data={personSchema()} />

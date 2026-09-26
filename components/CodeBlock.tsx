@@ -62,7 +62,7 @@ function CopyButton({
       aria-label={copied ? "Copied" : "Copy code"}
       data-copied={copied || undefined}
       data-floating={floating || undefined}
-      className="rsk-codeframe__copy"
+      className="codeframe__copy"
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
     </button>
@@ -70,7 +70,7 @@ function CopyButton({
 }
 
 /**
- * Renders fenced code blocks as `.rsk-codeframe` from @ruskel/ui: a framed
+ * Renders fenced code blocks as `.codeframe` (app/globals.css): a framed
  * block whose header names the file or language and hosts the copy control.
  *
  * This intercepts the `figure` rather than the `pre` because that is where
@@ -83,8 +83,8 @@ function CopyButton({
  */
 export function CodeBlock({ children, ...rest }: ComponentPropsWithoutRef<"figure">) {
   // The ref sits on the figure rather than a wrapper around the pre. A wrapper
-  // would break `.rsk-codeframe > pre`, which is what zeroes the margin the
-  // typography plugin puts on every pre — leaving a 27px band inside the frame.
+  // would break `.codeframe > pre`, which is what zeroes the margin and frame
+  // Minima's prose puts on every pre — leaving a second frame inside this one.
   const frameRef = useRef<HTMLElement>(null);
   const isCodeFigure = "data-rehype-pretty-code-figure" in rest;
 
@@ -124,15 +124,15 @@ export function CodeBlock({ children, ...rest }: ComponentPropsWithoutRef<"figur
   // fence.
   //
   // In the headerless case the copy button does not disappear: it moves onto
-  // the block itself (see .rsk-codeframe__copy[data-floating] in globals.css),
+  // the block itself (see .codeframe__copy[data-floating] in globals.css),
   // stays in the tab order, and stays visible where hover does not exist.
   const hasHeader = title !== null;
 
   return (
-    <figure {...rest} ref={frameRef} className="rsk-codeframe" data-headless={!hasHeader || undefined}>
+    <figure {...rest} ref={frameRef} className="codeframe" data-headless={!hasHeader || undefined}>
       {hasHeader ? (
-        <div className="rsk-codeframe__head">
-          <span className="rsk-codeframe__name">{title}</span>
+        <div className="codeframe__head">
+          <span className="codeframe__name">{title}</span>
           <CopyButton target={frameRef} />
         </div>
       ) : (

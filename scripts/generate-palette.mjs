@@ -1,199 +1,120 @@
 /**
- * Resolve @ruskel/tokens into literal hex.
+ * Resolve Minima's dark tokens into literal hex, for the two places that
+ * cannot read a CSS variable:
  *
- * The site consumes the design system as CSS custom properties everywhere it
- * can. Two places it can't:
+ *   - satori (the opengraph-image routes) renders outside a browser, so a
+ *     var() never resolves and comes out transparent.
+ *   - SVG presentation attributes (`stroke="…"`, `fill="…"`) do not accept
+ *     var() — only the style property does.
  *
- *   - satori (the five opengraph-image routes) renders outside a browser, so
- *     `var(--rsk-…)` never resolves and comes out transparent.
- *   - SVG *presentation attributes* (`stroke="…"`, `fill="…"`) don't accept
- *     var() either — only the style property does.
- *
- * Hand-maintaining a second copy of the palette for those cases is how the two
- * drift apart. Instead this reads the installed package and computes the hex,
- * so the literals are always downstream of the tokens. Re-run after bumping
- * @ruskel/tokens:
+ * Hand-keeping a second copy of the palette is how the two drift. This reads
+ * the installed theme, applies the dark blocks over :root the way the cascade
+ * does, follows each var() chain to a literal, and converts it. Re-run after
+ * re-adding the theme from the registry:
  *
  *   node scripts/generate-palette.mjs
  */
 import { readFileSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { pathToFileURL } from "node:url";
 
-const require = createRequire(import.meta.url);
-const TOKENS = require.resolve("@ruskel/tokens/tokens.css");
-const css = readFileSync(TOKENS, "utf8");
+const css = readFileSync(new URL("../styles/minima.css", import.meta.url), "utf8");
 
-// ── OKLCH → sRGB ──────────────────────────────────────────────────────────
+/* Declarations from every block whose selector matches, in source order —
+   later wins, which is the cascade for blocks of equal-or-rising specificity
+   on the same element. :root first, then the dark overrides. */
+function collect(test) {
+  const vars = {};
+  for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selector = m[1].trim().split("\n").pop().trim();
+    if (!test(selector)) continue;
+    for (const d of m[2].matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) vars[d[1]] = d[2].trim();
+  }
+  return vars;
+}
+const isRoot = (s) => /^(:root)+(\[data-theme="minima"\])?$/.test(s);
+const isDark = (s) => /^(:root)*(\[data-theme="minima"\])?\.dark$/.test(s);
+const vars = { ...collect(isRoot), ...collect(isDark) };
+
+function resolve(name, seen = new Set()) {
+  if (seen.has(name)) throw new Error(`cycle at ${name}`);
+  seen.add(name);
+  const value = vars[name];
+  if (value === undefined) throw new Error(`styles/minima.css — ${name} is not declared`);
+  const ref = value.match(/^var\((--[\w-]+)\)$/);
+  return ref ? resolve(ref[1], seen) : value;
+}
+
+// ── OKLCH → sRGB hex ──────────────────────────────────────────────────────
 const toSrgb = (c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
-
-function oklchToHex(L, C, hDeg) {
-  const h = (hDeg * Math.PI) / 180;
+function oklchToHex(value) {
+  const m = value.match(/^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)(?:\s+([\d.]+))?/);
+  if (!m) throw new Error(`not an oklch literal: ${value}`);
+  const L = m[2] ? Number(m[1]) / 100 : Number(m[1]);
+  const C = Number(m[3]);
+  const h = (Number(m[4] ?? 0) * Math.PI) / 180;
   const a = C * Math.cos(h);
   const b = C * Math.sin(h);
-  const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
-  const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
-  const l = l_ ** 3, m = m_ ** 3, s = s_ ** 3;
+  const l_ = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m_ = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s_ = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
   const rgb = [
-     4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
-    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
-    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
-  ].map((v) => Math.max(0, Math.min(255, Math.round(toSrgb(v) * 255))));
-  return "#" + rgb.map((v) => v.toString(16).padStart(2, "0").toUpperCase()).join("");
+    4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_,
+    -1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_,
+    -0.0041960863 * l_ - 0.7034186147 * m_ + 1.707614701 * s_,
+  ];
+  return (
+    "#" +
+    rgb
+      .map((c) => Math.round(Math.min(1, Math.max(0, toSrgb(c))) * 255))
+      .map((n) => n.toString(16).padStart(2, "0"))
+      .join("")
+      .toUpperCase()
+  );
 }
+const hex = (name) => oklchToHex(resolve(name));
 
-// ── parse the stylesheet ──────────────────────────────────────────────────
-const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, "");
+const palette = {
+  ink: hex("--background"),
+  surface: hex("--surface"),
+  surfaceRaised: hex("--surface-raised"),
+  hairline: hex("--gray-border"),
 
-/** Every `--rsk-h-*: <deg>` and the neutral ramp live in :root. */
-function block(selector) {
-  const re = new RegExp(`${selector}\\s*\\{([\\s\\S]*?)\\n\\}`);
-  const m = strip(css).match(re);
-  if (!m) throw new Error(`could not find ${selector} in ${TOKENS}`);
-  return m[1];
-}
+  paper: hex("--foreground"),
+  prose: hex("--gray-reading"),
+  muted: hex("--muted-foreground"),
+  subtle: hex("--subtle-foreground"),
+  faint: hex("--gray-solid"),
+  ray: hex("--gray-solid"),
 
-const root = block(":root");
-const hues = Object.fromEntries(
-  [...root.matchAll(/--rsk-h-([\w-]+):\s*([\d.]+)/g)].map((m) => [m[1], Number(m[2])])
-);
+  interface: hex("--amber-mark"),
+  systems: hex("--green-mark"),
+  compute: hex("--blue-mark"),
+  intelligence: hex("--purple-mark"),
 
-/** Resolve `oklch(L C var(--rsk-h-x))` declarations within a block. */
-function resolve(body) {
-  const out = {};
-  for (const m of body.matchAll(
-    /--rsk-([\w-]+):\s*oklch\(([\d.]+)\s+([\d.]+)\s+(?:var\(--rsk-h-([\w-]+)\)|([\d.]+))\)/g
-  )) {
-    const [, name, L, C, hueRef, hueLit] = m;
-    const h = hueRef !== undefined ? hues[hueRef] : Number(hueLit);
-    if (h === undefined) continue;
-    out[name] = oklchToHex(Number(L), Number(C), h);
-  }
-  return out;
-}
+  interfaceText: hex("--amber-text"),
+  systemsText: hex("--green-text"),
+  computeText: hex("--blue-text"),
+  intelligenceText: hex("--purple-text"),
 
-// The site is dark-only, so it runs the luminous exposure.
-const neutrals = resolve(root);
-const luminous = { ...neutrals, ...resolve(block('\\[data-exposure="luminous"\\]')) };
-
-/**
- * Aliases follow `--rsk-x: var(--rsk-y)` chains. Two passes, because the
- * shared `[data-exposure]` block (selection, syntax colours) aliases onto the
- * per-exposure text ring, which itself aliases onto the neutral ramp.
- */
-// The shared [data-exposure] block holds exposure-agnostic values. Since
-// 0.3.0 that includes the syntax ring as literal oklch() rather than aliases,
-// so it has to go through resolve() as well as the alias pass.
-const sharedBlock = strip(css).match(/\[data-exposure\]\s*\{([\s\S]*?)\n\}/g)?.join("\n") ?? "";
-Object.assign(luminous, resolve(sharedBlock));
-
-const aliasSources = [
-  block('\\[data-exposure="luminous"\\]'),
-  // The bare [data-exposure] block holds the exposure-agnostic aliases —
-  // --rsk-code-* among them — so it has to be read too or they resolve to
-  // nothing and the shiki theme silently loses its colours.
-  strip(css).match(/\[data-exposure\]\s*\{([\s\S]*?)\n\}/g)?.join("\n") ?? "",
-].join("\n");
-
-for (let pass = 0; pass < 3; pass++) {
-  for (const m of aliasSources.matchAll(/--rsk-([\w-]+):\s*var\(--rsk-([\w-]+)\)/g)) {
-    if (luminous[m[2]] && !luminous[m[1]]) luminous[m[1]] = luminous[m[2]];
-  }
-}
-
-/**
- * Rules are declared as `color-mix(in oklab, var(--rsk-text) 12%, transparent)`
- * so they composite with whatever sits behind them. satori has no "behind" —
- * it paints one flat canvas — so flatten them over the exposure's own ground,
- * which is what an OG image sits on anyway.
- */
-function resolveMixes(scope, table) {
-  const toRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  const toHex = (rgb) =>
-    "#" + rgb.map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0").toUpperCase()).join("");
-
-  for (const m of scope.matchAll(
-    /--rsk-([\w-]+):\s*color-mix\(in oklab,\s*var\(--rsk-([\w-]+)\)\s*([\d.]+)%,\s*transparent\)/g
-  )) {
-    const [, name, src, pct] = m;
-    const fg = table[src], bg = table.ground;
-    if (!fg || !bg) continue;
-    const a = Number(pct) / 100;
-    // Gamma space, not linear: browsers composite alpha on the encoded values,
-    // and flattening in linear light comes out visibly too light.
-    const f = toRgb(fg), b = toRgb(bg);
-    table[name] = toHex(f.map((v, i) => v * a + b[i] * (1 - a)));
-  }
-}
-resolveMixes(aliasSources, luminous);
-
-const pick = (k) => {
-  const v = luminous[k];
-  if (!v) throw new Error(`token --rsk-${k} not found or unresolvable`);
-  return v;
+  critical: hex("--red-mark"),
+  warning: hex("--orange-mark"),
 };
 
-// @ruskel/tokens <=0.1.0 does not expose ./package.json through "exports",
-// so read it off the resolved stylesheet path instead of importing it.
-const version = JSON.parse(
-  readFileSync(new URL("../package.json", pathToFileURL(TOKENS)), "utf8")
-).version;
-const out = `/**
+const body = Object.entries(palette)
+  .map(([k, v]) => `  ${k}: "${v}",`)
+  .join("\n");
+
+writeFileSync(
+  new URL("../lib/palette.ts", import.meta.url),
+  `/**
  * GENERATED — do not edit. Run \`node scripts/generate-palette.mjs\`.
  *
- * Literal hex resolved from @ruskel/tokens@${version}, luminous exposure.
- * The DOM consumes the tokens as CSS variables; this exists only for the
- * places that cannot — satori (opengraph-image routes) and SVG presentation
- * attributes. See the script header.
+ * Literal hex resolved from styles/minima.css, dark mode. The DOM reads the
+ * tokens as CSS variables; this exists only for satori (opengraph-image
+ * routes) and SVG presentation attributes, which cannot.
  */
 export const palette = {
-  ink: "${pick("ground")}",
-  surface: "${pick("surface")}",
-  surfaceRaised: "${pick("surface-2")}",
-  hairline: "${pick("rule")}",
-
-  paper: "${pick("text")}",
-  prose: "${pick("text-prose")}",
-  muted: "${pick("text-muted")}",
-  faint: "${pick("text-faint")}",
-  /** Non-text only: the dispersion mark's incoming beam. */
-  ray: "${pick("n-08")}",
-
-  /** Marks — fills, dots, rays. Seen, not read. */
-  interface: "${pick("mark-590")}",
-  systems: "${pick("mark-520")}",
-  compute: "${pick("mark-470")}",
-  intelligence: "${pick("mark-405")}",
-
-  /** Text ring — coloured type only. Constrained to AA on ink. */
-  interfaceText: "${pick("text-590")}",
-  systemsText: "${pick("text-520")}",
-  computeText: "${pick("text-470")}",
-  intelligenceText: "${pick("text-405")}",
-
-  critical: "${pick("mark-700")}",
-  warning: "${pick("mark-620")}",
-
-  /**
-   * Syntax colours. shiki needs a real theme with literal hex — its
-   * \`css-variables\` theme was dropped from the bundle — so these are resolved
-   * here rather than referenced as variables. See components/Mdx.tsx.
-   */
-  code: {
-    text: "${pick("code-text")}",
-    comment: "${pick("code-comment")}",
-    keyword: "${pick("code-keyword")}",
-    string: "${pick("code-string")}",
-    number: "${pick("code-number")}",
-    function: "${pick("code-function")}",
-    type: "${pick("code-type")}",
-    special: "${pick("code-special")}",
-    punctuation: "${pick("code-punctuation")}",
-  },
+${body}
 } as const;
-`;
-writeFileSync("lib/palette.ts", out);
-console.log(`lib/palette.ts ← @ruskel/tokens@${version}`);
-for (const k of ["ground", "text", "mark-590", "mark-520", "mark-470", "mark-405", "text-590"])
-  console.log(`  --rsk-${k.padEnd(10)} ${luminous[k]}`);
+`,
+);
+console.log(`wrote lib/palette.ts — ${Object.keys(palette).length} colours`);

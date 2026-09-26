@@ -2,8 +2,8 @@ import { evaluate } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode from "rehype-pretty-code";
-import { palette } from "@/lib/palette";
+import rehypePrettyCode, { type Options } from "rehype-pretty-code";
+import minimaDark from "@/styles/minima-syntax-dark.json";
 import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkGfm from "remark-gfm";
 import smartypants from "remark-smartypants";
@@ -93,36 +93,12 @@ function rehypeCountCodeLines() {
  * the tree, and `development: false` matches the non-dev runtime we import.
  */
 /**
- * Syntax colours drawn from the design system rather than a bundled editor
- * theme. Code blocks were rendering in GitHub Dark, a foreign palette sitting
- * inside the system — keywords in a pink that appears nowhere else on the site.
- *
- * This is a literal-hex theme rather than CSS variables because shiki dropped
- * its `css-variables` theme from the bundle; `palette` is generated from
- * @ruskel/tokens (see scripts/generate-palette.mjs), so the values are still
- * downstream of the tokens and cannot drift.
- *
- * The mapping follows the band taxonomy: keywords take intelligence, strings
- * systems, numbers interface, functions compute.
+ * Syntax colours from Minima's own shiki theme, generated from the same ramps
+ * as every other colour on the site and installed from the registry
+ * (phugadev/minima/syntax-shiki). Literal colours rather than CSS variables
+ * because shiki dropped its css-variables theme from the bundle.
  */
-const ruskelSyntax = {
-  name: "ruskel-luminous",
-  type: "dark" as const,
-  colors: { "editor.background": palette.surfaceRaised, "editor.foreground": palette.code.text },
-  tokenColors: [
-    { scope: ["comment", "punctuation.definition.comment"], settings: { foreground: palette.code.comment, fontStyle: "italic" } },
-    { scope: ["keyword", "storage", "storage.type", "keyword.control", "variable.language"], settings: { foreground: palette.code.keyword } },
-    { scope: ["string", "string.quoted", "punctuation.definition.string"], settings: { foreground: palette.code.string } },
-    { scope: ["constant.numeric", "constant.language", "constant.character"], settings: { foreground: palette.code.number } },
-    { scope: ["entity.name.function", "support.function", "meta.function-call"], settings: { foreground: palette.code.function } },
-    { scope: ["entity.name.type", "support.type", "support.class", "entity.name.class"], settings: { foreground: palette.code.type } },
-    { scope: ["constant.regexp", "string.regexp", "constant.character.escape"], settings: { foreground: palette.code.special } },
-    { scope: ["punctuation", "meta.brace", "keyword.operator"], settings: { foreground: palette.code.punctuation } },
-    { scope: ["variable", "variable.other", "meta.definition.variable"], settings: { foreground: palette.code.text } },
-    { scope: ["entity.name.tag"], settings: { foreground: palette.code.special } },
-    { scope: ["support.type.property-name", "meta.object-literal.key"], settings: { foreground: palette.code.type } },
-  ],
-};
+const syntax = minimaDark as unknown as NonNullable<Options["theme"]>;
 
 export async function Mdx({ source }: { source: string }) {
   const { default: Content } = await evaluate(source, {
@@ -144,7 +120,7 @@ export async function Mdx({ source }: { source: string }) {
       // style, which otherwise beat --tw-prose-pre-bg and painted every code
       // block GitHub's blue-grey #24292e — the only bluish grey on the site,
       // and a visible seam against the filename bar sitting on top of it.
-      [rehypePrettyCode, { theme: ruskelSyntax, keepBackground: false }],
+      [rehypePrettyCode, { theme: syntax, keepBackground: false }],
       // Must run after rehype-pretty-code — it counts the `data-line` spans
       // that plugin creates.
       rehypeCountCodeLines,

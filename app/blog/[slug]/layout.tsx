@@ -1,7 +1,7 @@
 import { Instrument_Serif } from "next/font/google";
 
 /**
- * The authorship display face, per @ruskel/tokens: serif marks a person
+ * The authorship display face: serif marks a person
  * speaking, as distinct from the interface (sans) or the machine (mono).
  * Loaded here rather than in the root layout so only post pages pay for it.
  *
@@ -13,14 +13,14 @@ const authored = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
   style: ["normal", "italic"],
-  variable: "--font-serif",
+  variable: "--font-serif-face",
   display: "swap",
 });
 
 export default function PostLayout({ children }: { children: React.ReactNode }) {
   return (
-    // data-voice is what unlocks the serif; it is independent of exposure, so
-    // this works on the site's dark ground exactly as it would on paper.
+    // data-voice is where app/globals.css declares --font-serif, on the same
+    // element next/font scopes the face to.
     <div className={authored.variable} data-voice="author">
       {children}
     </div>

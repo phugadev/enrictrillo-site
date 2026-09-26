@@ -1,15 +1,16 @@
 import Image from "next/image";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import { wavelengths, type Wavelength } from "@/lib/site";
+import type { Wavelength } from "@/lib/site";
+import { band } from "@/lib/bands";
 import { CodeBlock } from "./CodeBlock";
 import { Diagram } from "./Diagram";
 import { InfoIcon, SuccessIcon, TipIcon, WarningIcon } from "./ui/CalloutIcons";
 import { Cell, Plate } from "./ui/Plate";
 import { Zigzag } from "./ui/Zigzag";
 
-const FIGURE = "my-8";
-const CAPTION = "mt-3 text-center font-mono text-[12px] not-italic text-faint";
-const FRAME = "rounded-lg border border-border";
+const FIGURE = "my-stack";
+const CAPTION = "figure mt-inset text-center type-caption-sm not-italic text-faint";
+const FRAME = "rounded-panel border border-border";
 
 /** Prose column width, so the browser can pick a sensible source. */
 const SIZES = "(max-width: 768px) 100vw, 672px";
@@ -84,7 +85,7 @@ type CompareItem = {
   outcome: "good" | "bad";
 };
 
-const CHIP = "inline-flex w-fit items-center rounded-full border border-border px-2.5 py-1 font-mono text-[11px] text-faint";
+const CHIP = "figure inline-flex w-fit items-center rounded-chip border border-border px-2 py-0.5 type-caption-sm text-subtle-foreground";
 
 /**
  * A "wrong way / right way" pair of panels for the rare post making a single,
@@ -105,8 +106,8 @@ const CHIP = "inline-flex w-fit items-center rounded-full border border-border p
  *     ]}
  *   />
  *
- * Built on the .rsk-plate primitive from @ruskel/ui: one framed panel divided
- * by hairlines, rather than two detached cards. `Plate` and `Cell` are also
+ * Built on Plate (components/ui/Plate.tsx): one raised panel divided by
+ * hairlines, rather than two detached cards. `Plate` and `Cell` are also
  * exported to MDX for cases the items API does not cover.
  */
 export function Compare({ items, caption }: { items: CompareItem[]; caption?: string }) {
@@ -118,7 +119,7 @@ export function Compare({ items, caption }: { items: CompareItem[]; caption?: st
           verdict={item.outcome === "good" ? "yes" : "no"}
           label={item.outcome === "good" ? "Works" : "Doesn't work"}
         >
-          <code className="block whitespace-pre-wrap font-mono text-[13px] leading-relaxed">
+          <code className="block whitespace-pre-wrap bg-transparent p-0 font-mono type-caption leading-relaxed text-foreground">
             {item.code}
           </code>
           <span className={CHIP}>{item.label}</span>
@@ -156,27 +157,21 @@ const CALLOUT_VARIANTS: Record<CalloutVariant, { wavelength: Wavelength; label: 
  */
 export function Callout({ variant = "info", children }: { variant?: CalloutVariant; children: ReactNode }) {
   const { wavelength, label, Icon } = CALLOUT_VARIANTS[variant];
-  const hex = wavelengths[wavelength].hex;
+  const b = band[wavelength];
 
   return (
-    <div
-      className="not-prose my-8 flex gap-3 rounded-lg border p-4"
-      style={{ borderColor: `${hex}40`, backgroundColor: `${hex}0d` }}
-    >
+    <aside className={`my-stack flex gap-gutter rounded-panel border p-gutter ${b.chip}`}>
       <span
         aria-hidden="true"
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md border"
-        style={{ borderColor: `${hex}40`, backgroundColor: `${hex}14`, color: hex }}
+        className="flex size-7 shrink-0 items-center justify-center rounded-control-sm border border-current/25 bg-background/40"
       >
-        <Icon className="h-3.5 w-3.5" />
+        <Icon className="size-3.5" />
       </span>
-      <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-2">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-wider" style={{ color: hex }}>
-          {label}
-        </p>
-        <div className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{children}</div>
+      <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-inset">
+        <p className="signal type-label-sm">{label}</p>
+        <div className="mt-1 type-body text-muted-foreground">{children}</div>
       </div>
-    </div>
+    </aside>
   );
 }
 
@@ -196,7 +191,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
  */
 function Break() {
   return (
-    <div className="my-12 flex w-full items-center justify-center text-border-strong">
+    <div className="my-section flex w-full items-center justify-center text-gray-border-strong">
       <Zigzag />
     </div>
   );

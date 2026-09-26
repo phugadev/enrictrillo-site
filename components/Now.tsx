@@ -1,25 +1,16 @@
-import { Section } from "./ui/Section";
-import { SectionLabel } from "./ui/SectionLabel";
+import { Section } from "./layout";
 import { now } from "@/lib/site";
 
-/**
- * "What I'm doing now" — the highest-signal block on most of the portfolio
- * sites worth copying, because it's the only one that dates itself.
- *
- * Hides entirely while `now` is empty, the same way Credentials does. An
- * invented or stale present tense is worse than no section: a reader who spots
- * one out-of-date line discounts everything else on the page.
- */
+/** Hides itself until there is a present tense worth stating. */
 export function Now() {
   if (now.length === 0) return null;
 
   return (
-    <Section>
-      <SectionLabel>Now</SectionLabel>
-      <ul className="mt-6 space-y-3">
+    <Section label="Now">
+      <ul className="max-w-3xl space-y-gutter">
         {now.map((item) => (
-          <li key={item} className="flex gap-3 text-[16px] leading-relaxed text-subtle-foreground">
-            <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-border" />
+          <li key={item} className="flex gap-gutter text-pretty type-lead text-muted-foreground">
+            <span aria-hidden="true" className="mt-[0.8em] h-px w-6 shrink-0 bg-interface" />
             <span>{item}</span>
           </li>
         ))}

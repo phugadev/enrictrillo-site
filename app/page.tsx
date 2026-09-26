@@ -3,21 +3,18 @@ import { Avatar } from "@/components/Avatar";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { About } from "@/components/About";
+import { Availability } from "@/components/Availability";
 import { Credentials } from "@/components/Credentials";
-import { ProjectEntry } from "@/components/ProjectEntry";
-import { Now } from "@/components/Now";
-// DESIGN TRIAL — see PR description. Revert by dropping this import and the
-// <Expertise /> line below.
 import { Expertise } from "@/components/Expertise";
+import { Now } from "@/components/Now";
+import { ProjectCard } from "@/components/ProjectCard";
 import { Spectrometer } from "@/components/Spectrometer";
 import { Toolkit } from "@/components/Toolkit";
-import { CONTAINER, Section } from "@/components/ui/Section";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { PAGE, Section } from "@/components/layout";
+import { buttonVariants } from "@/components/ui/button";
 import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
-// DESIGN TRIAL — see PR description. Revert by dropping this import and
-// unwrapping the sections below it that use <Reveal>.
 import { Reveal } from "@/components/ui/Reveal";
-import { site, projects } from "@/lib/site";
+import { bandGradient, site, projects } from "@/lib/site";
 import { getAllPosts } from "@/lib/posts";
 import { parseDate } from "@/lib/dates";
 
@@ -39,104 +36,78 @@ export const revalidate = 43200;
 export default function Home() {
   const posts = getAllPosts().slice(0, LATEST_COUNT);
 
-  /**
-   * Only the newest post can wear the pill, and only inside the window.
-   *
-   * The window alone is not enough: publish three posts in a fortnight and
-   * all three light up, which tells a reader nothing except that the site
-   * had a good week. Capping it at one keeps the pill meaning "start here,
-   * this is the thing I just put up" — and in a quiet stretch, nobody gets
-   * it, which is the honest outcome rather than a badge that is always on.
-   *
-   * `getAllPosts()` is already sorted newest-first, so this is one date
-   * comparison per render, not a scan.
-   */
+  /* Only the newest post can wear the pill, and only inside the window —
+     three posts in a fortnight should not all light up. */
   const newestIsRecent =
     posts.length > 0 &&
     Date.now() - parseDate(posts[0].date).getTime() < NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
 
   return (
     <PageShell>
-      {/* Hero */}
-      <section className={`${CONTAINER} pb-12 pt-14 sm:pt-16`}>
-        {/* Face first — every portfolio worth copying leads with one, and it
-            costs 8 KB. Name and role sit beside it so the page introduces
-            itself before the headline makes a claim. */}
-        <div className="mb-8 flex animate-fade-up items-center gap-4">
-          <Avatar />
-          <div className="min-w-0">
-            <p className="flex items-center gap-1.5 font-display text-[17px] tracking-tight text-foreground">
-              {site.name}
-              <VerifiedBadge className="h-[18px] w-[18px]" />
-            </p>
-            <SectionLabel as="p" className="mt-1">
-              {site.role} — {site.location}
-            </SectionLabel>
+      {/* Hero. The spectrum sits behind it once, blurred to a glow — the only
+          place the full gradient appears at size. */}
+      <section className="relative isolate overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 -top-40 -z-10 mx-auto h-80 max-w-4xl opacity-20 blur-3xl"
+          style={{ background: bandGradient }}
+        />
+        <div className={`${PAGE} pt-section pb-stack sm:pt-[calc(var(--spacing-section)*1.5)]`}>
+          <div className="animate-fade-up">
+            <Availability />
+          </div>
+
+          <div className="mt-stack flex animate-fade-up items-center gap-gutter [animation-delay:60ms]">
+            <Avatar size={56} />
+            <div className="min-w-0">
+              <p className="flex items-center gap-1.5 type-subheading text-foreground">
+                {site.name}
+                <VerifiedBadge className="size-4" />
+              </p>
+              <p className="signal mt-1 type-label-sm text-subtle-foreground">
+                {site.role} · {site.location}
+              </p>
+            </div>
+          </div>
+
+          <h1 className="mt-stack max-w-3xl animate-fade-up text-balance type-title text-foreground [animation-delay:120ms] sm:type-display">
+            Production software, end to end.
+          </h1>
+          <p className="mt-gutter max-w-2xl animate-fade-up text-pretty type-lead text-muted-foreground [animation-delay:180ms]">
+            Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI
+            as part of the toolkit, not a separate department. I take features from product
+            decision to production across the full stack, with no handoffs between specialists
+            along the way.
+          </p>
+
+          <div className="mt-stack flex animate-fade-up flex-wrap items-center gap-inset [animation-delay:240ms]">
+            <a href={`mailto:${site.email}`} className={buttonVariants({ size: "lg" })}>
+              Email me
+            </a>
+            <Link href="#work" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              See the work
+            </Link>
+            <Link href="/blog" className={buttonVariants({ variant: "ghost", size: "lg" })}>
+              Read the writing →
+            </Link>
           </div>
         </div>
 
-        <h1
-          className="animate-fade-up font-display text-[40px] font-medium leading-[1.15] tracking-tight text-foreground sm:text-[52px]"
-          style={{ animationDelay: "80ms" }}
-        >
-          Production software,
-          <br />
-          end to end.
-        </h1>
-        <p
-          /* text-muted-foreground, not text-subtle-foreground. This is a paragraph someone reads, and
-             muted is the metadata grey — dates, labels, counts. Running the
-             one paragraph that has to do the persuading two steps dimmer
-             than any paragraph inside an article was the hierarchy
-             backwards. */
-          className="mt-6 max-w-xl animate-fade-up text-[17px] leading-relaxed text-muted-foreground"
-          style={{ animationDelay: "160ms" }}
-        >
-          Nine years building and shipping on TypeScript, Next.js and Python — with Azure and AI as
-          part of the toolkit, not a separate department. I take features from product decision to
-          production across the full stack — no handoffs between specialists along the way.
-        </p>
-
-        {/* Availability lives in AvailabilityBar (below) and the footer —
-            a third statement here made it read as filler rather than signal. */}
-        <div
-          className="mt-8 flex animate-fade-up flex-wrap items-center gap-x-5 gap-y-3 font-mono text-[13px]"
-          style={{ animationDelay: "240ms" }}
-        >
-          <a
-            href={`mailto:${site.email}`}
-            className="rounded border border-border px-5 py-2.5 text-foreground transition-colors hover:border-foreground"
-          >
-            {site.email}
-          </a>
-          <Link href="/blog" className="text-subtle-foreground transition-colors hover:text-foreground">
-            Read the writing →
-          </Link>
-        </div>
-
-        {/* DESIGN TRIAL — capability areas at the same altitude as the
-            tagline, so it sits inside the hero rather than after it. */}
-        <div className="animate-fade-up" style={{ animationDelay: "320ms" }}>
+        <div className={`${PAGE} animate-fade-up pb-section [animation-delay:300ms]`}>
           <Expertise />
         </div>
       </section>
 
-      {/* Signature strip and the site's legend, before any coloured dot appears */}
-      <Spectrometer />
+      {/* The legend, before the first coloured dot it explains. */}
+      <div className={PAGE}>
+        <Spectrometer />
+      </div>
 
-      {/* Proof leads — right after the legend that explains its colours,
-          before any lower-stakes content gets in the way of it. */}
       <Reveal>
-        <Section id="work">
-          <div className="flex items-baseline justify-between">
-            <SectionLabel>Selected work</SectionLabel>
-            {/* The count, the way an instrument labels a channel — it also
-                tells a reader the list is short on purpose. */}
-            <span className="font-mono text-[12px] text-faint">{projects.length}</span>
-          </div>
-          <ul className="mt-6 divide-y divide-border">
+        <Section id="work" label="Selected work" aside={`${projects.length} projects`}>
+          <ul className="space-y-gutter">
             {projects.map((project, i) => (
-              <ProjectEntry key={project.name} project={project} index={i} />
+              <ProjectCard key={project.name} project={project} index={i} />
             ))}
           </ul>
         </Section>
@@ -146,43 +117,32 @@ export default function Home() {
         <Toolkit />
       </Reveal>
 
-      {/* Hides itself until there's a present tense worth stating. Moved
-          past the proof and capability sections — a present-tense aside is
-          lower stakes than either, and sat awkwardly between the hero and
-          Selected work, right where momentum toward the proof should be
-          building. */}
-      <Reveal>
-        <Now />
-      </Reveal>
-
-      {/* Hides itself while no credentials are banked */}
-      <Reveal>
-        <Credentials />
-      </Reveal>
-
       {posts.length > 0 && (
         <Reveal>
-          <Section>
-            <div className="flex items-center justify-between">
-              <SectionLabel>Latest writing</SectionLabel>
-              <Link href="/blog" className="font-mono text-[12px] text-subtle-foreground hover:text-foreground">
+          <Section
+            label="Latest writing"
+            aside={
+              <Link href="/blog" className="transition-colors duration-quick hover:text-foreground">
                 All posts →
               </Link>
-            </div>
-            <div className="rsk-focuslist mt-2">
+            }
+          >
+            <div className="focuslist divide-y divide-border">
               {posts.map((post, i) => (
-                <PostCard
-                  key={post.slug}
-                  post={post}
-                  as="h3"
-                  compact
-                  flagNew={i === 0 && newestIsRecent}
-                />
+                <PostCard key={post.slug} post={post} as="h3" compact flagNew={i === 0 && newestIsRecent} />
               ))}
             </div>
           </Section>
         </Reveal>
       )}
+
+      <Reveal>
+        <Now />
+      </Reveal>
+
+      <Reveal>
+        <Credentials />
+      </Reveal>
 
       <Reveal>
         <About />
