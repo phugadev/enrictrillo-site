@@ -39,7 +39,7 @@ export function Endpoint({
         emphasis ? "border-foreground/40" : "border-border"
       }`}
     >
-      <span className="block font-mono text-[11px] uppercase tracking-wider text-foreground">
+      <span className="block font-mono type-label-sm uppercase text-foreground">
         {label} <span aria-hidden="true">{arrow}</span>
       </span>
       <span className="mt-0.5 block truncate font-mono text-[10px] text-faint transition-colors group-hover/ep:text-subtle-foreground">

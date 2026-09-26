@@ -42,7 +42,7 @@ export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (
               className="flex shrink-0 flex-col items-center gap-1 rounded-lg border px-4 py-3 text-center"
               style={{ borderColor: `${hex}40`, backgroundColor: `${hex}14` }}
             >
-              <span className="font-mono text-[12px] uppercase tracking-wider" style={{ color: hex }}>
+              <span className="font-mono type-label uppercase" style={{ color: hex }}>
                 {node.label}
               </span>
               {node.note && <span className="text-[12px] text-faint">{node.note}</span>}
@@ -50,7 +50,7 @@ export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (
             {i < nodes.length - 1 && (
               <div className="flex flex-col items-center justify-center gap-1 px-1 py-2 sm:flex-1 sm:px-3 sm:py-0">
                 {edges[i] && (
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-faint">{edges[i]}</span>
+                  <span className="font-mono type-label-xs uppercase text-faint">{edges[i]}</span>
                 )}
                 <span aria-hidden="true" className="text-faint sm:hidden">
                   ↓

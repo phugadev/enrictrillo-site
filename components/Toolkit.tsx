@@ -27,7 +27,7 @@ export function Toolkit() {
               key={wavelength}
               className="grid gap-x-6 gap-y-2 sm:grid-cols-[10rem_1fr] sm:items-baseline"
             >
-              <dt className="flex items-baseline gap-2.5 font-mono text-[11px] uppercase tracking-wider">
+              <dt className="flex items-baseline gap-2.5 font-mono type-label-sm uppercase">
                 <span
                   aria-hidden="true"
                   className="h-1.5 w-1.5 shrink-0 -translate-y-px rounded-full"

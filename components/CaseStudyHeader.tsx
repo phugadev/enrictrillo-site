@@ -29,7 +29,7 @@ export function CaseStudyHeader({ meta }: { meta: CaseStudyMeta }) {
 
   return (
     <header>
-      <dl className="grid grid-cols-[6.5rem_1fr] gap-y-1.5 font-mono text-[11px] uppercase tracking-wider">
+      <dl className="grid grid-cols-[6.5rem_1fr] gap-y-1.5 font-mono type-label-sm uppercase">
         <Row label="From">{site.name}</Row>
         <Row label="Wavelength">
           <span style={{ color: wl.hex }}>

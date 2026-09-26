@@ -171,7 +171,7 @@ export function Callout({ variant = "info", children }: { variant?: CalloutVaria
         <Icon className="h-3.5 w-3.5" />
       </span>
       <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-2">
-        <p className="font-mono text-[11px] font-medium uppercase tracking-wider" style={{ color: hex }}>
+        <p className="font-mono type-label-sm uppercase" style={{ color: hex }}>
           {label}
         </p>
         <div className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{children}</div>

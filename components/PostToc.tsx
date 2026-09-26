@@ -248,7 +248,7 @@ export function TocRail({
 
   return (
     <>
-      <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+      <p className="mb-3 font-mono type-label-xs uppercase text-faint">
         On this page
       </p>
 

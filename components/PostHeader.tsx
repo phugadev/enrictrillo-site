@@ -125,7 +125,7 @@ function Frame({
       href={href}
       className="group flex items-center justify-between gap-4 rounded border border-border px-4 py-2.5 transition-colors hover:border-border-strong"
     >
-      <span className="font-mono text-[11px] uppercase tracking-wider">
+      <span className="font-mono type-label-sm uppercase">
         <span className="text-foreground underline decoration-border underline-offset-4 transition-colors group-hover:decoration-subtle-foreground">
           {name}
         </span>
@@ -219,7 +219,7 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
         When the post has no series the band is already named in the frame
         above, so it drops out of this line rather than being said twice.
       */}
-      <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground">
+      <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono type-label-sm uppercase text-subtle-foreground">
         <span className="text-foreground">{site.name}</span>
         {series && (
           <>

@@ -128,14 +128,14 @@ export function ProjectEntry({ project, index }: { project: Project; index: numb
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h3 className="font-display text-[22px] leading-tight text-foreground">{project.name}</h3>
             <span
-              className="font-mono text-[11px] uppercase tracking-wider"
+              className="font-mono type-label-sm uppercase"
               style={{ color: wl.hex }}
             >
               {wl.nm}nm {wl.label}
             </span>
           </div>
 
-          <p className="mt-1.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+          <p className="mt-1.5 flex items-center gap-3 font-mono type-label-sm uppercase text-faint">
             <span className="flex items-center gap-1.5">
               <span
                 aria-hidden="true"

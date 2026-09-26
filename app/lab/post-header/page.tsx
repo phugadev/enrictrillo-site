@@ -134,10 +134,10 @@ function Variant({
   return (
     <section className="border-t border-border pt-10">
       <div className="mb-10 flex items-baseline gap-3">
-        <span className="font-mono text-[12px] font-medium uppercase tracking-wider text-foreground">
+        <span className="font-mono type-label uppercase text-foreground">
           {letter}
         </span>
-        <span className="font-mono text-[12px] uppercase tracking-wider text-faint">{name}</span>
+        <span className="font-mono type-label uppercase text-faint">{name}</span>
       </div>
 
       {header}
@@ -252,7 +252,7 @@ export default async function PostHeaderLab() {
 
             <div className="mt-10 space-y-10">
               <figure>
-                <figcaption className="font-mono text-[11px] uppercase tracking-wider text-faint">
+                <figcaption className="font-mono type-label-sm uppercase text-faint">
                   Hatch — structural
                 </figcaption>
                 <div className="mt-4">
@@ -266,7 +266,7 @@ export default async function PostHeaderLab() {
               </figure>
 
               <figure>
-                <figcaption className="font-mono text-[11px] uppercase tracking-wider text-faint">
+                <figcaption className="font-mono type-label-sm uppercase text-faint">
                   Zigzag — prose break
                 </figcaption>
                 <div className="mt-4 flex justify-center text-border-strong">
@@ -284,7 +284,7 @@ export default async function PostHeaderLab() {
               {/* The two at once, at the width they would actually appear, is
                   the only view that answers whether they can coexist. */}
               <figure>
-                <figcaption className="font-mono text-[11px] uppercase tracking-wider text-faint">
+                <figcaption className="font-mono type-label-sm uppercase text-faint">
                   Both, in sequence
                 </figcaption>
                 <div className="mt-4">

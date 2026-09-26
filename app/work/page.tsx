@@ -51,7 +51,7 @@ export default function WorkIndex() {
                 <WavelengthDot wavelength={study.wavelength} />
               </span>
               <div className="min-w-0 flex-1">
-                <div className="mb-1.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+                <div className="mb-1.5 flex items-center gap-3 font-mono type-label-sm uppercase text-faint">
                   <span>{study.year}</span>
                   {study.stack && <span className="truncate">{study.stack.join(" · ")}</span>}
                 </div>

@@ -99,13 +99,13 @@ export function PostCard({
         <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-foreground">
           <span className="truncate">{post.title}</span>
           {flagNew && (
-            <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-compute-tint">
+            <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono type-label-xs uppercase text-compute-tint">
               New
             </span>
           )}
         </Heading>
         <Leader />
-        <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
+        <span className="shrink-0 font-mono type-label-sm uppercase text-faint">
           {format(parseDate(post.date), "d MMM yyyy")}
         </span>
       </Link>
@@ -134,7 +134,7 @@ export function PostCard({
           <span>{post.title}</span>
         </Heading>
         <Leader />
-        <span className="flex shrink-0 items-baseline gap-3 font-mono text-[11px] uppercase tracking-wider text-faint">
+        <span className="flex shrink-0 items-baseline gap-3 font-mono type-label-sm uppercase text-faint">
           {post.series && <span className="hidden sm:inline">{post.series}</span>}
           <span>{format(parseDate(post.date), "d MMM yyyy")}</span>
         </span>

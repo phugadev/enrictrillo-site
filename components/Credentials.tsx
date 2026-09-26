@@ -30,12 +30,12 @@ export function Credentials() {
                 />
                 <span>
                   <span className="font-display text-[16px] text-foreground">{credential.name}</span>{" "}
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-faint">
+                  <span className="font-mono type-label-sm uppercase text-faint">
                     {credential.issuer}
                   </span>
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-faint">
+              <span className="shrink-0 font-mono type-label-sm uppercase text-faint">
                 {format(parseDate(`${credential.earned}-01`), "MMM yyyy")}
               </span>
             </span>

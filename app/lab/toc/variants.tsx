@@ -25,7 +25,7 @@ export type VariantProps = {
 
 function RailCaption({ children }: { children: string }) {
   return (
-    <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
+    <p className="mb-3 font-mono type-label-xs uppercase text-faint">
       {children}
     </p>
   );

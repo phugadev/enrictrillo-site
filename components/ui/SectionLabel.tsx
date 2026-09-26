@@ -30,7 +30,7 @@ export function SectionLabel({
 }) {
   return (
     <Tag
-      className={`font-mono text-[12px] font-medium uppercase tracking-wider text-foreground ${className}`}
+      className={`font-mono type-label uppercase text-foreground ${className}`}
       style={style}
     >
       {children}

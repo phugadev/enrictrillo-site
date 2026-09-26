@@ -38,7 +38,7 @@ export default async function TocLab() {
       {/* Wider than CONTAINER on purpose: the static comparison is the one
           thing on this page that is not trying to reproduce the post layout. */}
       <div className="mx-auto mb-20 max-w-6xl px-6">
-        <h1 className="font-mono text-[11px] uppercase tracking-[0.18em] text-faint">
+        <h1 className="font-mono type-label-sm uppercase text-faint">
           Lab — margin table of contents
         </h1>
         <p className="mt-4 max-w-2xl font-reading text-[16px] leading-[1.7] text-muted-foreground">

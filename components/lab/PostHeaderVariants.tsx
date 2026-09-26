@@ -106,7 +106,7 @@ export function PostHeaderA({ meta }: { meta: PostMeta }) {
 
   return (
     <header>
-      <dl className="grid grid-cols-[6.5rem_1fr] gap-y-1.5 font-mono text-[11px] uppercase tracking-wider">
+      <dl className="grid grid-cols-[6.5rem_1fr] gap-y-1.5 font-mono type-label-sm uppercase">
         <Row label="From">
           {site.name} · {city}
         </Row>
@@ -183,7 +183,7 @@ export function PostHeaderB({
           return (
             <div key={band} className="flex flex-1 flex-col items-center gap-1.5">
               <span
-                className="font-mono text-[10px] uppercase tracking-wider transition-colors"
+                className="font-mono type-label-xs uppercase transition-colors"
                 // The inactive labels are faint, not invisible: the point of
                 // the scale is that the reader can see the options they are
                 // not in.
@@ -211,7 +211,7 @@ export function PostHeaderB({
           the boundary between chrome and writing. One line doing two jobs. */}
       <hr className="border-border" />
 
-      <p className="mt-5 flex flex-wrap items-center gap-x-2 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground">
+      <p className="mt-5 flex flex-wrap items-center gap-x-2 font-mono type-label-sm uppercase text-subtle-foreground">
         <span className={BAND_TEXT[meta.wavelength]}>{wl.label}</span>
         <Sep />
         <time dateTime={meta.date}>{format(parseDate(meta.date), "d MMM yyyy")}</time>

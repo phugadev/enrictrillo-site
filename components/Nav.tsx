@@ -28,7 +28,7 @@ export function Nav() {
 
         <nav
           aria-label="Primary"
-          className="flex items-center gap-3.5 font-mono text-[11px] uppercase tracking-wider text-subtle-foreground sm:gap-6 sm:text-[12px]"
+          className="flex items-center gap-3.5 font-mono type-label-sm uppercase text-subtle-foreground sm:gap-6 sm:type-label"
         >
           {site.nav.map((item) => (
             <Link key={item.href} href={item.href} className="transition-colors hover:text-foreground">

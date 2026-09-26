@@ -14,7 +14,7 @@ function NavLink({ post, side }: { post: PostMeta; side: "left" | "right" }) {
       href={`/blog/${post.slug}`}
       className={`group flex flex-col gap-2 py-5 sm:py-6 ${isLeft ? "" : "sm:items-end sm:text-right"}`}
     >
-      <span className="font-mono text-[11px] uppercase tracking-wider text-faint">
+      <span className="font-mono type-label-sm uppercase text-faint">
         {isLeft ? "← Older" : "Newer →"}
       </span>
       <span className="flex items-center gap-2.5">

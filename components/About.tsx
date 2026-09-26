@@ -54,7 +54,7 @@ export function About() {
                     key={fact.label}
                     className="flex items-baseline justify-between gap-4 sm:block"
                   >
-                    <dt className="font-mono text-[11px] uppercase tracking-wider text-faint">
+                    <dt className="font-mono type-label-sm uppercase text-faint">
                       {fact.label}
                     </dt>
                     <dd className="text-[14px] text-foreground sm:mt-1">{fact.value}</dd>
