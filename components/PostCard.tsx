@@ -2,53 +2,15 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import type { PostMeta } from "@/lib/posts";
-import { WavelengthDot } from "./ui/WavelengthDot";
+import { wavelengths } from "@/lib/site";
+import { band } from "@/lib/bands";
 
 /**
- * The dotted leader between a row's title and its date — the device a
- * contents page or an index uses to carry the eye across a gap that would
- * otherwise be dead space. Lifted from desengs.com, where it is what makes
- * a wide list read as one horizontal line per item rather than as two
- * columns that happen to share a row.
+ * One post in a list. The date sits in its own column as a figure, so a list
+ * scans down a timeline; the band is named, not just coloured, because a dot
+ * alone asks the reader to remember the legend.
  *
- * Empty and aria-hidden: it is a ruled line, not content. It sits on the
- * baseline for free — an empty inline-level flex item in a baseline row
- * aligns its bottom margin edge to the baseline, which is exactly where the
- * bottom border lands.
- */
-function Leader() {
-  return (
-    <span
-      aria-hidden="true"
-      className="min-w-6 flex-1 border-b border-dotted border-border-strong"
-    />
-  );
-}
-
-/**
- * A post in a list. Two shapes, and the difference is who is reading.
- *
- * `compact` (the homepage teaser) is band dot, title, leader and date —
- * nothing else. A reader
- * on the homepage has not decided to read anything yet — the list is an
- * activity signal, proof the work is ongoing, and an excerpt there competes
- * with the section that is actually meant to convert them.
- *
- * The full shape (/blog, band and series pages) keeps the excerpt, because a
- * reader who has arrived there is choosing *which* post, and these excerpts
- * make a claim rather than summarising — "the best feature I shipped this
- * year was one that sends fewer notifications" is the argument, and it is
- * what makes someone pick that post over the one above it. Sites that list
- * titles alone get away with it because their titles are reference labels
- * ("The Popover API"); these are argument titles, and an argument title
- * without its claim is just a headline.
- *
- * What the full shape dropped: the old metadata line ran wavelength · date ·
- * reading time · series as four mono fragments above the title, and it did
- * not parse at a glance — four values of equal weight, none of them the
- * thing you were scanning for. The band is now the coloured dot, the series
- * sits next to the date, and reading time is gone. It was never a reason to
- * click or not click.
+ * `compact` drops the excerpt, for the homepage.
  */
 export function PostCard({
   post,
@@ -59,93 +21,45 @@ export function PostCard({
 }: {
   post: PostMeta;
   showWavelength?: boolean;
-  /**
-   * Defaults to h2 because on /blog and the band and series pages the card
-   * title is the first thing under the page h1. The homepage passes h3, where
-   * the "Latest writing" SectionLabel is already an h2.
-   */
   as?: "h2" | "h3";
-  /**
-   * Single-line row (band dot + title + dotted leader + date) with the
-   * excerpt and metadata line dropped. The leading mark used to be a framed
-   * tile of four bars standing in for a page of text; it is now the same
-   * 6px band dot the toolkit rows and the full card use, so one mark means
-   * "this thing carries a wavelength" everywhere on the site instead of two
-   * marks meaning it in two idioms. Hover does nothing to the row itself — no lift,
-   * no background, no arrow appearing. The list handles it: `.rsk-focuslist`
-   * dims every row you are not pointing at, which says "this one" by taking
-   * attention off the others rather than by decorating the one under the
-   * cursor. Three separate hover affordances on one row was two too many. Used on the homepage teaser, where
-   * the excerpt is more of an activity signal than something a reader needs
-   * to decide whether to click — unlike /blog and the wavelength/series
-   * pages, which keep the full treatment. Takes the "New" pill when the
-   * list-builder hands it one — see `flagNew`.
-   */
   compact?: boolean;
-  /**
-   * Draws the "New" pill. The *policy* — how new is new, and how many posts
-   * may claim it at once — deliberately lives with whoever builds the list
-   * (app/page.tsx), not here. A card cannot know whether it is the newest
-   * thing on the page, and a rule of the form "anything inside N days" hands
-   * the pill to three posts at once in a busy month, at which point it has
-   * stopped saying anything.
-   */
   flagNew?: boolean;
 }) {
-  if (compact) {
-    return (
-      <Link href={`/blog/${post.slug}`} className="group flex items-baseline gap-3 py-2.5">
-        <WavelengthDot wavelength={post.wavelength} className="-translate-y-px" />
-        <Heading className="flex min-w-0 items-baseline gap-2 font-display text-[16px] leading-snug text-foreground">
-          <span className="truncate">{post.title}</span>
-          {flagNew && (
-            <span className="shrink-0 rounded-full bg-compute/15 px-2 py-0.5 font-mono type-label-xs uppercase text-compute-tint">
-              New
-            </span>
-          )}
-        </Heading>
-        <Leader />
-        <span className="shrink-0 font-mono type-label-sm uppercase text-faint">
-          {format(parseDate(post.date), "d MMM yyyy")}
-        </span>
-      </Link>
-    );
-  }
+  const wl = wavelengths[post.wavelength];
+  const b = band[post.wavelength];
+  const read = post.readingTime.replace(/\s*read$/i, "");
 
   return (
     <Link
       href={`/blog/${post.slug}`}
-      /* No hover treatment on the row itself, the same discipline the compact
-         shape already follows: `.rsk-focuslist` dims every row you are *not*
-         pointing at, which says "this one" by taking attention off the others.
-         A background wash on top of that was a second answer to a question
-         already answered — and it was the loud one, since it redraws a panel
-         under the text while the dimming only changes what is around it. */
-      className="group block py-5"
+      className="group grid gap-x-stack gap-y-1 py-gutter sm:grid-cols-[7.5rem_minmax(0,1fr)]"
     >
-      <div className="flex items-baseline gap-3">
-        <Heading className="flex min-w-0 items-baseline gap-3 font-display text-[17px] leading-snug text-foreground">
-          {/* Hidden on the band pages: every post there is the same band,
-              so the dot would repeat one colour down the page and mean
-              nothing. */}
-          {showWavelength && (
-            <WavelengthDot wavelength={post.wavelength} className="translate-y-[-3px]" />
+      <time dateTime={post.date} className="figure pt-0.5 type-caption-sm text-faint">
+        {format(parseDate(post.date), "d MMM yyyy")}
+      </time>
+      <div className="min-w-0">
+        <Heading className="flex items-center gap-inset text-balance type-subheading text-foreground transition-colors duration-quick group-hover:text-foreground">
+          <span className="underline decoration-transparent decoration-1 underline-offset-4 transition-colors duration-quick group-hover:decoration-subtle-foreground">
+            {post.title}
+          </span>
+          {flagNew && (
+            <span className={`signal shrink-0 rounded-chip border px-1.5 py-0.5 type-label-xs ${b.chip}`}>New</span>
           )}
-          <span>{post.title}</span>
         </Heading>
-        <Leader />
-        <span className="flex shrink-0 items-baseline gap-3 font-mono type-label-sm uppercase text-faint">
-          {post.series && <span className="hidden sm:inline">{post.series}</span>}
-          <span>{format(parseDate(post.date), "d MMM yyyy")}</span>
-        </span>
+        {!compact && (
+          <p className="mt-1 max-w-prose text-pretty type-body text-subtle-foreground">{post.excerpt}</p>
+        )}
+        <p className="signal mt-inset flex flex-wrap items-center gap-x-gutter gap-y-1 type-label-xs text-faint">
+          {showWavelength && (
+            <span className={`flex items-center gap-1.5 ${b.tint}`}>
+              <span aria-hidden="true" className={`size-1.5 rounded-full ${b.mark}`} />
+              {wl.label}
+            </span>
+          )}
+          {post.series && <span>{post.series}</span>}
+          <span>{read}</span>
+        </p>
       </div>
-      <p
-        className={`mt-1.5 max-w-prose text-[14px] leading-relaxed text-subtle-foreground ${
-          showWavelength ? "pl-[18px]" : ""
-        }`}
-      >
-        {post.excerpt}
-      </p>
     </Link>
   );
 }

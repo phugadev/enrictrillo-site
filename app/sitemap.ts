@@ -23,9 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    // /system is a real page about real work, unlike /lab — it belongs in
-    // here. Its lastModified is genuinely "whenever the package moved", and
-    // the package version is what the page prints, so "now" is honest enough.
+    // /system is Minima's live specimen, computed from the installed theme at
+    // build time, so "now" is an honest lastModified.
     {
       url: `${site.url}/system`,
       lastModified: new Date(),

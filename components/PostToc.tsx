@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Heading } from "@/lib/headings";
-import { wavelengths, type Wavelength } from "@/lib/site";
+import type { Wavelength } from "@/lib/site";
+import { band } from "@/lib/bands";
 
 /**
  * The reading line: the y the reader's eye is assumed to be at. Sits just under
@@ -29,9 +30,8 @@ const READING_LINE = 96;
  * edge, and the marker went stale on a jump. Defining "active" against a single
  * line removes the ambiguous state instead of patching around it.
  *
- * Exported because the lab variants at /lab/toc are alternative *presentations*
- * of the same reading position — the tracking logic is settled and should not
- * be forked to try a different look.
+ * Exported so any other presentation of the reading position reuses this
+ * tracking logic rather than forking it.
  */
 export function useActiveHeading(
   headings: Heading[],
@@ -110,93 +110,13 @@ export function useActiveHeading(
   return [activeId, setActiveId];
 }
 
-/**
- * The rail's reserved geometry, in one place because three things depend on it
- * agreeing: this component, the lab variants, and the arithmetic in the comment
- * below. `ml-20` is the gutter between the prose and the rail; `w-60` (240px)
- * is the rail itself.
- *
- * WHY THE GUTTER IS 80px AND NOT 32px. The article column is not the widest
- * thing in the article. Code frames and tables break out past the reading
- * measure at `lg` and up — `width: calc(100% + 3rem)` in globals.css, which
- * grows them 48px to the right so they sit flush with CONTAINER instead of
- * with the prose. A gutter measured from the *column* therefore left only
- * 32px minus those 48px, and a fenced block ran under the rail. The gutter is
- * measured from the widest thing the article can contain: 48px of breakout
- * plus the 32px of air the rail actually wants.
- *
- * At the `xl` breakpoint (1280px layout width) the container is `max-w-3xl`
- * (768px) centred, so the article column — `max-w-2xl`, 672px, left-aligned
- * inside it — runs 256→928 and a broken-out code frame reaches 976. The rail
- * therefore occupies 1008→1248, clearing the widest possible content by 32px
- * and leaving 32px to the viewport edge. Nothing here can reach the prose and
- * nothing can push past the right edge into horizontal scroll, and because the
- * width is a constant rather than a hover state, that stays true in every
- * state the rail has.
- */
-export const RAIL =
-  "sticky top-28 ml-20 w-60 max-h-[calc(100vh-9rem)] overflow-y-auto overscroll-contain";
+/** The rail sticks under the nav for the length of the post, and scrolls on
+    its own if a post has more headings than the viewport holds. */
+export const RAIL = "sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto overscroll-contain";
 
-/**
- * The rail's outer positioning, shared with the lab variants.
- *
- * `absolute left-full` off the post page's `relative max-w-2xl` wrapper: the
- * rail hangs off the column's right edge and is out of flow, so the article's
- * position and its alignment with Nav and Footer are untouched at every
- * breakpoint. `h-full` gives the sticky child a containing block that lasts the
- * length of the post, so the rail travels with the reader and stops at the end.
- */
-export const RAIL_OUTER = "absolute left-full top-0 hidden h-full xl:block";
-
-/** Label type, shared by all three variants so only the marker differs. */
 export const RAIL_LABEL =
-  "font-mono text-[11px] leading-normal [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden";
+  "type-caption [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] overflow-hidden";
 
-/**
- * The margin table of contents: a permanently legible list of the post's h2/h3
- * headings in a reserved column to the right of the article, with the reader's
- * current section marked on a continuous hairline spine.
- *
- * WHY IT NO LONGER EXPANDS. The previous version was 36px wide at rest — one
- * short line per heading — and grew to 272px on hover, sliding the labels in
- * over whatever happened to be beside them. Two things were wrong with that.
- * The obvious one is that a panel which appears on hover *is* an overlay even
- * when it technically has room: it arrives unannounced, it is transient, and it
- * reads as covering the page rather than belonging to it. The subtler one is
- * that a ToC you cannot read without pointing at it is not a table of contents
- * — it is a scrollbar with extra steps. You could see that the post had eight
- * sections; you could not see what they were, which is the entire question a
- * ToC answers. The width is now a constant and the labels are always on.
- *
- * WHY THE RIGHT MARGIN. The reference for this rework (noechague) puts its
- * contents list on the left, and on a symmetric layout that would be the better
- * side — a left rail is read once on arrival and then ignored. This layout is
- * not symmetric. The article is `max-w-2xl` left-aligned inside a `max-w-3xl`
- * container, which means the slack the design already reserves is on the right
- * (328px at `xl`, against 280px on the left), and the container itself must
- * stay put because it is what lines the post up with Nav and Footer. Moving the
- * rail left would mean either a narrower rail or shifting the column, and the
- * column is not available. There is also a reading argument: the eye returns to
- * the left edge of the prose on every line, so a permanently visible list of
- * titles there sits directly in the return path. On the right it is out of it.
- *
- * WHY THE SPINE. The active item is marked by an accent segment on a continuous
- * 1px rule rather than by a background block or coloured text. Coloured text is
- * ruled out outright — the wavelength value here is the *mark*, and marks are
- * seen, not read (see the band note in tailwind.config.ts); the active label
- * goes to full-strength paper instead. A background block was the other
- * candidate and is variant A in the lab; the spine won because a marker sliding
- * along a track is the same instrument idiom as ScrollProgress and the
- * Spectrometer, and because it keeps the rail's silhouette a single vertical
- * line instead of a stack of boxes.
- *
- * Below `xl` it does not render at all — no accordion, no drawer, no mobile
- * fallback. A ToC that has to be opened is a different feature from one you
- * glance at, and the post already has a scroll-progress bar and an end-of-post
- * nav. The only transitions left are colour and the marker's width; globals.css
- * zeroes every transition under prefers-reduced-motion and
- * `motion-reduce:transition-none` states it locally too.
- */
 export function PostToc({
   headings,
   wavelength,
@@ -211,7 +131,7 @@ export function PostToc({
   if (headings.length < 2) return null;
 
   return (
-    <nav aria-label="On this page" className={RAIL_OUTER}>
+    <nav aria-label="On this page" className="h-full">
       <div className={RAIL}>
         <TocRail
           headings={headings}
@@ -228,10 +148,8 @@ export function PostToc({
  * The rail's contents, with no opinion about where the rail is — the reading
  * position is passed in rather than measured here.
  *
- * Split out for one reason: /lab/toc renders this alongside two rejected
- * presentations, both live and pinned to a fixed heading, and a lab that
- * compares a *copy* of the shipped variant is comparing the wrong thing. If
- * this changes, what Enric is looking at changes with it.
+ * Split out so the rail can be rendered against a fixed heading — in a test
+ * or a specimen — without scrolling a page to get there.
  */
 export function TocRail({
   headings,
@@ -244,11 +162,11 @@ export function TocRail({
   activeId: string | null;
   onSelect?: (id: string) => void;
 }) {
-  const accent = wavelengths[wavelength].hex;
+  const mark = band[wavelength].mark;
 
   return (
     <>
-      <p className="mb-3 font-mono type-label-xs uppercase text-faint">
+      <p className="signal mb-gutter type-label-xs text-faint">
         On this page
       </p>
 
@@ -268,8 +186,8 @@ export function TocRail({
                 // scroll finishes. Marking it now means the item you clicked
                 // lights up on the click rather than at the end of the glide.
                 onClick={() => onSelect?.(heading.id)}
-                className={`group relative block rounded-sm py-[7px] pr-1 outline-hidden focus-visible:ring-1 focus-visible:ring-border-strong ${
-                  heading.depth === 3 ? "pl-7" : "pl-4"
+                className={`group relative block rounded-control-xs py-1.5 pr-1 ${
+                  heading.depth === 3 ? "pl-stack" : "pl-gutter"
                 }`}
               >
                 {/* Pulled 1px left so the marker sits *on* the spine and covers
@@ -277,11 +195,12 @@ export function TocRail({
                     adjacent items would still read as separate marks. */}
                 <span
                   aria-hidden="true"
-                  className="absolute -left-px bottom-[5px] top-[5px] w-px transition-[width,background-color] duration-200 ease-out motion-reduce:transition-none"
-                  style={active ? { backgroundColor: accent, width: 2 } : undefined}
+                  className={`absolute -left-px top-1.5 bottom-1.5 transition-[width,background-color] duration-base ease-out ${
+                    active ? `w-0.5 ${mark}` : "w-px"
+                  }`}
                 />
                 <span
-                  className={`${RAIL_LABEL} transition-colors duration-200 ease-out motion-reduce:transition-none ${
+                  className={`${RAIL_LABEL} transition-colors duration-base ease-out ${
                     active ? "text-foreground" : "text-subtle-foreground group-hover:text-muted-foreground"
                   }`}
                 >

@@ -1,5 +1,6 @@
 import { Fragment } from "react";
-import { wavelengths, type Wavelength } from "@/lib/site";
+import type { Wavelength } from "@/lib/site";
+import { band } from "@/lib/bands";
 
 export type DiagramNode = {
   label: string;
@@ -8,7 +9,6 @@ export type DiagramNode = {
   note?: string;
 };
 
-const NEUTRAL_HEX = "#7A7C85"; // palette.faint — not re-imported to keep this component to one concern
 
 /**
  * A left-to-right pipeline diagram (stacking top-to-bottom on mobile) for
@@ -33,24 +33,21 @@ const NEUTRAL_HEX = "#7A7C85"; // palette.faint — not re-imported to keep this
  */
 export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (string | undefined)[] }) {
   return (
-    <div className="not-prose my-8 flex flex-col rounded-lg border border-border bg-surface p-6 sm:flex-row sm:items-center">
+    <div className="my-stack flex flex-col rounded-panel border border-border bg-card p-gutter shadow-raised sm:flex-row sm:items-center sm:p-stack">
       {nodes.map((node, i) => {
-        const hex = node.wavelength ? wavelengths[node.wavelength].hex : NEUTRAL_HEX;
+        const chip = node.wavelength ? band[node.wavelength].chip : "border-border bg-gray-fill text-muted-foreground";
         return (
           <Fragment key={i}>
-            <div
-              className="flex shrink-0 flex-col items-center gap-1 rounded-lg border px-4 py-3 text-center"
-              style={{ borderColor: `${hex}40`, backgroundColor: `${hex}14` }}
-            >
-              <span className="font-mono type-label uppercase" style={{ color: hex }}>
+            <div className={`flex shrink-0 flex-col items-center gap-1 rounded-control-md border px-gutter py-inset text-center ${chip}`}>
+              <span className="signal type-label">
                 {node.label}
               </span>
-              {node.note && <span className="text-[12px] text-faint">{node.note}</span>}
+              {node.note && <span className="type-caption-sm text-subtle-foreground">{node.note}</span>}
             </div>
             {i < nodes.length - 1 && (
               <div className="flex flex-col items-center justify-center gap-1 px-1 py-2 sm:flex-1 sm:px-3 sm:py-0">
                 {edges[i] && (
-                  <span className="font-mono type-label-xs uppercase text-faint">{edges[i]}</span>
+                  <span className="signal type-label-xs text-faint">{edges[i]}</span>
                 )}
                 <span aria-hidden="true" className="text-faint sm:hidden">
                   ↓

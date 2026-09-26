@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
-import { WavelengthDot } from "@/components/ui/WavelengthDot";
-import { CONTAINER } from "@/components/ui/Section";
+import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
+import { band } from "@/lib/bands";
 import { getAllCaseStudies } from "@/lib/work";
-import { site } from "@/lib/site";
+import { site, wavelengths } from "@/lib/site";
 
 const description = "Longer write-ups on individual projects — approach, decisions and outcomes.";
 
@@ -35,35 +35,53 @@ export default function WorkIndex() {
   const studies = getAllCaseStudies();
 
   return (
-    <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <h1 className="font-display text-[32px] font-medium tracking-tight text-foreground">
-        Case studies
-      </h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-subtle-foreground">{description}</p>
-
-      {studies.length === 0 ? (
-        <p className="mt-14 font-mono text-[13px] text-faint">Nothing published yet.</p>
-      ) : (
-        <div className="mt-12 divide-y divide-border">
-          {studies.map((study) => (
-            <Link key={study.slug} href={`/work/${study.slug}`} className="group flex gap-4 py-6">
-              <span className="pt-2">
-                <WavelengthDot wavelength={study.wavelength} />
-              </span>
-              <div className="min-w-0 flex-1">
-                <div className="mb-1.5 flex items-center gap-3 font-mono type-label-sm uppercase text-faint">
-                  <span>{study.year}</span>
-                  {study.stack && <span className="truncate">{study.stack.join(" · ")}</span>}
-                </div>
-                <h2 className="font-display text-[19px] leading-snug text-foreground transition-colors group-hover:text-white">
-                  {study.title}
-                </h2>
-                <p className="mt-1.5 text-[15px] leading-relaxed text-subtle-foreground">{study.excerpt}</p>
-              </div>
+    <PageShell>
+      <PageHeader
+        eyebrow={<Eyebrow>Case studies</Eyebrow>}
+        title="How the work was done."
+        lead={description}
+      />
+      <div className={PAGE}>
+        {studies.length === 0 ? (
+          <div className="rounded-panel border border-dashed border-gray-border-strong p-stack text-center">
+            <p className="type-subheading text-foreground">The write-ups are in progress.</p>
+            <p className="mx-auto mt-inset max-w-md type-body text-subtle-foreground">
+              Until they land, every project is on the homepage with its source and packages linked.
+            </p>
+            <Link
+              href="/#work"
+              className="signal mt-gutter inline-block type-label-sm text-subtle-foreground underline decoration-faint underline-offset-4 transition-colors duration-quick hover:text-foreground"
+            >
+              See the selected work
             </Link>
-          ))}
-        </div>
-      )}
+          </div>
+        ) : (
+          <ul className="grid gap-gutter sm:grid-cols-2">
+            {studies.map((study) => {
+              const wl = wavelengths[study.wavelength];
+              const b = band[study.wavelength];
+              return (
+                <li key={study.slug}>
+                  <Link
+                    href={`/work/${study.slug}`}
+                    className="group relative flex h-full flex-col overflow-hidden rounded-panel border border-border bg-card p-stack shadow-raised transition-colors duration-quick hover:border-gray-border-strong"
+                  >
+                    <span aria-hidden="true" className={`absolute left-0 top-0 h-px w-24 ${b.mark}`} />
+                    <Eyebrow as="span" wavelength={study.wavelength}>
+                      {wl.label} · {study.year}
+                    </Eyebrow>
+                    <h2 className="mt-gutter text-balance type-heading text-foreground">{study.title}</h2>
+                    <p className="mt-inset flex-1 text-pretty type-body text-muted-foreground">{study.excerpt}</p>
+                    <span className="signal mt-stack type-label-sm text-subtle-foreground transition-colors duration-quick group-hover:text-foreground">
+                      Read the case study →
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </PageShell>
   );
 }

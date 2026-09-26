@@ -1,21 +1,8 @@
 import type { CaseStudyMeta } from "@/lib/work";
 import { site, wavelengths } from "@/lib/site";
+import { band } from "@/lib/bands";
+import { Eyebrow } from "./layout";
 import { SmartLink } from "./ui/SmartLink";
-
-/**
- * Instrument-readout header for a case study, mirroring PostHeader's mono
- * label/value grid — same dispersion metaphor, different fields. A post reads
- * as an entry in a log (From/Date/Wavelength/Read); a case study reads as a
- * specimen on the bench (Wavelength/Year/Stack/Links).
- */
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <>
-      <dt className="text-faint">{label}</dt>
-      <dd className="text-subtle-foreground">{children}</dd>
-    </>
-  );
-}
 
 const LINK_ORDER = [
   { key: "live", label: "Live" },
@@ -23,43 +10,64 @@ const LINK_ORDER = [
   { key: "npm", label: "npm" },
 ] as const;
 
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-gutter px-gutter py-inset sm:block sm:py-gutter">
+      <dt className="signal type-label-xs text-faint">{label}</dt>
+      <dd className="text-right type-body text-foreground sm:mt-1 sm:text-left">{children}</dd>
+    </div>
+  );
+}
+
 export function CaseStudyHeader({ meta }: { meta: CaseStudyMeta }) {
   const wl = wavelengths[meta.wavelength];
   const links = LINK_ORDER.filter(({ key }) => meta.links?.[key]);
 
   return (
     <header>
-      <dl className="grid grid-cols-[6.5rem_1fr] gap-y-1.5 font-mono type-label-sm uppercase">
+      <Eyebrow wavelength={meta.wavelength}>
+        Case study · {wl.nm}nm {wl.label}
+      </Eyebrow>
+      <h1 className="mt-gutter text-balance type-title text-foreground sm:type-display">{meta.title}</h1>
+      {meta.excerpt && (
+        <p className="mt-gutter max-w-prose text-pretty type-lead text-muted-foreground">{meta.excerpt}</p>
+      )}
+
+      <dl className="mt-stack grid divide-y divide-border rounded-panel border border-border bg-card shadow-raised sm:grid-cols-4 sm:divide-x sm:divide-y-0">
         <Row label="From">{site.name}</Row>
-        <Row label="Wavelength">
-          <span style={{ color: wl.hex }}>
-            {wl.nm}nm · {wl.label}
-          </span>
+        <Row label="Year">
+          <span className="figure">{meta.year}</span>
         </Row>
-        <Row label="Year">{meta.year}</Row>
-        {meta.stack && <Row label="Stack">{meta.stack.join(" · ")}</Row>}
-        {links.length > 0 && (
-          <Row label="Links">
-            <span className="flex flex-wrap gap-4 normal-case tracking-normal">
+        <Row label="Band">
+          <span className={band[meta.wavelength].tint}>{wl.label}</span>
+        </Row>
+        <Row label="Links">
+          {links.length > 0 ? (
+            <span className="flex flex-wrap justify-end gap-x-gutter sm:justify-start">
               {links.map(({ key, label }) => (
                 <SmartLink
                   key={key}
                   href={meta.links![key]!}
-                  className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-subtle-foreground"
+                  className="underline decoration-faint decoration-1 underline-offset-4 transition-colors duration-quick hover:decoration-interface"
                 >
                   {label} ↗
                 </SmartLink>
               ))}
             </span>
-          </Row>
-        )}
+          ) : (
+            <span className="text-faint">—</span>
+          )}
+        </Row>
       </dl>
-
-      <hr className="mt-5 border-border" />
-
-      <h1 className="mt-8 font-display text-[32px] font-medium leading-tight tracking-tight text-foreground sm:text-[38px]">
-        {meta.title}
-      </h1>
+      {meta.stack && (
+        <ul className="mt-gutter flex flex-wrap gap-1.5" aria-label="Stack">
+          {meta.stack.map((item) => (
+            <li key={item} className="figure rounded-chip border border-border px-2 py-0.5 type-caption-sm text-subtle-foreground">
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
     </header>
   );
 }

@@ -3,8 +3,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { SeriesChips } from "@/components/SeriesChips";
 import { WavelengthChips } from "@/components/WavelengthChips";
-import { Hatch } from "@/components/ui/Hatch";
-import { CONTAINER } from "@/components/ui/Section";
+import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
 
@@ -48,37 +47,43 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <h1 className="font-display text-[32px] font-medium tracking-tight text-foreground">Writing</h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-subtle-foreground">
-        Build logs, architecture notes and engineering write-ups — filed by wavelength, the same
-        taxonomy the work is organised by.
-      </p>
-
-      {posts.length === 0 ? (
-        <p className="mt-14 font-mono text-[13px] text-faint">Nothing published yet.</p>
-      ) : (
-        <>
-          <div className="mt-8">
+    <PageShell>
+      <PageHeader
+        eyebrow={<Eyebrow>Writing{posts.length > 0 ? ` · ${posts.length} ${posts.length === 1 ? "post" : "posts"}` : ""}</Eyebrow>}
+        title="Build logs and engineering notes."
+        lead="Architecture notes and engineering write-ups — filed by wavelength, the same taxonomy the work is organised by."
+      >
+        {posts.length > 0 && (
+          <div className="space-y-gutter">
             <WavelengthChips />
-          </div>
-
-          <div className="mt-5">
             <SeriesChips />
           </div>
+        )}
+      </PageHeader>
 
-          {/* Separates filtering from results. The homepage uses Spectrometer
-              for this job; here there was nothing, and a plain rule read as
-              just another divider among the post separators below. */}
-          <Hatch className="mt-10" />
-
-          <div className="rsk-focuslist mt-8 divide-y divide-border">
+      <div className={PAGE}>
+        {posts.length === 0 ? (
+          <div className="rounded-panel border border-dashed border-gray-border-strong p-stack text-center">
+            <p className="type-subheading text-foreground">The first posts are being written.</p>
+            <p className="mx-auto mt-inset max-w-md type-body text-subtle-foreground">
+              Build logs and architecture notes land here as they are finished. The feed will
+              have them the moment they do.
+            </p>
+            <a
+              href="/feed.xml"
+              className="signal mt-gutter inline-block type-label-sm text-subtle-foreground underline decoration-faint underline-offset-4 transition-colors duration-quick hover:text-foreground"
+            >
+              Subscribe via RSS
+            </a>
+          </div>
+        ) : (
+          <div className="focuslist divide-y divide-border border-t border-border">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
     </PageShell>
   );
 }

@@ -2,16 +2,9 @@
  * A zigzag mark — a run of 45° peaks and valleys, drawn as one continuous
  * stroke.
  *
- * TRIAL, not yet shipped. It exists to be compared against `Hatch` on
- * /lab/post-header, because the two look adjacent and are not the same thing:
- *
- *   Hatch    a *structural* break. Repeating 315° strokes derived from
- *            --rsk-rule-strong, spanning the full measure. It says "one region
- *            of the page has ended and another begins" — chrome talking about
- *            layout.
- *   Zigzag   a *prose* break. A short, centred, single stroke, the modern
- *            descendant of the dinkus (* * *). It says "the argument turns
- *            here" — the author talking about the writing.
+ * A prose break: short, centred, one stroke — the modern descendant of the
+ * dinkus (* * *). It says "the argument turns here", the author talking about
+ * the writing, where a full-width rule would be the layout talking.
  *
  * Which is why this deliberately does NOT span the column. A full-measure
  * zigzag stops reading as a mark and starts reading as a saw blade, and at

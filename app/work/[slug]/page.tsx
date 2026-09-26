@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { CaseStudyHeader } from "@/components/CaseStudyHeader";
 import { Mdx } from "@/components/Mdx";
-import { CONTAINER } from "@/components/ui/Section";
+import { PAGE } from "@/components/layout";
 import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/work";
 import { site } from "@/lib/site";
 
@@ -55,17 +55,15 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   if (meta.draft && process.env.NODE_ENV === "production") notFound();
 
   return (
-    // Same CONTAINER-then-max-w-2xl split as /blog/[slug] — the column lines
-    // up with Nav and Footer on both edges, while the reading measure inside
-    // stays narrower than the site's usual card width.
-    <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <div className="max-w-2xl">
-        <CaseStudyHeader meta={meta} />
-
-        <article className="prose prose-invert mt-10 font-reading text-[18px] leading-[1.75]">
-          <Mdx source={content} />
-        </article>
-      </div>
+    <PageShell reading>
+      <article className={`${PAGE} pt-section`}>
+        <div className="max-w-[46rem]">
+          <CaseStudyHeader meta={meta} />
+          <div className="prose mt-stack">
+            <Mdx source={content} />
+          </div>
+        </div>
+      </article>
     </PageShell>
   );
 }

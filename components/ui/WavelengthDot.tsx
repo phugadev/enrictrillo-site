@@ -1,10 +1,7 @@
-import { wavelengths, type Wavelength } from "@/lib/site";
+import type { Wavelength } from "@/lib/site";
+import { band } from "@/lib/bands";
 
-/**
- * The small colour-coded dot used wherever something carries a wavelength —
- * projects, credentials, post links. Decorative: the label is always adjacent
- * in text, so it's hidden from assistive tech.
- */
+/** A band as a mark: seen, not read. Always beside a label that names it. */
 export function WavelengthDot({
   wavelength,
   className = "",
@@ -15,8 +12,7 @@ export function WavelengthDot({
   return (
     <span
       aria-hidden="true"
-      className={`h-1.5 w-1.5 shrink-0 rounded-full ${className}`}
-      style={{ backgroundColor: wavelengths[wavelength].hex }}
+      className={`inline-block size-1.5 shrink-0 rounded-full ${band[wavelength].mark} ${className}`}
     />
   );
 }

@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { WavelengthChips } from "@/components/WavelengthChips";
-import { CONTAINER } from "@/components/ui/Section";
-import { SectionLabel } from "@/components/ui/SectionLabel";
+import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
 import { getPostsByWavelength } from "@/lib/posts";
 import { site, wavelengths, type Wavelength } from "@/lib/site";
 
@@ -60,23 +59,24 @@ export default async function WavelengthPage({
   const wl = wavelengths[band.wavelength];
 
   return (
-    <PageShell mainClassName={`${CONTAINER} py-16`}>
-      <SectionLabel as="p" style={{ color: wl.hex }}>
-        {wl.nm}nm
-      </SectionLabel>
-      <h1 className="mt-3 font-display text-[32px] font-medium tracking-tight text-foreground">
-        {wl.label}
-      </h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-subtle-foreground">{wl.description}.</p>
-
-      <div className="mt-8">
+    <PageShell>
+      <PageHeader
+        eyebrow={
+          <Eyebrow wavelength={band.wavelength as Wavelength}>
+            {wl.nm}nm · {band.posts.length} {band.posts.length === 1 ? "post" : "posts"}
+          </Eyebrow>
+        }
+        title={wl.label}
+        lead={`${wl.description}.`}
+      >
         <WavelengthChips active={band.wavelength as Wavelength} />
-      </div>
-
-      <div className="mt-12 rsk-focuslist divide-y divide-border">
-        {band.posts.map((post) => (
-          <PostCard key={post.slug} post={post} showWavelength={false} />
-        ))}
+      </PageHeader>
+      <div className={PAGE}>
+        <div className="focuslist divide-y divide-border border-t border-border">
+          {band.posts.map((post) => (
+            <PostCard key={post.slug} post={post} showWavelength={false} />
+          ))}
+        </div>
       </div>
     </PageShell>
   );
