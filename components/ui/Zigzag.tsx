@@ -8,7 +8,7 @@
  *
  * Which is why this deliberately does NOT span the column. A full-measure
  * zigzag stops reading as a mark and starts reading as a saw blade, and at
- * that width it competes with Hatch for the same job. Kept at its natural
+ * that width it competes with a structural rule for the same job. Kept at its natural
  * size and centred, it can sit inside an article without claiming to be
  * structure.
  *
