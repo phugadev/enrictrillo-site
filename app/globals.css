@@ -50,6 +50,12 @@
 }
 
 html {
+  /* The root is the reader's, not ours. Ruskel set it to --rsk-text-base
+     (0.875rem) on [data-exposure], which made every rem on the site 14px:
+     Tailwind's spacing, and Minima's type and space ladders, all landed
+     12.5% under what they say. 100% is 16px by default and still follows the
+     reader's browser text size. Unlayered, so it beats Ruskel's base layer. */
+  font-size: 100%;
   scroll-behavior: smooth;
   /* The header is sticky at ~56px, so an un-offset anchor jump hides the
      target's top rule and clips its heading. This also fixes keyboard focus
@@ -58,6 +64,9 @@ html {
 }
 
 body {
+  /* Running text stays 14px — now said on the body, where it belongs, instead
+     of by shrinking the root. It is Minima's body size (--type-body). */
+  font-size: var(--type-body);
   background-color: var(--rsk-ground);
   color: var(--rsk-text);
 }
