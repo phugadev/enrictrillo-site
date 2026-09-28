@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Container } from "@/components/layout";
+import { Container, Section } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { CaseStudyHeader } from "@/components/CaseStudyHeader";
 import { Mdx } from "@/components/Mdx";
+import { PostCard } from "@/components/PostCard";
+import { getSeriesBySlug } from "@/lib/posts";
 import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/work";
 import { site } from "@/lib/site";
 
@@ -58,6 +60,10 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   // Drafts stay previewable while you're writing, but never resolve in production.
   if (meta.draft && process.env.NODE_ENV === "production") notFound();
 
+  // A project's build log is a post series of the same name; the case study
+  // is where someone evaluating the work lands, so it points to it.
+  const series = getSeriesBySlug(slug);
+
   return (
     <PageShell reading back={{ href: "/", label: site.name }}>
       <Container as="article" size="narrow" className="pt-stack">
@@ -66,6 +72,15 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <Mdx source={content} />
         </div>
       </Container>
+      {series && (
+        <Section variant="quiet" size="narrow" label={`Writing on ${series.name}`}>
+          <ul>
+            {series.posts.map((post) => (
+              <PostCard key={post.slug} post={post} />
+            ))}
+          </ul>
+        </Section>
+      )}
     </PageShell>
   );
 }
