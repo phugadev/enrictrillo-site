@@ -1,9 +1,9 @@
 # enrictrillo.com — verification
 #
-# The site is migrating from Ruskel to Minima, which means hundreds of class
-# names moving across sixty-odd component files. Until now nothing checked any
-# of it: a typo in a className is invisible to TypeScript, but a broken import
-# or a bad prop is not, and neither is a build that stops compiling.
+# Typecheck and build on every push and pull request. A typo in a className is
+# invisible to TypeScript, but a broken import or a bad prop is not, and
+# neither is a build that stops compiling — including frontmatter validation,
+# which runs when the build reads content/.
 #
 # This is the floor, not the ceiling. It runs what the repository can actually
 # run today — there is no ESLint here, and inventing a config as part of adding

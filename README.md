@@ -354,9 +354,11 @@ Three faces, one per voice (the reasoning is in the comment at the top of
 `app/layout.tsx`):
 
 - **Inter** (`font-sans`) — the system speaking: nav, labels, headings and
-  body. Loaded in the root layout at **400 and 500**, upright only. 500 is the
-  real medium cut behind `font-medium` (list titles, project names, table
-  headers).
+  body. Loaded in the root layout at **400, 500 and 600** — one variable file,
+  so the extra weights cost nothing. 500 is `font-medium` (list titles, project
+  names, table headers); 600 is bold in prose. Its **italic** is a separate
+  instance that isn't preloaded: `.prose em` uses it, so only a page with
+  italics downloads it (about 50 KB), and the home page never does.
 - **IBM Plex Mono** (`font-mono`) — the machine stating: figures, states,
   captions and code. Root layout, **400 and 500**. Plex isn't variable, so any
   new weight has to be listed.
@@ -370,12 +372,6 @@ Three faces, one per voice (the reasoning is in the comment at the top of
 
 Minima ships no typeface of its own; it reads Tailwind's `--font-sans` and
 `--font-mono`, which `app/globals.css` points at the two `next/font` variables.
-
-**Known gap: prose bold and italics are synthesised.** Minima sets `<strong>`
-in prose at 600, and nothing loads an italic Inter, so the browser thickens the
-500 cut and slants the upright one. It reads acceptably at body size. For real
-cuts, add `"600"` to the Inter `weight` array and `style: ["normal",
-"italic"]` in `app/layout.tsx` — each costs a font file on every page.
 
 The social cards can't use `next/font` (Satori doesn't read the page's CSS), so
 Instrument Serif and Inter are also committed as `.ttf` files under

@@ -101,6 +101,12 @@ body {
     color: var(--muted-foreground);
   }
 
+  /* Prose italics take Inter's real italic, a separate unpreloaded instance
+     (app/layout.tsx), so pages without italics never download it. */
+  .prose :is(em, i, cite) {
+    font-family: var(--font-body-italic), var(--font-sans);
+  }
+
   /*
     Links carry their signal in the underline, not the text, and at rest the
     underline is the quiet grey, and on hover it firms to the text colour —
