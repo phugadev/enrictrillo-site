@@ -6,10 +6,10 @@ import { stdin as input, stdout as output } from "node:process";
 
 /** Keep in sync with `topics` in lib/site.ts. */
 const WAVELENGTHS = [
-  ["interface", "590nm — product/frontend work"],
-  ["systems", "520nm — architecture, backend and data"],
-  ["compute", "470nm — infrastructure, deploys and hardware"],
-  ["intelligence", "405nm — models, agents and AI engineering"],
+  ["frontend", "product thinking and interfaces"],
+  ["backend", "architecture, services and data"],
+  ["infrastructure", "deploys, hosting and hardware"],
+  ["ai", "models, agents and evals"],
 ];
 
 const POSTS_DIR = path.join(process.cwd(), "content", "posts");

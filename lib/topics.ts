@@ -15,25 +15,25 @@ import type { Topic } from "./site";
  * Written out literally: Tailwind only emits classes it can see in source.
  */
 export const topicColor: Record<Topic, { hue: string; dot: string; tint: string; chip: string }> = {
-  interface: {
+  frontend: {
     hue: "amber",
     dot: "bg-amber-solid",
     tint: "text-amber-text",
     chip: "border-amber-border bg-amber-fill text-amber-text",
   },
-  systems: {
+  backend: {
     hue: "green",
     dot: "bg-green-solid",
     tint: "text-green-text",
     chip: "border-green-border bg-green-fill text-green-text",
   },
-  compute: {
+  infrastructure: {
     hue: "blue",
     dot: "bg-blue-solid",
     tint: "text-blue-text",
     chip: "border-blue-border bg-blue-fill text-blue-text",
   },
-  intelligence: {
+  ai: {
     hue: "purple",
     dot: "bg-purple-solid",
     tint: "text-purple-text",

@@ -119,7 +119,7 @@ export default function SystemPage() {
   return (
     <PageShell wide back={{ href: "/", label: site.name }}>
       <PageHeader
-        eyebrow={<Eyebrow topic="interface">System · Minima</Eyebrow>}
+        eyebrow={<Eyebrow>System · Minima</Eyebrow>}
         title="The system this site is built on."
         lead={
           <>

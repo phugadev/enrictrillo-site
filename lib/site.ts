@@ -30,38 +30,36 @@ export const site = {
 
 };
 
-export type Topic = "interface" | "systems" | "compute" | "intelligence";
+export type Topic = "frontend" | "backend" | "infrastructure" | "ai";
 
 export const topics: Record<
   Topic,
   { label: string; hex: string; description: string }
 > = {
-  interface: {
-    label: "Interface",
-    hex: palette.interface,
-    description: "Product thinking and frontend",
+  frontend: {
+    label: "Frontend",
+    hex: palette.amber,
+    description: "Product thinking and interfaces",
   },
-  systems: {
-    label: "Systems",
-    hex: palette.systems,
-    description: "Architecture, backend and data",
+  backend: {
+    label: "Backend",
+    hex: palette.green,
+    description: "Architecture, services and data",
   },
-  // "Compute" rather than "Cloud": the band is where code runs, which includes
-  // self-hosting, local-first and hardware — not just a vendor's platform.
-  compute: {
-    label: "Compute",
-    hex: palette.compute,
-    description: "Infrastructure, deploys and hardware",
+  infrastructure: {
+    label: "Infrastructure",
+    hex: palette.blue,
+    description: "Deploys, hosting and hardware",
   },
-  intelligence: {
-    label: "Intelligence",
-    hex: palette.intelligence,
-    description: "Models, agents and AI engineering",
+  ai: {
+    label: "AI",
+    hex: palette.purple,
+    description: "Models, agents and evals",
   },
 };
 
-/** Display order for grouped views — long topic to short, like a real spectrum. */
-export const topicOrder: Topic[] = ["interface", "systems", "compute", "intelligence"];
+/** Display order for grouped views. */
+export const topicOrder: Topic[] = ["frontend", "backend", "infrastructure", "ai"];
 
 /** Ascending nm, left to right — the way a spectrometer readout is drawn. */
 const ascendingTopics = [...topicOrder].reverse();
@@ -141,7 +139,7 @@ export const projects: Project[] = [
     description: "Real-time system health monitor.",
     // TODO(rico): add the stack once you confirm it — omitted rather than
     // guessed. Less urgent now the repo is linked and readable.
-    topic: "systems",
+    topic: "backend",
     status: "Shipped",
     year: "2026",
     links: { repo: "https://github.com/phugadev/watchman" },
@@ -153,7 +151,7 @@ export const projects: Project[] = [
     description:
       "A Tailwind v4 theme for interfaces that stay out of their own way — neutral carries the structure, colour is spent on state, identity and data. Every rule ships with the runner that proves it.",
     stack: ["Tailwind v4", "OKLCH", "shadcn registry"],
-    topic: "interface",
+    topic: "frontend",
     status: "In build",
     year: "2026",
     /* This site is Minima's first real consumer and is rendered by it, so
@@ -167,7 +165,7 @@ export const projects: Project[] = [
     description:
       "A design system with decisions in it, not just components — one spectrum solved against contrast windows, two exposures, and a rule for which value belongs where.",
     stack: ["CSS", "OKLCH", "shadcn", "npm"],
-    topic: "interface",
+    topic: "frontend",
     status: "Shipped",
     year: "2026",
     links: { npm: "https://www.npmjs.com/package/@ruskel/ui", repo: "https://github.com/phugadev/ruskel" },
@@ -178,7 +176,7 @@ export const projects: Project[] = [
     description:
       "npm package for token encryption, rebuilt from scratch in v2.0.0 around proper AES-256-GCM.",
     stack: ["TypeScript", "Node", "npm"],
-    topic: "compute",
+    topic: "infrastructure",
     status: "Shipped",
     year: "2026",
     links: { npm: "https://www.npmjs.com/package/supasteeltokens" },

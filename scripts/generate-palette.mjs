@@ -85,15 +85,15 @@ const palette = {
   faint: hex("--gray-solid"),
   ray: hex("--gray-solid"),
 
-  interface: hex("--amber-mark"),
-  systems: hex("--green-mark"),
-  compute: hex("--blue-mark"),
-  intelligence: hex("--purple-mark"),
+  amber: hex("--amber-mark"),
+  green: hex("--green-mark"),
+  blue: hex("--blue-mark"),
+  purple: hex("--purple-mark"),
 
-  interfaceText: hex("--amber-text"),
-  systemsText: hex("--green-text"),
-  computeText: hex("--blue-text"),
-  intelligenceText: hex("--purple-text"),
+  amberText: hex("--amber-text"),
+  greenText: hex("--green-text"),
+  blueText: hex("--blue-text"),
+  purpleText: hex("--purple-text"),
 
   critical: hex("--red-mark"),
   warning: hex("--orange-mark"),

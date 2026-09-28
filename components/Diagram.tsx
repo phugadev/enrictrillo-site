@@ -24,9 +24,9 @@ export type DiagramNode = {
  *
  *   <Diagram
  *     nodes={[
- *       { label: "Probes", topic: "systems" },
- *       { label: "Batcher", topic: "compute", note: "5k events / flush" },
- *       { label: "Postgres", topic: "intelligence" },
+ *       { label: "Probes", topic: "backend" },
+ *       { label: "Batcher", topic: "infrastructure", note: "5k events / flush" },
+ *       { label: "Postgres", topic: "ai" },
  *     ]}
  *     edges={[undefined, "flush every 200ms"]}
  *   />

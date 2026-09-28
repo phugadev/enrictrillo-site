@@ -48,8 +48,21 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
     fail(file, "`log` was renamed to `series` — update the frontmatter key.");
   }
 
-  if (data.topic === "cloud") {
-    fail(file, 'the "cloud" topic was renamed to "compute" — update the frontmatter.');
+  if (data.wavelength !== undefined) {
+    fail(file, "`wavelength` was renamed to `topic` — update the frontmatter key.");
+  }
+
+  /* Old topic names, so a draft written against them says what to change
+     rather than failing as an unknown topic. */
+  const RENAMED: Record<string, string> = {
+    cloud: "infrastructure",
+    compute: "infrastructure",
+    interface: "frontend",
+    systems: "backend",
+    intelligence: "ai",
+  };
+  if (typeof data.topic === "string" && data.topic in RENAMED) {
+    fail(file, `the "${data.topic}" topic was renamed to "${RENAMED[data.topic]}" — update the frontmatter.`);
   }
 
   if (typeof data.title !== "string" || data.title.trim() === "") {
