@@ -72,7 +72,7 @@ export default async function TopicPage({ params }: { params: Promise<{ topic: s
       <Container size="narrow">
         <ul>
           {group.posts.map((post) => (
-            <PostCard key={post.slug} post={post} showTopic={false} />
+            <PostCard key={post.slug} post={post} showTopic={false} excerpt />
           ))}
         </ul>
         <div className="mt-stack">

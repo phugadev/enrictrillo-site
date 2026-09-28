@@ -22,12 +22,11 @@ function seriesPosition(meta: PostMeta) {
 
 /**
  * The post header, said quietly: one grey line placing the post — its series
- * and position, or its band — with the date and reading time, then the
+ * and position, or its band — with the date, then the
  * headline in the serif, the one place a person rather than the system speaks.
  */
 export function PostHeader({ meta }: { meta: PostMeta }) {
   const wl = topics[meta.topic];
-  const read = meta.readingTime.replace(/\s*read$/i, "");
   const series = seriesPosition(meta);
 
   return (
@@ -45,8 +44,6 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
         )}
         <span aria-hidden="true">·</span>
         <time dateTime={meta.date}>{format(parseDate(meta.date), "d MMMM yyyy")}</time>
-        <span aria-hidden="true">·</span>
-        <span>{read}</span>
       </p>
       <h1 className="mt-gutter text-balance font-serif text-[2.25rem] leading-[1.1] tracking-[-0.01em] text-foreground">
         {meta.title}

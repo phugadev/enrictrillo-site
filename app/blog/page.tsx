@@ -76,7 +76,7 @@ export default function BlogIndex() {
           <>
             <ul>
               {posts.map((post) => (
-                <PostCard key={post.slug} post={post} />
+                <PostCard key={post.slug} post={post} excerpt />
               ))}
             </ul>
             <div className="mt-stack space-y-inset">

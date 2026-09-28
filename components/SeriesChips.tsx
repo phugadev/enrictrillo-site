@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { getAllSeries } from "@/lib/posts";
 
-/** The series, as a line of quiet links. */
+/**
+ * The series, as a line of quiet links. A series of one post is not yet a
+ * run to browse — the post itself is already in the list above — so it is
+ * listed once a second post joins it.
+ */
 export function SeriesChips() {
-  const series = getAllSeries();
+  const series = getAllSeries().filter((s) => s.posts.length > 1);
   if (series.length === 0) return null;
 
   return (
