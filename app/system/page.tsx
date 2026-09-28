@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Status } from "@/components/ui/status";
 import { SmartLink } from "@/components/ui/SmartLink";
 import { contrast } from "@/lib/system";
-import { band } from "@/lib/bands";
-import { site, wavelengthOrder, wavelengths } from "@/lib/site";
+import { site } from "@/lib/site";
 
 const SOURCE = "https://github.com/phugadev/minima";
 
@@ -41,7 +40,19 @@ const ROLES: Record<number, string> = {
   9: "text",
   10: "text-strong",
 };
-const BAND_HUE = { interface: "amber", systems: "green", compute: "blue", intelligence: "purple" } as const;
+/* Minima's nine hues, with each one's text step written out literally —
+   Tailwind only emits classes it can see in source. */
+const HUES = [
+  { hue: "red", text: "text-red-text" },
+  { hue: "orange", text: "text-orange-text" },
+  { hue: "amber", text: "text-amber-text" },
+  { hue: "green", text: "text-green-text" },
+  { hue: "teal", text: "text-teal-text" },
+  { hue: "cyan", text: "text-cyan-text" },
+  { hue: "blue", text: "text-blue-text" },
+  { hue: "purple", text: "text-purple-text" },
+  { hue: "pink", text: "text-pink-text" },
+] as const;
 
 const TEXT_LEVELS = [
   { name: "foreground", token: "--foreground", className: "text-foreground", job: "Headings, the thing itself" },
@@ -106,9 +117,9 @@ const ratio = (n: number) => `${n.toFixed(2)}:1`;
 
 export default function SystemPage() {
   return (
-    <PageShell>
+    <PageShell wide back={{ href: "/", label: site.name }}>
       <PageHeader
-        eyebrow={<Eyebrow wavelength="interface">System · Minima</Eyebrow>}
+        eyebrow={<Eyebrow topic="interface">System · Minima</Eyebrow>}
         title="The system this site is built on."
         lead={
           <>
@@ -145,13 +156,8 @@ export default function SystemPage() {
       <Section label="Colour" aside="Ten steps, named by role">
         <div className="space-y-stack">
           <Ramp hue="gray" name="Gray" />
-          {wavelengthOrder.map((w) => (
-            <Ramp
-              key={w}
-              hue={BAND_HUE[w]}
-              name={`${wavelengths[w].label} · ${BAND_HUE[w]}`}
-              tintClass={band[w].tint}
-            />
+          {HUES.map(({ hue, text }) => (
+            <Ramp key={hue} hue={hue} name={hue.charAt(0).toUpperCase() + hue.slice(1)} tintClass={text} />
           ))}
         </div>
         <dl className="figure mt-stack grid grid-cols-2 gap-x-gutter gap-y-1 type-caption-sm sm:grid-cols-5">
@@ -163,9 +169,9 @@ export default function SystemPage() {
           ))}
         </dl>
         <p className="mt-stack max-w-prose type-body text-subtle-foreground">
-          The four bands this site files its work under are four of Minima&rsquo;s hue ramps, used by
-          role — the mark for dots and rules, the text step for coloured type, the fill and border
-          for a tinted chip. Nothing asks for a step number.
+          Every colour on this site is one of these, asked for by role — the text step for coloured
+          type, the solid for a dot beside its label, the fill and border for a tinted panel.
+          Nothing asks for a step number.
         </p>
       </Section>
 
@@ -185,7 +191,7 @@ export default function SystemPage() {
           {SPACE.map((s) => (
             <li key={s.name} className="grid items-center gap-inset sm:grid-cols-[8rem_minmax(0,1fr)_14rem]">
               <p className="figure type-caption-sm text-faint">{s.name}</p>
-              <div className="h-3 rounded-full bg-interface" style={{ width: `var(${s.token})` } as CSSProperties} />
+              <div className="h-3 rounded-full bg-gray-solid" style={{ width: `var(${s.token})` } as CSSProperties} />
               <p className="type-caption text-subtle-foreground">{s.job}</p>
             </li>
           ))}
@@ -232,7 +238,7 @@ export default function SystemPage() {
               <Status tone="danger" dot>Down</Status>
             </div>
             <p className="mt-gutter type-caption text-subtle-foreground">
-              A tone is a state, never a category — which is why the bands are not tones.
+              A tone is a state, never a category.
             </p>
           </div>
         </div>

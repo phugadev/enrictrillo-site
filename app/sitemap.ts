@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts, getAllSeries, getPostsByWavelength } from "@/lib/posts";
+import { getAllPosts, getAllSeries, getPostsByTopic } from "@/lib/posts";
 import { getAllCaseStudies } from "@/lib/work";
 import { site } from "@/lib/site";
 
@@ -32,9 +32,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     // Band and series indexes are real, linkable pages — they belong here too.
-    ...getPostsByWavelength().map((band) => ({
-      url: `${site.url}/blog/wavelength/${band.wavelength}`,
-      lastModified: newest(band.posts),
+    ...getPostsByTopic().map((group) => ({
+      url: `${site.url}/blog/topic/${group.topic}`,
+      lastModified: newest(group.posts),
       changeFrequency: "weekly" as const,
       priority: 0.5,
     })),

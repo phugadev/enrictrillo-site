@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { CaseStudyHeader } from "@/components/CaseStudyHeader";
 import { Mdx } from "@/components/Mdx";
-import { PAGE } from "@/components/layout";
 import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/work";
 import { site } from "@/lib/site";
 
@@ -55,13 +54,11 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
   if (meta.draft && process.env.NODE_ENV === "production") notFound();
 
   return (
-    <PageShell reading>
-      <article className={`${PAGE} pt-section`}>
-        <div className="max-w-[46rem]">
-          <CaseStudyHeader meta={meta} />
-          <div className="prose mt-stack">
-            <Mdx source={content} />
-          </div>
+    <PageShell reading back={{ href: "/", label: site.name }}>
+      <article>
+        <CaseStudyHeader meta={meta} />
+        <div className="prose mt-stack">
+          <Mdx source={content} />
         </div>
       </article>
     </PageShell>

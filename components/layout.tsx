@@ -1,6 +1,6 @@
-import type { ComponentProps } from "react";
-import type { Wavelength } from "@/lib/site";
-import { band } from "@/lib/bands";
+import type { ComponentProps, ReactNode } from "react";
+import type { Topic } from "@/lib/site";
+import { topicColor } from "@/lib/topics";
 import { cn } from "@/lib/cn";
 import { Eyebrow as MinimaEyebrow, containerVariants } from "./ui/layout";
 
@@ -15,20 +15,39 @@ export { Container, Section, PageHeader, containerVariants } from "./ui/layout";
 export const PAGE = containerVariants();
 
 /**
+ * The reading column: one narrow column, the whole site's shape. Minima's
+ * page container, narrowed through cn so the max-width merges rather than
+ * fighting the container's own.
+ */
+export const COLUMN = cn(containerVariants(), "max-w-xl");
+
+/**
+ * A section's name, said quietly: the body size in the subtle grey, sentence
+ * case. The list under it carries the weight, not the label.
+ */
+export function Label({ children, id, as: Tag = "h2" }: { children: ReactNode; id?: string; as?: "h1" | "h2" | "p" }) {
+  return (
+    <Tag id={id} className="mb-inset type-body text-subtle-foreground">
+      {children}
+    </Tag>
+  );
+}
+
+/**
  * Minima's eyebrow, optionally in a band's colour with its mark beside it.
  * The band is this site's taxonomy, so it lives here rather than as a prop on
  * the system's component.
  */
 export function Eyebrow({
-  wavelength,
+  topic,
   className,
   children,
   ...props
-}: ComponentProps<typeof MinimaEyebrow> & { wavelength?: Wavelength }) {
+}: ComponentProps<typeof MinimaEyebrow> & { topic?: Topic }) {
   return (
-    <MinimaEyebrow className={cn(wavelength && band[wavelength].tint, className)} {...props}>
-      {wavelength && (
-        <span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${band[wavelength].mark}`} />
+    <MinimaEyebrow className={cn(topic && topicColor[topic].tint, className)} {...props}>
+      {topic && (
+        <span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${topicColor[topic].dot}`} />
       )}
       {children}
     </MinimaEyebrow>

@@ -4,7 +4,7 @@ import path from "node:path";
 import readline from "node:readline";
 import { stdin as input, stdout as output } from "node:process";
 
-/** Keep in sync with `wavelengths` in lib/site.ts. */
+/** Keep in sync with `topics` in lib/site.ts. */
 const WAVELENGTHS = [
   ["interface", "590nm — product/frontend work"],
   ["systems", "520nm — architecture, backend and data"],
@@ -77,15 +77,15 @@ async function main() {
     output.write("\nWavelength:\n");
     WAVELENGTHS.forEach(([name, desc], i) => output.write(`  ${i + 1}. ${name.padEnd(13)} ${desc}\n`));
 
-    let wavelength;
-    while (!wavelength) {
+    let topic;
+    while (!topic) {
       const answer = await prompter.ask("\nChoose 1-4 (or type the name): ");
-      if (answer === null) return abort("No wavelength given — nothing written.");
+      if (answer === null) return abort("No topic given — nothing written.");
       const normalised = answer.trim().toLowerCase();
       const byIndex = WAVELENGTHS[Number(normalised) - 1];
       const byName = WAVELENGTHS.find(([name]) => name === normalised);
-      if (byIndex) wavelength = byIndex[0];
-      else if (byName) wavelength = byName[0];
+      if (byIndex) topic = byIndex[0];
+      else if (byName) topic = byName[0];
       else output.write("Not one of the four — try again.\n");
     }
 
@@ -110,7 +110,7 @@ async function main() {
       `title: ${yamlString(title)}`,
       `excerpt: ${yamlString(excerpt || "TODO — one sentence for the index page and meta description.")}`,
       `date: ${yamlString(date)}`,
-      `wavelength: ${yamlString(wavelength)}`,
+      `topic: ${yamlString(topic)}`,
       ...(series ? [`series: ${yamlString(series)}`] : []),
       "draft: true",
       "---",

@@ -1,21 +1,28 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { Nav } from "./Nav";
 import { Footer } from "./Footer";
 import { ScrollProgress } from "./ScrollProgress";
+import { COLUMN, PAGE } from "./layout";
 
 /**
- * Every page: skip link, the sticky nav, the page, the footer. `reading`
- * adds the thin spectrum progress bar along the top, for articles, below the
- * width where the margin table of contents takes over that job.
+ * Every page: one narrow column and a one-line footer. There is no nav bar —
+ * the home page is the navigation — so every other page carries a single
+ * quiet link back to where it came from.
+ *
+ * `reading` adds the thin progress line along the top, for long articles.
+ * `wide` lets a page that needs the room (the specimen, an article with its
+ * contents rail) lay out its own columns instead of taking the narrow one.
  */
 export function PageShell({
   children,
-  mainClassName = "",
+  back,
   reading = false,
+  wide = false,
 }: {
   children: ReactNode;
-  mainClassName?: string;
+  back?: { href: string; label: string };
   reading?: boolean;
+  wide?: boolean;
 }) {
   return (
     <>
@@ -25,9 +32,18 @@ export function PageShell({
       >
         Skip to content
       </a>
-      {reading && <ScrollProgress className="xl:hidden" />}
-      <Nav />
-      <main id="content" className={mainClassName}>
+      {reading && <ScrollProgress />}
+      {back && (
+        <nav aria-label="Back" className={`${wide ? PAGE : COLUMN} pt-section`}>
+          <Link
+            href={back.href}
+            className="type-body text-subtle-foreground transition-colors duration-quick hover:text-foreground"
+          >
+            ← {back.label}
+          </Link>
+        </nav>
+      )}
+      <main id="content" className={wide ? "" : `${COLUMN} ${back ? "pt-stack" : "pt-section"}`}>
         {children}
       </main>
       <Footer />

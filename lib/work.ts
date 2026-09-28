@@ -1,19 +1,19 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import type { ProjectLinks, Wavelength } from "./site";
-import { wavelengths } from "./site";
+import type { ProjectLinks, Topic } from "./site";
+import { topics } from "./site";
 
 const WORK_DIR = path.join(process.cwd(), "content/work");
 
-const VALID_WAVELENGTHS = Object.keys(wavelengths) as Wavelength[];
+const VALID_WAVELENGTHS = Object.keys(topics) as Topic[];
 const VALID_LINK_KEYS = ["live", "repo", "npm"] as const;
 
 export type CaseStudyMeta = {
   slug: string;
   title: string;
   excerpt: string;
-  wavelength: Wavelength;
+  topic: Topic;
   year: string;
   /** Omit rather than guess — same convention as Project.stack. */
   stack?: string[];
@@ -42,12 +42,12 @@ function parseMeta(slug: string, data: Record<string, unknown>): CaseStudyMeta {
   }
 
   if (
-    typeof data.wavelength !== "string" ||
-    !VALID_WAVELENGTHS.includes(data.wavelength as Wavelength)
+    typeof data.topic !== "string" ||
+    !VALID_WAVELENGTHS.includes(data.topic as Topic)
   ) {
     fail(
       file,
-      `unknown wavelength ${JSON.stringify(data.wavelength)} — must be one of: ${VALID_WAVELENGTHS.join(", ")}.`,
+      `unknown topic ${JSON.stringify(data.topic)} — must be one of: ${VALID_WAVELENGTHS.join(", ")}.`,
     );
   }
 
@@ -87,7 +87,7 @@ function parseMeta(slug: string, data: Record<string, unknown>): CaseStudyMeta {
     slug,
     title: data.title,
     excerpt: data.excerpt,
-    wavelength: data.wavelength as Wavelength,
+    topic: data.topic as Topic,
     year: data.year.trim(),
     stack: data.stack as string[] | undefined,
     links: data.links as ProjectLinks | undefined,

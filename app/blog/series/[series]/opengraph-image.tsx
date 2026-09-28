@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getAllSeries, getSeriesBySlug, type PostMeta } from "@/lib/posts";
-import { site, type Wavelength } from "@/lib/site";
+import { site, type Topic } from "@/lib/site";
 
 /**
  * A constant `alt`, not generateImageMetadata.
@@ -31,15 +31,15 @@ export function generateStaticParams() {
  * band most of its posts belong to rather than assuming the newest post speaks
  * for the set.
  */
-function dominantWavelength(posts: PostMeta[]): Wavelength | undefined {
-  const tally = new Map<Wavelength, number>();
-  for (const post of posts) tally.set(post.wavelength, (tally.get(post.wavelength) ?? 0) + 1);
+function dominantTopic(posts: PostMeta[]): Topic | undefined {
+  const tally = new Map<Topic, number>();
+  for (const post of posts) tally.set(post.topic, (tally.get(post.topic) ?? 0) + 1);
 
-  let best: Wavelength | undefined;
+  let best: Topic | undefined;
   let bestCount = 0;
-  for (const [wavelength, count] of tally) {
+  for (const [topic, count] of tally) {
     if (count > bestCount) {
-      best = wavelength;
+      best = topic;
       bestCount = count;
     }
   }
@@ -66,7 +66,7 @@ export default async function Image({ params }: { params: Promise<{ series: stri
       <OgCard
         eyebrow="Series"
         title={found.name}
-        wavelength={dominantWavelength(found.posts)}
+        topic={dominantTopic(found.posts)}
         footer={`${site.name} · ${count} ${count === 1 ? "post" : "posts"}`}
       />
     ),

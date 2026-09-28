@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { palette } from "./palette";
-import { wavelengthOrder, wavelengths, type Wavelength } from "./site";
+import { topicOrder, topics, type Topic } from "./site";
 
 export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
@@ -44,15 +44,15 @@ export function ogFonts() {
 export function OgCard({
   title,
   eyebrow,
-  wavelength,
+  topic,
   footer,
 }: {
   title: string;
   eyebrow: string;
-  wavelength?: Wavelength;
+  topic?: Topic;
   footer: string;
 }) {
-  const accent = wavelength ? wavelengths[wavelength].hex : palette.paper;
+  const accent = topic ? topics[topic].hex : palette.paper;
 
   return (
     <div
@@ -70,14 +70,14 @@ export function OgCard({
       {/* Spectrum bar — the dispersion mark, flattened for a 1200px canvas */}
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", height: 6 }}>
-          {wavelengthOrder.map((w) => (
+          {topicOrder.map((w) => (
             <div
               key={w}
               style={{
                 width: 56,
                 height: 6,
-                backgroundColor: wavelengths[w].hex,
-                opacity: wavelength && w !== wavelength ? 0.25 : 1,
+                backgroundColor: topics[w].hex,
+                opacity: topic && w !== topic ? 0.25 : 1,
               }}
             />
           ))}

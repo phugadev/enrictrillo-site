@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getAllCaseStudies, getCaseStudyBySlug } from "@/lib/work";
-import { site, wavelengths } from "@/lib/site";
+import { site, topics } from "@/lib/site";
 
 /**
  * A constant `alt`, not generateImageMetadata — same reasoning as
@@ -29,14 +29,14 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { meta } = getCaseStudyBySlug(slug);
-  const wl = wavelengths[meta.wavelength];
+  const wl = topics[meta.topic];
 
   return new ImageResponse(
     (
       <OgCard
-        eyebrow={`${wl.nm}nm · ${wl.label}`}
+        eyebrow={wl.label}
         title={meta.title}
-        wavelength={meta.wavelength}
+        topic={meta.topic}
         footer={`${site.name} · Case study · ${meta.year}`}
       />
     ),

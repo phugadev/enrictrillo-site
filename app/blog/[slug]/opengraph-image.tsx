@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
-import { site, wavelengths } from "@/lib/site";
+import { site, topics } from "@/lib/site";
 
 /**
  * A constant `alt`, not generateImageMetadata.
@@ -29,14 +29,14 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { meta } = getPostBySlug(slug);
-  const wl = wavelengths[meta.wavelength];
+  const wl = topics[meta.topic];
 
   return new ImageResponse(
     (
       <OgCard
-        eyebrow={`${wl.nm}nm · ${wl.label}`}
+        eyebrow={wl.label}
         title={meta.title}
-        wavelength={meta.wavelength}
+        topic={meta.topic}
         footer={`${site.name} · ${meta.readingTime}`}
       />
     ),
