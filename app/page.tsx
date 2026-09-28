@@ -1,7 +1,7 @@
 import { Avatar } from "@/components/Avatar";
 import { CopyEmail } from "@/components/CopyEmail";
 import { Greeting } from "@/components/Greeting";
-import { Label } from "@/components/layout";
+import { Container, Section } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { ProjectRow } from "@/components/ProjectRow";
@@ -34,53 +34,54 @@ export default function Home() {
 
   return (
     <PageShell>
-      <Avatar size={44} />
+      <Container size="narrow" className="pt-section">
+        <Avatar size={44} />
 
-      <div className="mt-stack space-y-gutter type-body text-muted-foreground">
-        <Greeting />
-        <p className="text-foreground">
-          I&rsquo;m {site.name.split(" ")[0]}, a {site.role.toLowerCase()} in London, working
-          through {site.company}.
-        </p>
-        <p>
-          For nine years I&rsquo;ve built and shipped software across the whole stack, without
-          handing off between specialists: TypeScript and Next.js on the front, Python and Node
-          behind them, Azure underneath, and AI worked through the middle rather than kept as a
-          separate department.
-        </p>
-        {now.length > 0 && <p>Right now I&rsquo;m {now[0]!.charAt(0).toLowerCase() + now[0]!.slice(1)}</p>}
-        <p>
-          {site.availability.open ? (
-            <>
-              I work {site.availability.mode}, on {site.availability.contracts}, and can start with{" "}
-              {site.availability.notice}.{" "}
-            </>
-          ) : null}
-          <CopyEmail email={site.email} />, or find me on <A href={site.social.github}>GitHub</A> and{" "}
-          <A href={site.social.linkedin}>LinkedIn</A>.
-        </p>
-      </div>
+        <div className="mt-stack space-y-gutter type-body text-muted-foreground">
+          <Greeting />
+          <p className="text-foreground">
+            I&rsquo;m {site.name.split(" ")[0]}, a {site.role.toLowerCase()} in London, working
+            through {site.company}.
+          </p>
+          <p>
+            For nine years I&rsquo;ve built and shipped software across the whole stack, without
+            handing off between specialists: TypeScript and Next.js on the front, Python and Node
+            behind them, Azure underneath, and AI worked through the middle rather than kept as a
+            separate department.
+          </p>
+          {now.length > 0 && (
+            <p>Right now I&rsquo;m {now[0]!.charAt(0).toLowerCase() + now[0]!.slice(1)}</p>
+          )}
+          <p>
+            {site.availability.open ? (
+              <>
+                I work {site.availability.mode}, on {site.availability.contracts}, and can start
+                with {site.availability.notice}.{" "}
+              </>
+            ) : null}
+            <CopyEmail email={site.email} />, or find me on <A href={site.social.github}>GitHub</A>{" "}
+            and <A href={site.social.linkedin}>LinkedIn</A>.
+          </p>
+        </div>
+      </Container>
 
-      <section className="mt-section" aria-labelledby="work">
-        <Label id="work">Work</Label>
+      <Section variant="quiet" size="narrow" label="Work">
         <ul>
           {projects.map((project) => (
             <ProjectRow key={project.name} project={project} />
           ))}
         </ul>
-      </section>
+      </Section>
 
       {posts.length > 0 && (
-        <section className="mt-section" aria-labelledby="writing">
-          <Label id="writing">Writing</Label>
+        <Section variant="quiet" size="narrow" label="Writing">
           <ul>
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
           </ul>
-        </section>
+        </Section>
       )}
-
     </PageShell>
   );
 }

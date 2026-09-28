@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Container, PageHeader } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { getAllSeries, getSeriesBySlug } from "@/lib/posts";
@@ -42,15 +43,20 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
 
   return (
     <PageShell back={{ href: "/blog", label: "Writing" }}>
-      <h1 className="type-body text-foreground">{found.name}</h1>
-      <p className="mt-inset type-body text-muted-foreground">
-        {found.posts.length} {found.posts.length === 1 ? "post" : "posts"} in this series, newest first.
-      </p>
-      <ul className="mt-stack">
-        {found.posts.map((post) => (
-          <PostCard key={post.slug} post={post} />
-        ))}
-      </ul>
+      <PageHeader
+        variant="quiet"
+        size="narrow"
+        className="pt-stack"
+        title={found.name}
+        lead={`${found.posts.length} ${found.posts.length === 1 ? "post" : "posts"} in this series, newest first.`}
+      />
+      <Container size="narrow">
+        <ul>
+          {found.posts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </ul>
+      </Container>
     </PageShell>
   );
 }

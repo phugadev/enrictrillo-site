@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Container, PageHeader } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { TopicLinks } from "@/components/TopicLinks";
@@ -47,11 +48,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function TopicPage({
-  params,
-}: {
-  params: Promise<{ topic: string }>;
-}) {
+export default async function TopicPage({ params }: { params: Promise<{ topic: string }> }) {
   const { topic } = await params;
   const group = findTopic(topic);
   if (!group) notFound();
@@ -60,19 +57,28 @@ export default async function TopicPage({
 
   return (
     <PageShell back={{ href: "/blog", label: "Writing" }}>
-      <h1 className="flex items-center gap-2 type-body text-foreground">
-        <TopicDot topic={group.topic as Topic} />
-        {wl.label}
-      </h1>
-      <p className="mt-inset type-body text-muted-foreground">{wl.description}.</p>
-      <ul className="mt-stack">
-        {group.posts.map((post) => (
-          <PostCard key={post.slug} post={post} showTopic={false} />
-        ))}
-      </ul>
-      <div className="mt-stack">
-        <TopicLinks active={group.topic as Topic} />
-      </div>
+      <PageHeader
+        variant="quiet"
+        size="narrow"
+        className="pt-stack"
+        title={
+          <span className="flex items-center gap-2">
+            <TopicDot topic={group.topic as Topic} />
+            {wl.label}
+          </span>
+        }
+        lead={`${wl.description}.`}
+      />
+      <Container size="narrow">
+        <ul>
+          {group.posts.map((post) => (
+            <PostCard key={post.slug} post={post} showTopic={false} />
+          ))}
+        </ul>
+        <div className="mt-stack">
+          <TopicLinks active={group.topic as Topic} />
+        </div>
+      </Container>
     </PageShell>
   );
 }

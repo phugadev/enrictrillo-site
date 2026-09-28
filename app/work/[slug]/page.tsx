@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Container } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { CaseStudyHeader } from "@/components/CaseStudyHeader";
 import { Mdx } from "@/components/Mdx";
@@ -33,7 +34,11 @@ export async function generateMetadata({
         description: meta.excerpt,
         url: `/work/${slug}`,
       },
-      twitter: { card: "summary_large_image", title: meta.title, description: meta.excerpt },
+      twitter: {
+        card: "summary_large_image",
+        title: meta.title,
+        description: meta.excerpt,
+      },
     };
   } catch {
     return {};
@@ -55,12 +60,12 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
 
   return (
     <PageShell reading back={{ href: "/", label: site.name }}>
-      <article>
+      <Container as="article" size="narrow" className="pt-stack">
         <CaseStudyHeader meta={meta} />
         <div className="prose mt-stack">
           <Mdx source={content} />
         </div>
-      </article>
+      </Container>
     </PageShell>
   );
 }
