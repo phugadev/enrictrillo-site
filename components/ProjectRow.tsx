@@ -41,7 +41,7 @@ export function ProjectRow({ project }: { project: Project }) {
     <>
       <TopicDot topic={project.topic} className="translate-y-[-2px]" />
       <span className="min-w-0 flex-1 sm:truncate">
-        <span className="text-foreground">{project.name}</span>
+        <span className="font-medium text-foreground">{project.name}</span>
         <span className="text-subtle-foreground"> — {project.summary ?? project.description}</span>
       </span>
       <span className="shrink-0 type-body tabular-nums text-subtle-foreground">

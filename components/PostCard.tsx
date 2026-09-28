@@ -26,7 +26,7 @@ export function PostCard({
       >
         <span className="flex items-baseline gap-3">
           {showTopic && <TopicDot topic={post.topic} className="translate-y-[-2px]" />}
-          <span className="min-w-0 flex-1 text-foreground">{post.title}</span>
+          <span className="min-w-0 flex-1 font-medium text-foreground">{post.title}</span>
           <time dateTime={post.date} className="shrink-0 type-body tabular-nums text-subtle-foreground">
             {format(parseDate(post.date), "MMM yyyy")}
           </time>

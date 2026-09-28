@@ -33,33 +33,35 @@ export type DiagramNode = {
  */
 export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (string | undefined)[] }) {
   return (
-    <div className="my-stack flex flex-col rounded-panel border border-border bg-card p-gutter shadow-raised sm:flex-row sm:items-center sm:p-stack">
-      {nodes.map((node, i) => {
-        const chip = node.topic ? topicColor[node.topic].chip : "border-border bg-gray-fill text-muted-foreground";
-        return (
-          <Fragment key={i}>
-            <div className={`flex shrink-0 flex-col items-center gap-1 rounded-control-md border px-gutter py-inset text-center ${chip}`}>
-              <span className="signal type-label">
-                {node.label}
-              </span>
-              {node.note && <span className="type-caption-sm text-subtle-foreground">{node.note}</span>}
-            </div>
-            {i < nodes.length - 1 && (
-              <div className="flex flex-col items-center justify-center gap-1 px-1 py-2 sm:flex-1 sm:px-3 sm:py-0">
-                {edges[i] && (
-                  <span className="signal type-label-xs whitespace-nowrap text-faint">{edges[i]}</span>
-                )}
-                <span aria-hidden="true" className="text-faint sm:hidden">
-                  ↓
+    <div className="tray my-stack">
+      <div className="tray__stage flex flex-col items-center justify-center p-stack sm:flex-row">
+        {nodes.map((node, i) => {
+          const chip = node.topic ? topicColor[node.topic].chip : "border-border bg-gray-fill text-muted-foreground";
+          return (
+            <Fragment key={i}>
+              <div className={`flex shrink-0 flex-col items-center gap-1 rounded-control-md border px-gutter py-inset text-center ${chip}`}>
+                <span className="signal type-label">
+                  {node.label}
                 </span>
-                <span aria-hidden="true" className="hidden text-faint sm:inline">
-                  →
-                </span>
+                {node.note && <span className="type-caption-sm text-subtle-foreground">{node.note}</span>}
               </div>
-            )}
-          </Fragment>
-        );
-      })}
+              {i < nodes.length - 1 && (
+                <div className="flex flex-col items-center justify-center gap-1 px-1 py-2 sm:flex-1 sm:px-3 sm:py-0">
+                  {edges[i] && (
+                    <span className="signal type-label-xs whitespace-nowrap text-faint">{edges[i]}</span>
+                  )}
+                  <span aria-hidden="true" className="text-faint sm:hidden">
+                    ↓
+                  </span>
+                  <span aria-hidden="true" className="hidden text-faint sm:inline">
+                    →
+                  </span>
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -158,18 +158,30 @@ body {
   }
 }
 
-/*
-  Tables and code break out past the reading measure once there is room. The
-  article column is the reading measure; the page column beside it is wider,
-  and a breakout grows right into that slack rather than centring, because
-  the two columns share a left edge, not a centre.
-*/
-@media (min-width: 1024px) {
-  .prose [data-table-wrapper],
-  .prose figure.codeframe {
-    width: calc(100% + 4rem);
-    max-width: none;
-  }
+/* ── Tray and stage ───────────────────────────────────────────────────────
+   Every figure in a post sits in the same double frame, after Noé Chagué's
+   writing: a tray (page-coloured, a 4px inset, the raised shadow as its only
+   edge) holding a stage (the card surface, a hairline border, the radius one
+   step in). The tray says "this is an object, not prose"; the stage is where
+   the specimen sits. One frame for code, comparisons, diagrams and images,
+   so a post's figures read as one family.
+
+   Figures stay the width of the reading column. They used to break out 4rem
+   to the right from 1024px, which ran them under the contents rail that
+   hangs in that margin from 1280px. */
+.tray {
+  padding: 4px;
+  border-radius: var(--radius-panel);
+  background: var(--background);
+  /* The ring is a translucent grey so the tray keeps an edge in dark mode,
+     where a shadow has nothing to fall on. */
+  box-shadow: 0 0 0 1px var(--gray-tint), var(--shadow-raised);
+}
+.tray__stage {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-panel) - 4px);
+  background: var(--card);
 }
 
 /* ── The code frame ───────────────────────────────────────────────────────
@@ -177,33 +189,31 @@ body {
    title bar when the fence names a file, a copy button, line numbers that
    never reach the clipboard, a band under the hovered line, and a margin
    mark on lines the author highlights. */
+/* The frame is a tray; the pre is its stage. A filename, when the fence
+   names one, sits on the tray above the stage rather than in a bar across it. */
 .codeframe {
   position: relative;
   margin-block: var(--prose-lead, 2rem);
-  overflow: hidden;
-  border: 1px solid var(--border);
+  padding: 4px;
   border-radius: var(--radius-panel);
-  background: var(--surface-raised);
-  box-shadow: var(--shadow-raised);
+  background: var(--background);
+  /* The ring is a translucent grey so the tray keeps an edge in dark mode,
+     where a shadow has nothing to fall on. */
+  box-shadow: 0 0 0 1px var(--gray-tint), var(--shadow-raised);
 }
 .codeframe__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-inset);
-  padding: 0.375rem 0.375rem 0.375rem var(--spacing-gutter);
-  border-bottom: 1px solid var(--border);
-  background: var(--gray-tint);
+  padding: 0.125rem 0.125rem 0.25rem 0.5rem;
 }
 .codeframe__name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: var(--type-label-sm);
-  font-weight: var(--type-label-sm--font-weight);
-  letter-spacing: var(--type-label-sm--letter-spacing);
-  text-transform: uppercase;
+  font-size: 0.75rem;
   color: var(--subtle-foreground);
 }
 .codeframe__copy {
@@ -242,8 +252,8 @@ body {
    opacity alone, never display:none, so it stays in the tab order. */
 .codeframe__copy[data-floating] {
   position: absolute;
-  top: var(--spacing-inset);
-  right: var(--spacing-inset);
+  top: calc(4px + var(--spacing-inset));
+  right: calc(4px + var(--spacing-inset));
   z-index: 1;
   border: 1px solid var(--border);
   background: var(--surface-raised);
@@ -266,9 +276,9 @@ body {
   margin: 0;
   padding: var(--spacing-gutter) 0;
   overflow-x: auto;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-panel) - 4px);
+  background: var(--card);
   font-size: 0.875rem;
   line-height: 1.7;
 }
@@ -304,6 +314,10 @@ body {
 .codeframe [data-highlighted-line] {
   background: var(--gray-tint-hover);
   box-shadow: inset 2px 0 0 0 var(--foreground);
+  /* Minima pulls highlighted lines out by a negative margin, which assumes
+     the padding lives on the pre. Here each line carries its own, so the
+     pull shifted highlighted lines a gutter to the left of the rest. */
+  margin-inline: 0;
 }
 
 /* ── Focus list ───────────────────────────────────────────────────────────
