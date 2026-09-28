@@ -1,5 +1,5 @@
 import type { PostMeta } from "./posts";
-import { site, wavelengths } from "./site";
+import { site, topics } from "./site";
 
 /**
  * JSON-LD. The main search query for a contractor is their own name, and
@@ -34,7 +34,7 @@ export function personSchema() {
       "Azure",
       "Cloud infrastructure",
       "AI engineering",
-      ...Object.values(wavelengths).map((wl) => wl.description),
+      ...Object.values(topics).map((wl) => wl.description),
     ],
     sameAs: [site.social.github, site.social.linkedin],
   };
@@ -69,7 +69,7 @@ export function blogPostingSchema(meta: PostMeta) {
     author: { "@id": `${site.url}/#person` },
     publisher: { "@id": `${site.url}/#person` },
     isPartOf: { "@id": `${site.url}/#website` },
-    articleSection: wavelengths[meta.wavelength].label,
+    articleSection: topics[meta.topic].label,
     ...(meta.series ? { about: meta.series } : {}),
   };
 }

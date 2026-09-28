@@ -2,8 +2,8 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { parseDate } from "@/lib/dates";
 import { getAllSeries, seriesSlug, type PostMeta } from "@/lib/posts";
-import { wavelengths } from "@/lib/site";
-import { WavelengthDot } from "@/components/ui/WavelengthDot";
+import { topics } from "@/lib/site";
+import { TopicDot } from "@/components/ui/TopicDot";
 
 /** Where this post sits in its series, oldest first. */
 function seriesPosition(meta: PostMeta) {
@@ -26,20 +26,20 @@ function seriesPosition(meta: PostMeta) {
  * headline in the serif, the one place a person rather than the system speaks.
  */
 export function PostHeader({ meta }: { meta: PostMeta }) {
-  const wl = wavelengths[meta.wavelength];
+  const wl = topics[meta.topic];
   const read = meta.readingTime.replace(/\s*read$/i, "");
   const series = seriesPosition(meta);
 
   return (
     <header>
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 type-body text-subtle-foreground">
-        <WavelengthDot wavelength={meta.wavelength} />
+        <TopicDot topic={meta.topic} />
         {series ? (
           <Link href={`/blog/series/${series.slug}`} className="transition-colors duration-quick hover:text-foreground">
             {series.name}, {series.index} of {series.total}
           </Link>
         ) : (
-          <Link href={`/blog/wavelength/${meta.wavelength}`} className="transition-colors duration-quick hover:text-foreground">
+          <Link href={`/blog/topic/${meta.topic}`} className="transition-colors duration-quick hover:text-foreground">
             {wl.label}
           </Link>
         )}

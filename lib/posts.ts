@@ -3,19 +3,19 @@ import path from "path";
 import matter from "gray-matter";
 import readingTime from "reading-time";
 import { isValidDate } from "./dates";
-import type { Wavelength } from "./site";
-import { wavelengths, wavelengthOrder } from "./site";
+import type { Topic } from "./site";
+import { topics, topicOrder } from "./site";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
-const VALID_WAVELENGTHS = Object.keys(wavelengths) as Wavelength[];
+const VALID_WAVELENGTHS = Object.keys(topics) as Topic[];
 
 export type PostMeta = {
   slug: string;
   title: string;
   excerpt: string;
   date: string;
-  wavelength: Wavelength;
+  topic: Topic;
   readingTime: string;
   /** Optional run of posts this belongs to — a project or a cert study thread. */
   series?: string;
@@ -36,7 +36,7 @@ function fail(file: string, message: string): never {
 
 /**
  * Frontmatter is hand-written, so it's validated rather than trusted. Without
- * this, a typo like `wavelength: "sytems"` surfaces much later as
+ * this, a typo like `topic: "sytems"` surfaces much later as
  * "Cannot read properties of undefined (reading 'hex')" with nothing pointing
  * at the file that caused it. Drafts are validated too, so problems show up
  * while writing instead of on the deploy that publishes them.
@@ -48,8 +48,8 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
     fail(file, "`log` was renamed to `series` — update the frontmatter key.");
   }
 
-  if (data.wavelength === "cloud") {
-    fail(file, 'the "cloud" wavelength was renamed to "compute" — update the frontmatter.');
+  if (data.topic === "cloud") {
+    fail(file, 'the "cloud" topic was renamed to "compute" — update the frontmatter.');
   }
 
   if (typeof data.title !== "string" || data.title.trim() === "") {
@@ -74,12 +74,12 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
   }
 
   if (
-    typeof data.wavelength !== "string" ||
-    !VALID_WAVELENGTHS.includes(data.wavelength as Wavelength)
+    typeof data.topic !== "string" ||
+    !VALID_WAVELENGTHS.includes(data.topic as Topic)
   ) {
     fail(
       file,
-      `unknown wavelength ${JSON.stringify(data.wavelength)} — must be one of: ${VALID_WAVELENGTHS.join(", ")}.`,
+      `unknown topic ${JSON.stringify(data.topic)} — must be one of: ${VALID_WAVELENGTHS.join(", ")}.`,
     );
   }
 
@@ -101,7 +101,7 @@ function parseMeta(slug: string, data: Record<string, unknown>, readingTimeText:
     title: data.title,
     excerpt: data.excerpt,
     date,
-    wavelength: data.wavelength as Wavelength,
+    topic: data.topic as Topic,
     readingTime: readingTimeText,
     series: (data.series as string | undefined)?.trim(),
     draft: (data.draft as boolean | undefined) ?? false,
@@ -128,7 +128,7 @@ export function getPostBySlug(slug: string): { meta: PostMeta; content: string }
 /**
  * Build-time memo. getAllPosts is called by the homepage, the blog index, the
  * chips, the spectrometer, the sitemap, the feed and /llms.txt — plus once per
- * post for adjacency, and again beneath getPostsByWavelength and getAllSeries.
+ * post for adjacency, and again beneath getPostsByTopic and getAllSeries.
  * Each call otherwise re-reads and re-parses every file on disk.
  *
  * Production only: .mdx files aren't modules, so nothing invalidates this when
@@ -162,17 +162,17 @@ export function getAdjacentPosts(slug: string): { newer?: PostMeta; older?: Post
 }
 
 /**
- * Posts bucketed by wavelength, in spectrum order, newest first within each
- * band. Empty bands are dropped so the blog index never shows a bare heading.
+ * Posts bucketed by topic, in spectrum order, newest first within each
+ * group. Empty groups are dropped so the blog index never shows a bare heading.
  */
-export function getPostsByWavelength(): { wavelength: Wavelength; posts: PostMeta[] }[] {
+export function getPostsByTopic(): { topic: Topic; posts: PostMeta[] }[] {
   const posts = getAllPosts();
-  return wavelengthOrder
-    .map((wavelength) => ({
-      wavelength,
-      posts: posts.filter((p) => p.wavelength === wavelength),
+  return topicOrder
+    .map((topic) => ({
+      topic,
+      posts: posts.filter((p) => p.topic === topic),
     }))
-    .filter((band) => band.posts.length > 0);
+    .filter((group) => group.posts.length > 0);
 }
 
 /** Every series that has at least one published post, newest activity first. */

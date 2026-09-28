@@ -2,45 +2,16 @@
 @import '../styles/minima.css';
 
 /*
-  This file is the site's own layer on top of Minima: the four wavelength
-  bands, the three faces, and the handful of reading and code-block decisions
+  This file is the site's own layer on top of Minima: a quieter fourth text
+  level, the three faces, and the handful of reading and code-block decisions
   that belong to this site rather than to a design system. Everything else —
   colour roles, type, space, depth, motion, focus, prose — comes from
   styles/minima.css, which is installed from the registry and never edited.
+  Topic colours are not here at all: each topic borrows a Minima hue by role,
+  in lib/topics.ts.
 */
 
-/* ── The wavelength bands ─────────────────────────────────────────────────
-   The site files its work and writing under four bands of the spectrum. Each
-   band is one of Minima's hue ramps, used by role: `mark` for things that are
-   seen (dots, rules, fills), `tint` for coloured text, `fill` and `edge` for a
-   tinted chip. Colour spent on identity, which is what Minima keeps hue for.
-
-     interface     590nm   amber
-     systems       520nm   green
-     compute       470nm   blue
-     intelligence  405nm   purple
-*/
 @theme inline {
-  --color-interface: var(--amber-mark);
-  --color-interface-tint: var(--amber-text);
-  --color-interface-fill: var(--amber-fill);
-  --color-interface-edge: var(--amber-border);
-
-  --color-systems: var(--green-mark);
-  --color-systems-tint: var(--green-text);
-  --color-systems-fill: var(--green-fill);
-  --color-systems-edge: var(--green-border);
-
-  --color-compute: var(--blue-mark);
-  --color-compute-tint: var(--blue-text);
-  --color-compute-fill: var(--blue-fill);
-  --color-compute-edge: var(--blue-border);
-
-  --color-intelligence: var(--purple-mark);
-  --color-intelligence-tint: var(--purple-text);
-  --color-intelligence-fill: var(--purple-fill);
-  --color-intelligence-edge: var(--purple-border);
-
   /*
     A fourth text level, below Minima's subtle-foreground — in dark only. Dark
     has room under subtle: the solid step reads 4.72:1 on the canvas and
@@ -118,9 +89,9 @@ body {
 @layer components {
   /*
     Links carry their signal in the underline, not the text, and at rest the
-    underline is the drawing grey — the hatch, the rules, the ticks. A band
-    colour means something here, so it is not the house colour for "link".
-    The interface band warms the rule on hover, the moment a link is touched.
+    underline is the quiet grey, and on hover it firms to the text colour —
+    the moment a link is touched. Colour on this site means a topic, so it is
+    not also the house colour for "link".
   */
   .prose a {
     color: var(--foreground);
@@ -132,7 +103,7 @@ body {
   }
   .prose a:hover {
     color: var(--foreground);
-    text-decoration-color: var(--color-interface);
+    text-decoration-color: var(--foreground);
   }
 
   /* rehype-autolink-headings wraps each heading in a link. The rule appears
@@ -170,13 +141,13 @@ body {
     font-weight: 500;
   }
 
-  /* GFM task lists: no bullet, the checkbox takes the interface band. */
+  /* GFM task lists: no bullet, the checkbox in the text colour. */
   .prose ul.contains-task-list {
     list-style: none;
     padding-left: 0;
   }
   .prose .task-list-item input[type='checkbox'] {
-    accent-color: var(--color-interface);
+    accent-color: var(--foreground);
     margin-right: 0.5em;
     vertical-align: middle;
   }
@@ -342,7 +313,7 @@ body {
 }
 .codeframe [data-highlighted-line] {
   background: var(--gray-tint-hover);
-  box-shadow: inset 2px 0 0 0 var(--color-interface);
+  box-shadow: inset 2px 0 0 0 var(--foreground);
 }
 
 /* ── Focus list ───────────────────────────────────────────────────────────

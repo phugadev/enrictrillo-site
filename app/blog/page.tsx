@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { SeriesChips } from "@/components/SeriesChips";
-import { WavelengthChips } from "@/components/WavelengthChips";
+import { TopicLinks } from "@/components/TopicLinks";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
 
 const description =
-  "Build logs, architecture notes and infrastructure/AI engineering write-ups, filed by wavelength.";
+  "Build logs, architecture notes and infrastructure/AI engineering write-ups, filed by topic.";
 
 export const metadata: Metadata = {
   title: `Writing — ${site.name}`,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 
 /**
  * A flat, newest-first list. Band grouping used to live here as sections, but
- * with real /blog/wavelength/<band> pages it would print every post twice on
+ * with real /blog/topic/<band> pages it would print every post twice on
  * one screen. This page answers "what's new"; the band pages answer
  * "what about X".
  */
@@ -67,7 +67,7 @@ export default function BlogIndex() {
             ))}
           </ul>
           <div className="mt-stack space-y-inset">
-            <WavelengthChips />
+            <TopicLinks />
             <SeriesChips />
           </div>
         </>

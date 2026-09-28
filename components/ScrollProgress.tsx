@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { bandGradient } from "@/lib/site";
+import { topicGradient } from "@/lib/site";
 
 /**
  * DESIGN TRIAL — see PR description. Easy to revert: drop the import and
@@ -56,7 +56,7 @@ export function ScrollProgress({ className = "" }: { className?: string }) {
       <div
         ref={barRef}
         className="h-full w-full origin-left motion-reduce:hidden"
-        style={{ background: bandGradient, transform: "scaleX(0)" }}
+        style={{ background: topicGradient, transform: "scaleX(0)" }}
       />
     </div>
   );

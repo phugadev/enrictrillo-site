@@ -1,5 +1,5 @@
 import { getAllPosts } from "@/lib/posts";
-import { site, wavelengths } from "@/lib/site";
+import { site, topics } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -27,7 +27,7 @@ export function GET() {
   const items = posts
     .map((post) => {
       const url = `${site.url}/blog/${post.slug}`;
-      const wl = wavelengths[post.wavelength];
+      const wl = topics[post.topic];
       // pubDate deliberately keeps `new Date(post.date)` rather than
       // lib/dates' parseDate: a feed timestamp wants one fixed instant, and
       // the date-only form parses as UTC midnight everywhere. Routing it

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
-import type { Wavelength } from "@/lib/site";
-import { band } from "@/lib/bands";
+import type { Topic } from "@/lib/site";
+import { topicColor } from "@/lib/topics";
 import { CodeBlock } from "./CodeBlock";
 import { Diagram } from "./Diagram";
 import { InfoIcon, SuccessIcon, TipIcon, WarningIcon } from "./ui/CalloutIcons";
@@ -132,17 +132,17 @@ export function Compare({ items, caption }: { items: CompareItem[]; caption?: st
 type CalloutVariant = "info" | "warning" | "success" | "tip";
 
 /**
- * A one-to-one mapping onto the site's four wavelength bands rather than a
+ * A one-to-one mapping onto the site's four topic bands rather than a
  * separate red/amber/green severity palette — "info" is `compute`-blue,
  * "warning" is `interface`-amber, and so on. No new colours enter the
  * system; a callout's accent is legible the same way a project's band tag
  * already is.
  */
-const CALLOUT_VARIANTS: Record<CalloutVariant, { wavelength: Wavelength; label: string; Icon: typeof InfoIcon }> = {
-  info: { wavelength: "compute", label: "Info", Icon: InfoIcon },
-  warning: { wavelength: "interface", label: "Warning", Icon: WarningIcon },
-  success: { wavelength: "systems", label: "Success", Icon: SuccessIcon },
-  tip: { wavelength: "intelligence", label: "Tip", Icon: TipIcon },
+const CALLOUT_VARIANTS: Record<CalloutVariant, { topic: Topic; label: string; Icon: typeof InfoIcon }> = {
+  info: { topic: "compute", label: "Info", Icon: InfoIcon },
+  warning: { topic: "interface", label: "Warning", Icon: WarningIcon },
+  success: { topic: "systems", label: "Success", Icon: SuccessIcon },
+  tip: { topic: "intelligence", label: "Tip", Icon: TipIcon },
 };
 
 /**
@@ -156,8 +156,8 @@ const CALLOUT_VARIANTS: Record<CalloutVariant, { wavelength: Wavelength; label: 
  *   </Callout>
  */
 export function Callout({ variant = "info", children }: { variant?: CalloutVariant; children: ReactNode }) {
-  const { wavelength, label, Icon } = CALLOUT_VARIANTS[variant];
-  const b = band[wavelength];
+  const { topic, label, Icon } = CALLOUT_VARIANTS[variant];
+  const b = topicColor[topic];
 
   return (
     <aside className={`my-stack flex gap-gutter rounded-panel border p-gutter ${b.chip}`}>

@@ -1,6 +1,6 @@
 import type { Project } from "@/lib/site";
 import { getCaseStudyBySlug } from "@/lib/work";
-import { WavelengthDot } from "./ui/WavelengthDot";
+import { TopicDot } from "./ui/TopicDot";
 import { SmartLink } from "./ui/SmartLink";
 
 /** Only link a case study that exists and is published; a typo in
@@ -39,7 +39,7 @@ export function ProjectRow({ project }: { project: Project }) {
   const href = projectHref(project);
   const body = (
     <>
-      <WavelengthDot wavelength={project.wavelength} className="translate-y-[-2px]" />
+      <TopicDot topic={project.topic} className="translate-y-[-2px]" />
       <span className="min-w-0 flex-1 sm:truncate">
         <span className="text-foreground">{project.name}</span>
         <span className="text-subtle-foreground"> — {project.summary ?? project.description}</span>

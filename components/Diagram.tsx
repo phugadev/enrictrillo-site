@@ -1,11 +1,11 @@
 import { Fragment } from "react";
-import type { Wavelength } from "@/lib/site";
-import { band } from "@/lib/bands";
+import type { Topic } from "@/lib/site";
+import { topicColor } from "@/lib/topics";
 
 export type DiagramNode = {
   label: string;
   /** Tints the node's border/background; omit for a neutral hairline box. */
-  wavelength?: Wavelength;
+  topic?: Topic;
   note?: string;
 };
 
@@ -14,7 +14,7 @@ export type DiagramNode = {
  * A left-to-right pipeline diagram (stacking top-to-bottom on mobile) for
  * architecture/system-design sections in case studies and posts — the
  * "steal the architecture diagram" idea from srbh.site's Telegram-bot post,
- * adapted to colour nodes with this site's own wavelength bands instead of
+ * adapted to colour nodes with this site's own topic bands instead of
  * a generic palette.
  *
  * Deliberately linear, not a general graph: nodes render in array order,
@@ -24,9 +24,9 @@ export type DiagramNode = {
  *
  *   <Diagram
  *     nodes={[
- *       { label: "Probes", wavelength: "systems" },
- *       { label: "Batcher", wavelength: "compute", note: "5k events / flush" },
- *       { label: "Postgres", wavelength: "intelligence" },
+ *       { label: "Probes", topic: "systems" },
+ *       { label: "Batcher", topic: "compute", note: "5k events / flush" },
+ *       { label: "Postgres", topic: "intelligence" },
  *     ]}
  *     edges={[undefined, "flush every 200ms"]}
  *   />
@@ -35,7 +35,7 @@ export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (
   return (
     <div className="my-stack flex flex-col rounded-panel border border-border bg-card p-gutter shadow-raised sm:flex-row sm:items-center sm:p-stack">
       {nodes.map((node, i) => {
-        const chip = node.wavelength ? band[node.wavelength].chip : "border-border bg-gray-fill text-muted-foreground";
+        const chip = node.topic ? topicColor[node.topic].chip : "border-border bg-gray-fill text-muted-foreground";
         return (
           <Fragment key={i}>
             <div className={`flex shrink-0 flex-col items-center gap-1 rounded-control-md border px-gutter py-inset text-center ${chip}`}>

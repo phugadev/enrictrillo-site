@@ -16,9 +16,12 @@ export const site = {
    */
   availability: {
     open: true,
-    label: "Available for Outside IR35 & C2C contracts",
-    detail: "UK-based · Remote",
+    /** How I work, as the home page says it: "I work {mode}, on {contracts}, and can start with {notice}." */
+    mode: "remotely",
+    contracts: "Outside IR35 and C2C contracts",
+    notice: "two weeks\u2019 notice",
   },
+
 
   social: {
     github: "https://github.com/phugadev",
@@ -27,21 +30,19 @@ export const site = {
 
 };
 
-export type Wavelength = "interface" | "systems" | "compute" | "intelligence";
+export type Topic = "interface" | "systems" | "compute" | "intelligence";
 
-export const wavelengths: Record<
-  Wavelength,
-  { label: string; nm: number; hex: string; description: string }
+export const topics: Record<
+  Topic,
+  { label: string; hex: string; description: string }
 > = {
   interface: {
     label: "Interface",
-    nm: 590,
     hex: palette.interface,
     description: "Product thinking and frontend",
   },
   systems: {
     label: "Systems",
-    nm: 520,
     hex: palette.systems,
     description: "Architecture, backend and data",
   },
@@ -49,23 +50,21 @@ export const wavelengths: Record<
   // self-hosting, local-first and hardware — not just a vendor's platform.
   compute: {
     label: "Compute",
-    nm: 470,
     hex: palette.compute,
     description: "Infrastructure, deploys and hardware",
   },
   intelligence: {
     label: "Intelligence",
-    nm: 405,
     hex: palette.intelligence,
     description: "Models, agents and AI engineering",
   },
 };
 
-/** Display order for grouped views — long wavelength to short, like a real spectrum. */
-export const wavelengthOrder: Wavelength[] = ["interface", "systems", "compute", "intelligence"];
+/** Display order for grouped views — long topic to short, like a real spectrum. */
+export const topicOrder: Topic[] = ["interface", "systems", "compute", "intelligence"];
 
 /** Ascending nm, left to right — the way a spectrometer readout is drawn. */
-const ascendingWavelengths = [...wavelengthOrder].reverse();
+const ascendingTopics = [...topicOrder].reverse();
 
 /**
  * The site's one gradient — the full spectrum, ascending nm left to right.
@@ -78,8 +77,8 @@ const ascendingWavelengths = [...wavelengthOrder].reverse();
  * job is to read as a calibrated instrument, the calibration being visibly
  * off is the worst possible detail to get wrong.
  */
-export const bandGradient = `linear-gradient(90deg, ${ascendingWavelengths
-  .map((w, i) => `${wavelengths[w].hex} ${((i + 0.5) / ascendingWavelengths.length) * 100}%`)
+export const topicGradient = `linear-gradient(90deg, ${ascendingTopics
+  .map((w, i) => `${topics[w].hex} ${((i + 0.5) / ascendingTopics.length) * 100}%`)
   .join(", ")})`;
 
 /**
@@ -100,20 +99,6 @@ export type ProjectLinks = {
  */
 export const now: string[] = ["Building depth in Azure, with AWS returning to the toolkit down the line."];
 
-/**
- * Diligence facts for the About section — the concrete details a contract
- * decision-maker actually checks before booking a call: sectors delivered
- * in, typical team size, how fast you could start. Empty by default rather
- * than guessed; `components/About.tsx` hides the whole row while this is
- * empty, same discipline as `now` and `credentials`. Deliberately excludes
- * years of experience — the hero states that already.
- */
-export const aboutFacts: { label: string; value: string }[] = [
-  { label: "Sectors", value: "Fintech, e-commerce, dev tools" },
-  { label: "Team size", value: "2–8 engineers" },
-  { label: "Notice period", value: "2 weeks" },
-];
-
 export type Project = {
   name: string;
   /** One line for a list, lower case, no full stop — the row reads "Name — summary". */
@@ -121,7 +106,7 @@ export type Project = {
   description: string;
   /** Omit rather than guess — the stack line is hidden when this is absent. */
   stack?: string[];
-  wavelength: Wavelength;
+  topic: Topic;
   status: "Shipped" | "In build" | "Archived";
   year: string;
   links?: ProjectLinks;
@@ -156,7 +141,7 @@ export const projects: Project[] = [
     description: "Real-time system health monitor.",
     // TODO(rico): add the stack once you confirm it — omitted rather than
     // guessed. Less urgent now the repo is linked and readable.
-    wavelength: "systems",
+    topic: "systems",
     status: "Shipped",
     year: "2026",
     links: { repo: "https://github.com/phugadev/watchman" },
@@ -168,7 +153,7 @@ export const projects: Project[] = [
     description:
       "A Tailwind v4 theme for interfaces that stay out of their own way — neutral carries the structure, colour is spent on state, identity and data. Every rule ships with the runner that proves it.",
     stack: ["Tailwind v4", "OKLCH", "shadcn registry"],
-    wavelength: "interface",
+    topic: "interface",
     status: "In build",
     year: "2026",
     /* This site is Minima's first real consumer and is rendered by it, so
@@ -182,7 +167,7 @@ export const projects: Project[] = [
     description:
       "A design system with decisions in it, not just components — one spectrum solved against contrast windows, two exposures, and a rule for which value belongs where.",
     stack: ["CSS", "OKLCH", "shadcn", "npm"],
-    wavelength: "interface",
+    topic: "interface",
     status: "Shipped",
     year: "2026",
     links: { npm: "https://www.npmjs.com/package/@ruskel/ui", repo: "https://github.com/phugadev/ruskel" },
@@ -193,7 +178,7 @@ export const projects: Project[] = [
     description:
       "npm package for token encryption, rebuilt from scratch in v2.0.0 around proper AES-256-GCM.",
     stack: ["TypeScript", "Node", "npm"],
-    wavelength: "compute",
+    topic: "compute",
     status: "Shipped",
     year: "2026",
     links: { npm: "https://www.npmjs.com/package/supasteeltokens" },
@@ -210,7 +195,7 @@ export type Credential = {
   name: string;
   issuer: string;
   earned: string; // YYYY-MM
-  wavelength: Wavelength;
+  topic: Topic;
   href?: string; // verification / badge link
 };
 

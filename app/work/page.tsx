@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
-import { WavelengthDot } from "@/components/ui/WavelengthDot";
+import { TopicDot } from "@/components/ui/TopicDot";
 import { getAllCaseStudies } from "@/lib/work";
 import { site } from "@/lib/site";
 
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * A minimal, flat list — no wavelength filtering like /blog gets. Case
+ * A minimal, flat list — no topic filtering like /blog gets. Case
  * studies will number in the single digits for a long time, so a filter chip
  * row would be overkill chrome around not much content.
  */
@@ -53,7 +53,7 @@ export default function WorkIndex() {
                 href={`/work/${study.slug}`}
                 className="group -mx-2 flex items-baseline gap-3 rounded-control-sm px-2 py-1.5 transition-colors duration-quick hover:bg-gray-tint"
               >
-                <WavelengthDot wavelength={study.wavelength} className="translate-y-[-2px]" />
+                <TopicDot topic={study.topic} className="translate-y-[-2px]" />
                 <span className="min-w-0 flex-1 text-foreground">{study.title}</span>
                 <span className="shrink-0 type-body tabular-nums text-subtle-foreground">{study.year}</span>
               </Link>

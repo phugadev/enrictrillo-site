@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import type { Heading } from "@/lib/headings";
-import type { Wavelength } from "@/lib/site";
-import { band } from "@/lib/bands";
+import type { Topic } from "@/lib/site";
+import { topicColor } from "@/lib/topics";
 
 /**
  * The reading line: the y the reader's eye is assumed to be at. Sits just under
@@ -119,10 +119,10 @@ export const RAIL_LABEL =
 
 export function PostToc({
   headings,
-  wavelength,
+  topic,
 }: {
   headings: Heading[];
-  wavelength: Wavelength;
+  topic: Topic;
 }) {
   const [activeId, setActiveId] = useActiveHeading(headings);
 
@@ -135,7 +135,7 @@ export function PostToc({
       <div className={RAIL}>
         <TocRail
           headings={headings}
-          wavelength={wavelength}
+          topic={topic}
           activeId={activeId}
           onSelect={setActiveId}
         />
@@ -153,16 +153,16 @@ export function PostToc({
  */
 export function TocRail({
   headings,
-  wavelength,
+  topic,
   activeId,
   onSelect,
 }: {
   headings: Heading[];
-  wavelength: Wavelength;
+  topic: Topic;
   activeId: string | null;
   onSelect?: (id: string) => void;
 }) {
-  const mark = band[wavelength].mark;
+  const mark = topicColor[topic].dot;
 
   return (
     <>

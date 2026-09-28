@@ -81,7 +81,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </article>
         {hasToc && (
           <aside className="absolute left-full top-0 ml-section hidden h-full w-52 xl:block">
-            <PostToc headings={headings} wavelength={meta.wavelength} />
+            <PostToc headings={headings} topic={meta.topic} />
           </aside>
         )}
       </div>

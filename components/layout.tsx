@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
-import type { Wavelength } from "@/lib/site";
-import { band } from "@/lib/bands";
+import type { Topic } from "@/lib/site";
+import { topicColor } from "@/lib/topics";
 import { cn } from "@/lib/cn";
 import { Eyebrow as MinimaEyebrow, containerVariants } from "./ui/layout";
 
@@ -39,15 +39,15 @@ export function Label({ children, id, as: Tag = "h2" }: { children: ReactNode; i
  * the system's component.
  */
 export function Eyebrow({
-  wavelength,
+  topic,
   className,
   children,
   ...props
-}: ComponentProps<typeof MinimaEyebrow> & { wavelength?: Wavelength }) {
+}: ComponentProps<typeof MinimaEyebrow> & { topic?: Topic }) {
   return (
-    <MinimaEyebrow className={cn(wavelength && band[wavelength].tint, className)} {...props}>
-      {wavelength && (
-        <span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${band[wavelength].mark}`} />
+    <MinimaEyebrow className={cn(topic && topicColor[topic].tint, className)} {...props}>
+      {topic && (
+        <span aria-hidden="true" className={`size-1.5 shrink-0 rounded-full ${topicColor[topic].dot}`} />
       )}
       {children}
     </MinimaEyebrow>

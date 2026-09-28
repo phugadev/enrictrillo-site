@@ -1,7 +1,7 @@
 import type { CaseStudyMeta } from "@/lib/work";
-import { wavelengths } from "@/lib/site";
+import { topics } from "@/lib/site";
 import { SmartLink } from "./ui/SmartLink";
-import { WavelengthDot } from "./ui/WavelengthDot";
+import { TopicDot } from "./ui/TopicDot";
 
 const LINK_ORDER = [
   { key: "live", label: "Live" },
@@ -11,13 +11,13 @@ const LINK_ORDER = [
 
 /** A case study's header: where it sits and where to find it, in one grey line. */
 export function CaseStudyHeader({ meta }: { meta: CaseStudyMeta }) {
-  const wl = wavelengths[meta.wavelength];
+  const wl = topics[meta.topic];
   const links = LINK_ORDER.filter(({ key }) => meta.links?.[key]);
 
   return (
     <header>
       <p className="flex flex-wrap items-center gap-x-2 gap-y-1 type-body text-subtle-foreground">
-        <WavelengthDot wavelength={meta.wavelength} />
+        <TopicDot topic={meta.topic} />
         <span>{wl.label}</span>
         <span aria-hidden="true">·</span>
         <span className="tabular-nums">{meta.year}</span>

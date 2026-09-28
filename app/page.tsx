@@ -6,7 +6,7 @@ import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { ProjectRow } from "@/components/ProjectRow";
 import { SmartLink } from "@/components/ui/SmartLink";
-import { aboutFacts, now, projects, site } from "@/lib/site";
+import { now, projects, site } from "@/lib/site";
 import { getAllPosts } from "@/lib/posts";
 
 /**
@@ -43,14 +43,19 @@ export default function Home() {
           through {site.company}.
         </p>
         <p>
-          For nine years I&rsquo;ve taken features from product decision to production across
-          the whole stack, without handing off between specialists: TypeScript and Next.js on the
-          front, Python and Node behind them, Azure underneath, and AI worked through the middle
-          rather than kept as a separate department.
+          For nine years I&rsquo;ve built and shipped software across the whole stack, without
+          handing off between specialists: TypeScript and Next.js on the front, Python and Node
+          behind them, Azure underneath, and AI worked through the middle rather than kept as a
+          separate department.
         </p>
         {now.length > 0 && <p>Right now I&rsquo;m {now[0]!.charAt(0).toLowerCase() + now[0]!.slice(1)}</p>}
         <p>
-          {site.availability.open ? <>I&rsquo;m available for Outside IR35 and C2C contracts. </> : null}
+          {site.availability.open ? (
+            <>
+              I work {site.availability.mode}, on {site.availability.contracts}, and can start with{" "}
+              {site.availability.notice}.{" "}
+            </>
+          ) : null}
           <CopyEmail email={site.email} />, or find me on <A href={site.social.github}>GitHub</A> and{" "}
           <A href={site.social.linkedin}>LinkedIn</A>.
         </p>
@@ -76,19 +81,6 @@ export default function Home() {
         </section>
       )}
 
-      {aboutFacts.length > 0 && (
-        <section className="mt-section" aria-labelledby="details">
-          <Label id="details">Details</Label>
-          <dl>
-            {aboutFacts.map((fact) => (
-              <div key={fact.label} className="flex items-baseline justify-between gap-gutter py-1.5 type-body">
-                <dt className="text-foreground">{fact.label}</dt>
-                <dd className="text-right text-subtle-foreground">{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )}
     </PageShell>
   );
 }

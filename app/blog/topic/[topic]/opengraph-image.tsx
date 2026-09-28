@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { OgCard, ogContentType, ogFonts, ogSize } from "@/lib/og";
-import { getPostsByWavelength } from "@/lib/posts";
-import { site, wavelengths } from "@/lib/site";
+import { getPostsByTopic } from "@/lib/posts";
+import { site, topics } from "@/lib/site";
 
 /**
  * A constant `alt`, not generateImageMetadata.
@@ -12,47 +12,47 @@ import { site, wavelengths } from "@/lib/site";
  * URL 404s. A generic alt on a working card beats a per-post alt on a broken
  * one; the card's own title carries the specifics for anyone who can see it.
  */
-export const alt = "Writing by wavelength — Enric Trillo";
+export const alt = "Writing by topic — Enric Trillo";
 export const size = ogSize;
 export const contentType = ogContentType;
 
 /**
- * Mirrors generateStaticParams in ./page.tsx — only bands that actually have
+ * Mirrors generateStaticParams in ./page.tsx — only groups that actually have
  * posts get a page, so only those get a card, and it's rendered at build time
  * rather than on every social fetch.
  *
- * Without this file the band pages emitted twitter:card=summary_large_image and
+ * Without this file the group pages emitted twitter:card=summary_large_image and
  * no image at all: declaring `openGraph` in the page's generateMetadata
  * suppresses the root app/opengraph-image that would otherwise cascade down.
  */
 export function generateStaticParams() {
-  return getPostsByWavelength().map((band) => ({ wavelength: band.wavelength }));
+  return getPostsByTopic().map((group) => ({ topic: group.topic }));
 }
 
-function findBand(slug: string) {
-  return getPostsByWavelength().find((b) => b.wavelength === slug);
+function findTopic(slug: string) {
+  return getPostsByTopic().find((b) => b.topic === slug);
 }
 
-export default async function Image({ params }: { params: Promise<{ wavelength: string }> }) {
-  const { wavelength } = await params;
-  const band = findBand(wavelength);
+export default async function Image({ params }: { params: Promise<{ topic: string }> }) {
+  const { topic } = await params;
+  const group = findTopic(topic);
 
-  // An unknown band 404s at the page; the card just falls back to the neutral
+  // An unknown group 404s at the page; the card just falls back to the neutral
   // spectrum rather than throwing inside a metadata route.
-  if (!band) {
-    const fallback = <OgCard eyebrow="Wavelength" title="Writing" footer={site.name} />;
+  if (!group) {
+    const fallback = <OgCard eyebrow="Topic" title="Writing" footer={site.name} />;
     return new ImageResponse(fallback, { ...size, fonts: ogFonts() });
   }
 
-  const wl = wavelengths[band.wavelength];
-  const count = band.posts.length;
+  const wl = topics[group.topic];
+  const count = group.posts.length;
 
   return new ImageResponse(
     (
       <OgCard
-        eyebrow={`${wl.nm}nm · Wavelength`}
+        eyebrow="Writing"
         title={wl.label}
-        wavelength={band.wavelength}
+        topic={group.topic}
         footer={`${site.name} · ${count} ${count === 1 ? "post" : "posts"}`}
       />
     ),

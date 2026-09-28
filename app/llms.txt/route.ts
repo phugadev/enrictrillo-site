@@ -1,6 +1,6 @@
-import { getAllPosts, getAllSeries, getPostsByWavelength } from "@/lib/posts";
+import { getAllPosts, getAllSeries, getPostsByTopic } from "@/lib/posts";
 import { getAllCaseStudies } from "@/lib/work";
-import { credentials, projects, site, wavelengths } from "@/lib/site";
+import { credentials, projects, site, topics } from "@/lib/site";
 
 export const dynamic = "force-static";
 
@@ -19,7 +19,7 @@ const plural = (n: number, word: string) => `${n} ${n === 1 ? word : `${word}s`}
  */
 export function GET() {
   const posts = getAllPosts();
-  const bands = getPostsByWavelength();
+  const groups = getPostsByTopic();
   const series = getAllSeries();
   const caseStudies = getAllCaseStudies();
   const { availability } = site;
@@ -31,12 +31,12 @@ export function GET() {
     `> ${site.tagline} Based in ${site.location}, working through ${site.company}.`,
     "",
     availability.open
-      ? `${availability.label}. ${availability.detail}. Contact: ${site.email}`
+      ? `Available for ${availability.contracts}, working ${availability.mode}, with ${availability.notice}. Contact: ${site.email}`
       : `Not currently taking new contracts. Contact: ${site.email}`,
     "",
-    "Work and writing are both filed by a four-band \"wavelength\" taxonomy:",
+    "Work and writing are both filed by a four-group \"topic\" taxonomy:",
     "",
-    ...Object.values(wavelengths).map((wl) => `- **${wl.label}** (${wl.nm}nm) — ${wl.description}`),
+    ...Object.values(topics).map((wl) => `- **${wl.label}** — ${wl.description}`),
     "",
   ];
 
@@ -54,7 +54,7 @@ export function GET() {
         .join(", ");
 
       lines.push(
-        `- ${title}: ${project.description} ${project.status}, ${project.year}. ${wavelengths[project.wavelength].label}.${stack}${metrics}${links ? ` Links — ${links}.` : ""}`,
+        `- ${title}: ${project.description} ${project.status}, ${project.year}. ${topics[project.topic].label}.${stack}${metrics}${links ? ` Links — ${links}.` : ""}`,
       );
     }
     lines.push("");
@@ -69,7 +69,7 @@ export function GET() {
         .join(", ");
 
       lines.push(
-        `- [${study.title}](${site.url}/work/${study.slug}): ${study.excerpt} ${wavelengths[study.wavelength].label}, ${study.year}.${stack}${links ? ` Links — ${links}.` : ""}`,
+        `- [${study.title}](${site.url}/work/${study.slug}): ${study.excerpt} ${topics[study.topic].label}, ${study.year}.${stack}${links ? ` Links — ${links}.` : ""}`,
       );
     }
     lines.push("");
@@ -91,12 +91,12 @@ export function GET() {
     lines.push("");
   }
 
-  if (bands.length > 0) {
-    lines.push("## Writing by wavelength", "");
-    for (const band of bands) {
-      const wl = wavelengths[band.wavelength];
+  if (groups.length > 0) {
+    lines.push("## Writing by topic", "");
+    for (const group of groups) {
+      const wl = topics[group.topic];
       lines.push(
-        `- [${wl.label} (${wl.nm}nm)](${site.url}/blog/wavelength/${band.wavelength}): ${wl.description}. ${plural(band.posts.length, "post")}.`,
+        `- [${wl.label}](${site.url}/blog/topic/${group.topic}): ${wl.description}. ${plural(group.posts.length, "post")}.`,
       );
     }
     lines.push("");
