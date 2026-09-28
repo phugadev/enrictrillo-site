@@ -88,6 +88,20 @@ body {
    specificity and still lose to any utility written in markup. */
 @layer components {
   /*
+    Body copy on the site's three tiers: foreground for what the eye should
+    land on (headlines, headings, bold, links, names), muted for reading,
+    subtle for labels and dates. Minima's prose uses its own --gray-reading
+    step instead, which in dark mode sits at 0.88 — close enough to the 0.96
+    headings that a post read as one brightness, and brighter than the
+    standfirst above it. The landing page already reads on muted; posts and
+    case studies now match it. Minima's heading, strong and link rules keep
+    them at foreground.
+  */
+  .prose {
+    color: var(--muted-foreground);
+  }
+
+  /*
     Links carry their signal in the underline, not the text, and at rest the
     underline is the quiet grey, and on hover it firms to the text colour —
     the moment a link is touched. Colour on this site means a topic, so it is
