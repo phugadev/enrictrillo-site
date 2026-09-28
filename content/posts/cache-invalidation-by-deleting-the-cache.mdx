@@ -1,0 +1,94 @@
+---
+title: "The fastest cache fix I shipped was deleting the cache"
+excerpt: "A read-through cache saved 40ms a request and cost us three stale-data incidents. An index saved 38ms and cost nothing."
+date: "2026-09-28"
+topic: "backend"
+series: "Watchman"
+---
+
+Watchman's status page had a Redis cache in front of it for eleven months. It shaved about 40ms off the median request. It also caused every one of the three "the page says we're up but we're down" incidents we had this year — which, for a status page, is the one bug that matters.
+
+This post is about removing it, and why the replacement was boring.
+
+## What the cache was doing
+
+Every status page read went through a read-through helper. On a miss, it queried Postgres, serialised the result, and wrote it back with a 30-second TTL.
+
+```ts title="lib/status/read.ts" {4,9}
+export async function getStatus(pageId: string) {
+  const key = `status:${pageId}`;
+  const hit = await redis.get(key);
+  if (hit) return JSON.parse(hit) as PageStatus;
+
+  const status = await db.pageStatus(pageId);
+  await redis.set(key, JSON.stringify(status), "EX", 30);
+  return status;
+}
+```
+
+Nothing is wrong with that code. The problem is line 4: for up to thirty seconds after an incident opens, a visitor gets the version of the world where it hadn't.
+
+<Callout variant="warning">
+Thirty seconds sounds small until you remember when people load a status page: in the first thirty seconds of an outage.
+</Callout>
+
+## Why invalidation never quite worked
+
+We tried the usual fixes, in the usual order:
+
+1. **Delete the key on write.** Worked until a second writer (the incident bot) was added that didn't know about the cache.
+2. **Shorter TTL.** Five seconds. The hit rate fell to 31% and the cache was mostly overhead.
+3. **Pub/sub invalidation.** Correct, and a new moving part that needed its own monitoring.
+
+Each fix was reasonable. Together they were a small distributed system whose only job was to hide a slow query.
+
+## Measuring the query instead
+
+So I stopped looking at the cache and looked at what it was hiding.
+
+| Path | p50 | p99 | Stale reads |
+| --- | ---: | ---: | ---: |
+| Cached (hit) | 4ms | 11ms | yes |
+| Uncached, before | 44ms | 180ms | no |
+| Uncached, with index | 6ms | 19ms | no |
+
+The query was slow because it sorted every component update to find the latest per component. One composite index turned it into an index-only scan:
+
+```sql title="migrations/0042_latest_component_status.sql"
+create index concurrently component_updates_latest
+  on component_updates (page_id, component_id, created_at desc)
+  include (status);
+```
+
+<Diagram
+  nodes={[
+    { label: "Request", topic: "frontend" },
+    { label: "Postgres", topic: "backend", note: "index-only scan" },
+    { label: "Response", topic: "frontend" },
+  ]}
+  edges={["6ms p50"]}
+/>
+
+## The comparison that decided it
+
+<Compare
+  items={[
+    { code: "redis.get → db → redis.set", label: "Read-through cache", outcome: "bad" },
+    { code: "db (indexed)", label: "Just the query", outcome: "good" },
+  ]}
+  caption="Two milliseconds slower at the median, and never wrong."
+/>
+
+Two milliseconds is a trade I will make every time for a page whose entire purpose is to be correct.
+
+---
+
+## What I'd tell myself a year ago
+
+- A cache is a second copy of the truth. Before adding one, ask what the first copy costs to make fast.
+- If the invalidation story needs a diagram, the index probably doesn't.
+- `EXPLAIN (ANALYZE, BUFFERS)` is cheaper than Redis.
+
+<Callout variant="tip">
+The Redis instance is still running — for rate limiting, where a slightly wrong answer is fine. That's the job it was good at all along.
+</Callout>
