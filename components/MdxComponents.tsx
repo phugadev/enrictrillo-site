@@ -138,14 +138,16 @@ type CalloutVariant = "info" | "warning" | "success" | "tip";
 
 /**
  * A callout is a state — information, a warning, a success, a tip — so it
- * takes Minima's state hues as a tinted panel (fill, border, tinted text),
- * not a topic's colour. Written out literally so Tailwind emits them.
+ * takes Minima's state hues, not a topic's colour. The hue is on the icon and
+ * the label only; the panel is the same tray and stage as every other figure,
+ * so a callout reads as one of the post's objects rather than a banner laid
+ * over it. Written out literally so Tailwind emits them.
  */
-const CALLOUT_VARIANTS: Record<CalloutVariant, { chip: string; label: string; Icon: typeof InfoIcon }> = {
-  info: { chip: "border-blue-border bg-blue-fill text-blue-text", label: "Info", Icon: InfoIcon },
-  warning: { chip: "border-amber-border bg-amber-fill text-amber-text", label: "Warning", Icon: WarningIcon },
-  success: { chip: "border-green-border bg-green-fill text-green-text", label: "Success", Icon: SuccessIcon },
-  tip: { chip: "border-purple-border bg-purple-fill text-purple-text", label: "Tip", Icon: TipIcon },
+const CALLOUT_VARIANTS: Record<CalloutVariant, { chip: string; text: string; label: string; Icon: typeof InfoIcon }> = {
+  info: { chip: "border-blue-border bg-blue-fill text-blue-text", text: "text-blue-text", label: "Info", Icon: InfoIcon },
+  warning: { chip: "border-amber-border bg-amber-fill text-amber-text", text: "text-amber-text", label: "Warning", Icon: WarningIcon },
+  success: { chip: "border-green-border bg-green-fill text-green-text", text: "text-green-text", label: "Success", Icon: SuccessIcon },
+  tip: { chip: "border-purple-border bg-purple-fill text-purple-text", text: "text-purple-text", label: "Tip", Icon: TipIcon },
 };
 
 /**
@@ -158,19 +160,21 @@ const CALLOUT_VARIANTS: Record<CalloutVariant, { chip: string; label: string; Ic
  *   </Callout>
  */
 export function Callout({ variant = "info", children }: { variant?: CalloutVariant; children: ReactNode }) {
-  const { chip, label, Icon } = CALLOUT_VARIANTS[variant];
+  const { chip, text, label, Icon } = CALLOUT_VARIANTS[variant];
 
   return (
-    <aside className={`my-stack flex gap-gutter rounded-panel border p-gutter ${chip}`}>
-      <span
-        aria-hidden="true"
-        className="flex size-7 shrink-0 items-center justify-center rounded-control-sm border border-current/25 bg-background/40"
-      >
-        <Icon className="size-3.5" />
-      </span>
-      <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-inset">
-        <p className="signal type-label-sm">{label}</p>
-        <div className="mt-1 type-body text-muted-foreground">{children}</div>
+    <aside className="tray my-stack">
+      <div className="tray__stage flex gap-gutter p-gutter">
+        <span
+          aria-hidden="true"
+          className={`flex size-7 shrink-0 items-center justify-center rounded-control-sm border ${chip}`}
+        >
+          <Icon className="size-3.5" />
+        </span>
+        <div className="min-w-0 [&_p]:m-0 [&_p+p]:mt-inset">
+          <p className={`signal type-label-sm ${text}`}>{label}</p>
+          <div className="mt-1 type-body text-muted-foreground">{children}</div>
+        </div>
       </div>
     </aside>
   );

@@ -118,13 +118,18 @@ body {
     text-decoration-line: underline;
   }
 
-  /* Tables scroll inside their wrapper rather than widening the column. */
+  /* Tables sit on a tray like every other figure, and scroll inside the
+     stage rather than widening the column. */
   .prose [data-table-wrapper] {
+    margin-block: var(--prose-lead, 2rem);
+  }
+  .prose [data-table-stage] {
     overflow-x: auto;
   }
   .prose [data-table-wrapper] table {
     width: 100%;
     min-width: max-content;
+    margin: 0;
     font-size: 0.9em;
     border-collapse: collapse;
   }
@@ -132,11 +137,17 @@ body {
      by comparing it to the one above. */
   .prose :is(th, td) {
     font-variant-numeric: tabular-nums;
-    padding: 0.5em 0.9em 0.5em 0;
+    padding: 0.6em 0.9em;
     border-bottom: 1px solid var(--border);
     text-align: left;
   }
+  .prose tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  /* The header row is a strip, the same tinted ground as the verdict strip
+     under a comparison. */
   .prose th {
+    background: var(--gray-tint);
     color: var(--foreground);
     font-weight: 500;
   }

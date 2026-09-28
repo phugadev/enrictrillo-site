@@ -36,11 +36,21 @@ function rehypeWrapTables() {
       // div's children, and without this it would nest wrappers forever.
       if (parent.tagName === "div" && parent.properties?.["data-table-wrapper"] !== undefined) return;
 
+      // Tray and stage, like every other figure (.tray in app/globals.css).
+      // The stage is the element that scrolls, so the tray's edge stays put
+      // while a wide table moves inside it.
       parent.children![index] = {
         type: "element",
         tagName: "div",
-        properties: { "data-table-wrapper": "" },
-        children: [node],
+        properties: { "data-table-wrapper": "", className: ["tray"] },
+        children: [
+          {
+            type: "element",
+            tagName: "div",
+            properties: { "data-table-stage": "", className: ["tray__stage"] },
+            children: [node],
+          },
+        ],
       };
     });
   };
