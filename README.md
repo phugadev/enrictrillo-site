@@ -361,7 +361,9 @@ Three faces, one per voice (the reasoning is in the comment at the top of
   italics downloads it (about 50 KB), and the home page never does.
 - **IBM Plex Mono** (`font-mono`) — the machine stating: figures, states,
   captions and code. Root layout, **400 and 500**. Plex isn't variable, so any
-  new weight has to be listed.
+  new weight has to be listed. Its **italic**, for comments in code blocks, is a
+  separate unpreloaded instance, so only pages with commented code fetch it.
+  Keywords the syntax themes mark bold stay regular on purpose.
 - **Instrument Serif** (`font-serif`) — a person speaking: the article
   headline and nothing else. Loaded by `app/blog/[slug]/layout.tsx`, so **only
   post pages fetch it**, and exposed there through `[data-voice="author"]` in
