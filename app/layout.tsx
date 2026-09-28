@@ -60,6 +60,19 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
+/**
+ * Plex's real italic, for comments in code blocks (app/globals.css). Like the
+ * Inter italic, unpreloaded: only a page with a commented code block pays for it.
+ */
+const monoItalic = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  variable: "--font-mono-italic",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
   title: `${site.name} — ${site.role}`,
   description: site.tagline,
@@ -106,7 +119,7 @@ const followSystemTheme = `(() => {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${body.variable} ${bodyItalic.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-GB" className={`${body.variable} ${bodyItalic.variable} ${mono.variable} ${monoItalic.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: followSystemTheme }} />
       </head>

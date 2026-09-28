@@ -342,6 +342,17 @@ body {
     background: var(--gray-tint);
   }
 }
+/* Comments in italic, as the syntax themes mark them. Minima's Shiki rule
+   applies only the colour, so the italic Shiki writes inline was ignored. It
+   is the same scope in both themes, so one rule covers both modes. Keywords
+   the themes mark bold stay regular on purpose: colour already separates
+   them, and bold keywords make a block read heavier than the prose around
+   it. */
+.codeframe [style*="font-style:italic"] {
+  font-family: var(--font-mono-italic), var(--font-mono);
+  font-style: italic;
+}
+
 .codeframe [data-highlighted-line] {
   background: var(--gray-tint-hover);
   box-shadow: inset 2px 0 0 0 var(--foreground);
