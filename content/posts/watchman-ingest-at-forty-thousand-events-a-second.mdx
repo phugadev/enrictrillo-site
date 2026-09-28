@@ -2,7 +2,7 @@
 title: "Watchman: ingest at forty thousand events a second"
 excerpt: "How Watchman's event pipeline went from choking at 3k/s to holding 40k/s on a single writer, and the three ideas that got it there."
 date: "2026-03-04"
-topic: "systems"
+topic: "backend"
 series: "Watchman"
 draft: true
 ---
@@ -33,9 +33,9 @@ The pipeline that came out of it, end to end:
 
 <Diagram
   nodes={[
-    { label: "Probes", wavelength: "systems", note: "HTTP, queue, disk" },
-    { label: "Batcher", wavelength: "compute", note: "in-memory buffer" },
-    { label: "Postgres", wavelength: "intelligence", note: "COPY writer" },
+    { label: "Probes", topic: "backend", note: "HTTP, queue, disk" },
+    { label: "Batcher", topic: "infrastructure", note: "in-memory buffer" },
+    { label: "Postgres", topic: "ai", note: "COPY writer" },
   ]}
   edges={[undefined, "flush: 2k rows or 250ms"]}
 />
