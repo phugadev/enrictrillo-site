@@ -77,7 +77,8 @@ out curly, with `--` becoming an en dash. Code blocks are left alone.
 
 Wide tables are wrapped in a scrolling container (`components/Mdx.tsx`) so they
 fill the column and scroll inside themselves rather than pushing the page
-sideways. Tables and code blocks widen past the reading measure above 1024px.
+sideways. Tables and code blocks stay the width of the reading column, so
+they never run under the contents rail beside it.
 
 Code blocks can carry a filename:
 
@@ -188,7 +189,7 @@ app/
   favicon.ico, apple-icon.png — rasterised from icon.svg (32px / 180px)
   page.tsx               — homepage (hero, work, credentials, latest posts, about)
   blog/page.tsx          — blog index, flat and newest-first
-  blog/[slug]/layout.tsx — loads the reading font for post pages only
+  blog/[slug]/layout.tsx — loads Instrument Serif (the headline face) for post pages only
   blog/[slug]/page.tsx   — post template
   blog/series/[series]/  — auto-generated series index pages
   blog/wavelength/[…]/   — auto-generated band index pages
@@ -267,31 +268,33 @@ so ad blockers don't trivially match it. First Load JS is unchanged at 99.8 kB.
 
 ## Fonts
 
-Three families load site-wide, about 85 KB total:
+Three faces, one per voice (the reasoning is in the comment at the top of
+`app/layout.tsx`):
 
-- **Space Grotesk** (`font-display`) — headings and project names only. Set
-  against Inter and Geist at headline size it's the one that reads as authored
-  rather than as the category default. It's also noticeably wider, which is why
-  it no longer carries body copy.
-- **Inter** (`font-body`) — everything else. Denser and more neutral over a
-  paragraph. **Pinned to weight 400**: every `font-medium` in the codebase sits
-  on `font-display`, and the only bold/italic text is inside prose. The full
-  100–900 variable axis cost 47 KB against 23 KB for the single static cut — if
-  you add a `<strong>` or `font-semibold` to body copy, add the weight in
-  `app/layout.tsx` or the browser will synthesise it.
-- **JetBrains Mono** (`font-mono`) — metadata, labels, the post readout.
+- **Inter** (`font-sans`) — the system speaking: nav, labels, headings and
+  body. Loaded in the root layout at **400 and 500**, upright only. 500 is the
+  real medium cut behind `font-medium` (list titles, project names, table
+  headers).
+- **IBM Plex Mono** (`font-mono`) — the machine stating: figures, states,
+  captions and code. Root layout, **400 and 500**. Plex isn't variable, so any
+  new weight has to be listed.
+- **Instrument Serif** (`font-serif`) — a person speaking: the article
+  headline and nothing else. Loaded by `app/blog/[slug]/layout.tsx`, so **only
+  post pages fetch it**, and exposed there through `[data-voice="author"]` in
+  `app/globals.css`. It's high-contrast and loses its footing under about 24px,
+  which is why body copy stays on the sans. A page outside `app/blog/[slug]/`
+  that wants the serif has to load its own instance — elsewhere `font-serif`
+  falls back to the system serif stack.
 
-A fourth, Newsreader (`font-reading`), is loaded by `app/blog/[slug]/layout.tsx`
-rather than the root layout, so **only post pages fetch it**. Long-form reading
-gets a real reading face with true italics; every other page stays light.
-Space Grotesk and Inter-at-400 have no italic cut, so prose italics come from
-Newsreader — that's the whole reason it's in the bundle.
+Minima ships no typeface of its own; it reads Tailwind's `--font-sans` and
+`--font-mono`, which `app/globals.css` points at the two `next/font` variables.
 
-If you add a page that needs the reading face, it has to live under
-`app/blog/[slug]/` or load its own instance — `font-reading` resolves to nothing
-elsewhere.
+**Known gap: prose bold and italics are synthesised.** Minima sets `<strong>`
+in prose at 600, and nothing loads an italic Inter, so the browser thickens the
+500 cut and slants the upright one. It reads acceptably at body size. For real
+cuts, add `"600"` to the Inter `weight` array and `style: ["normal",
+"italic"]` in `app/layout.tsx` — each costs a font file on every page.
 
-Space Grotesk, JetBrains Mono and Newsreader use variable fonts (no `weight`
-array) because they each render at more than one weight — pinning them
-previously left prose headings without a real 700 cut, so the browser
-synthesised bold. Inter is the deliberate exception, as above.
+The social cards can't use `next/font` (Satori doesn't read the page's CSS), so
+Instrument Serif and Inter are also committed as `.ttf` files under
+`assets/fonts/` — see [Generated routes](#generated-routes).
