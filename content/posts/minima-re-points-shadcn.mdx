@@ -1,0 +1,98 @@
+---
+title: "Minima: a design system that re-points shadcn instead of replacing it"
+excerpt: "Minima is one CSS file. Your shadcn components change without being edited, because it changes the values behind the names shadcn already uses."
+date: "2026-09-29"
+topic: "frontend"
+series: "Minima"
+draft: true
+---
+
+{/*
+  DRAFT OUTLINE. These comment blocks are notes to you and never render.
+  Headings and code blocks are real and render in the draft preview:
+  npm run dev → http://localhost:3000/blog/minima-re-points-shadcn
+
+  Facts below come from ~/Dev/minima (README, CHANGELOG, consumers.json) as of
+  v1.3.0, 28 Sep 2026. Check any you keep against the repo before publishing.
+*/}
+
+{/*
+  OPENING — the thesis, in your words.
+  An earlier session recorded you saying (22 Aug 2026): shadcn gives you
+  components, the foundation of a design system, but no decisions.
+  One or two paragraphs: what you kept running into, and what Minima is for.
+*/}
+
+## One file, the same class names
+
+{/*
+  The claim that makes Minima different from "a shadcn theme":
+  - It ships as one CSS file. Existing shadcn components pick it up without
+    being edited, because it re-points Tailwind's own shadow, easing and
+    colour scales rather than inventing a parallel set of names.
+  - Radius is the one scale shadcn keeps; install needs a one-time edit to
+    hand it over (docs/install.md). Say so — it's the honest caveat.
+  - The README's stock-vs-Minima screenshots are the same markup both ways.
+    Worth an image here (docs/images/dashboard-stock.png / -minima.png).
+*/}
+
+```bash
+npx shadcn@latest add phugadev/minima/theme
+```
+
+```css title="app/globals.css"
+@import "tailwindcss";
+@import "../styles/minima.css";
+```
+
+## The decisions shadcn leaves to you
+
+{/*
+  Pick two or three from the README's "A few of the decisions". Strongest,
+  because each has a concrete failure behind it:
+  - Ask for a role, never a step number. Renumbering the scale once left four
+    files quietly wrong; a name survives that.
+  - Text goes on a fill, never a tint. Seven hue/ground pairs land 4.20–4.48:1
+    on other grounds — under the floor, but only just.
+  - Each mode runs out of room at the opposite end: light spends its range on
+    shadow, dark on surface.
+  - The type scale is type-*, not text-*: cn() files a custom text-body as a
+    colour and silently drops it. (A good <Compare> candidate.)
+*/}
+
+## Verified, not asserted
+
+{/*
+  npm run audit: thirteen checks over the built CSS, registry and history
+  (contrast across 110 pairings, focus ring 3:1 on every surface, no dangling
+  var(), every commit that changes what ships is in the changelog…).
+  The line to keep: each check exists because something broke.
+*/}
+
+## The first consumer is this site
+
+{/*
+  The dogfooding section — the most persuasive part for a client reading it.
+  From Minima's CHANGELOG, releases this site caused:
+  - 1.1.0: Shiki follows the page's mode (before, every consumer wrote the
+    switch; one built the dark palette on a light page).
+  - 1.2.0: minima-palette.json, replacing three hand-rolled colour resolvers
+    across two projects.
+  - 1.3.0: the quiet voice for Section and PageHeader, written because this
+    site's redesign hand-rolled one.
+  And what building on it still turned up (28 Sep 2026), all currently fixed
+  in this site's app/globals.css rather than upstream:
+  - prose body in dark mode used a reading grey (0.88) nearly as bright as
+    headings (0.96);
+  - Minima's highlighted-line margin shifted highlighted code lines left;
+  - Minima's Shiki rule applied colour but dropped the themes' italics.
+  Decide: upstream these as Minima fixes before publishing, and the post can
+  say "and here's the release they became".
+*/}
+
+## See it running
+
+{/*
+  Close on the proof a stranger can check: /system on this site is Minima's
+  live specimen, and github.com/phugadev/minima has the audits.
+*/}
