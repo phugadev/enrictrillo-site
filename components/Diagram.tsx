@@ -47,7 +47,7 @@ export function Diagram({ nodes, edges = [] }: { nodes: DiagramNode[]; edges?: (
             {i < nodes.length - 1 && (
               <div className="flex flex-col items-center justify-center gap-1 px-1 py-2 sm:flex-1 sm:px-3 sm:py-0">
                 {edges[i] && (
-                  <span className="signal type-label-xs text-faint">{edges[i]}</span>
+                  <span className="signal type-label-xs whitespace-nowrap text-faint">{edges[i]}</span>
                 )}
                 <span aria-hidden="true" className="text-faint sm:hidden">
                   ↓

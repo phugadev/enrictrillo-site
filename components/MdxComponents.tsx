@@ -81,6 +81,9 @@ type CompareItem = {
   /** Small chip under the snippet naming its source or scenario, e.g. "button.md". */
   label: string;
   outcome: "good" | "bad";
+  /** Overrides "Works" / "Doesn't work" when the contrast is a trade-off
+   *  rather than a failure, e.g. "Stale for 30s". */
+  verdict?: string;
 };
 
 const CHIP = "figure inline-flex w-fit items-center rounded-chip border border-border px-2 py-0.5 type-caption-sm text-subtle-foreground";
@@ -115,7 +118,7 @@ export function Compare({ items, caption }: { items: CompareItem[]; caption?: st
         <Cell
           key={i}
           verdict={item.outcome === "good" ? "yes" : "no"}
-          label={item.outcome === "good" ? "Works" : "Doesn't work"}
+          label={item.verdict ?? (item.outcome === "good" ? "Works" : "Doesn't work")}
         >
           <code className="block whitespace-pre-wrap bg-transparent p-0 font-mono type-caption leading-relaxed text-foreground">
             {item.code}

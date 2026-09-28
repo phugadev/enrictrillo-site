@@ -48,7 +48,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
         size="narrow"
         className="pt-stack"
         title={found.name}
-        lead={`${found.posts.length} ${found.posts.length === 1 ? "post" : "posts"} in this series, newest first.`}
+        lead={found.posts.length === 1 ? "1 post in this series." : `${found.posts.length} posts in this series, newest first.`}
       />
       <Container size="narrow">
         <ul>
