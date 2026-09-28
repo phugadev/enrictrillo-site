@@ -54,12 +54,14 @@ const HUES = [
   { hue: "pink", text: "text-pink-text" },
 ] as const;
 
+/* Each level's token in each mode. faint is this site's own quietest grey:
+   its own step in dark, Minima's subtle in light (see app/globals.css). */
 const TEXT_LEVELS = [
-  { name: "foreground", token: "--foreground", className: "text-foreground", job: "Headings, the thing itself" },
-  { name: "muted", token: "--muted-foreground", className: "text-muted-foreground", job: "Paragraphs" },
-  { name: "subtle", token: "--subtle-foreground", className: "text-subtle-foreground", job: "Metadata, secondary lines" },
-  { name: "faint", token: "--gray-solid", className: "text-faint", job: "This site only — quietest tier" },
-];
+  { name: "foreground", light: "foreground", dark: "foreground", className: "text-foreground", job: "Headings, the thing itself" },
+  { name: "muted", light: "muted-foreground", dark: "muted-foreground", className: "text-muted-foreground", job: "Paragraphs" },
+  { name: "subtle", light: "subtle-foreground", dark: "subtle-foreground", className: "text-subtle-foreground", job: "Metadata, secondary lines" },
+  { name: "faint", light: "subtle-foreground", dark: "gray-solid", className: "text-faint", job: "This site only — quietest tier" },
+] as const;
 
 const TYPE = [
   { name: "display", className: "type-display", sample: "Production software" },
@@ -137,16 +139,16 @@ export default function SystemPage() {
         </SmartLink>
       </PageHeader>
 
-      <Section label="Text" aside="Contrast on the canvas">
+      <Section label="Text" aside="Contrast on the canvas, light · dark">
         <ul className="divide-y divide-border rounded-panel border border-border bg-card">
           {TEXT_LEVELS.map((level) => (
-            <li key={level.name} className="grid gap-inset p-gutter sm:grid-cols-[minmax(0,1fr)_12rem_6rem] sm:items-center">
+            <li key={level.name} className="grid gap-inset p-gutter sm:grid-cols-[minmax(0,1fr)_12rem_9rem] sm:items-center">
               <p className={`type-heading ${level.className}`}>The quick brown fox</p>
               <p className="type-caption text-subtle-foreground">
                 <span className="figure text-foreground">{level.name}</span> · {level.job}
               </p>
               <p className="figure type-caption text-foreground sm:text-right">
-                {ratio(contrast(level.token, "--background"))}
+                {ratio(contrast(level.light, "background", "light"))} · {ratio(contrast(level.dark, "background", "dark"))}
               </p>
             </li>
           ))}
