@@ -7,7 +7,8 @@ import minima from "@/styles/minima-palette.json";
  * Minima generates from the same build as the theme and checks against it;
  * re-add it with the theme and these follow.
  *
- * Dark values: the social cards are drawn on the dark ground.
+ * Dark values. The social cards (lib/og.tsx) read the light ground from the
+ * JSON directly, as the site opens light.
  */
 const dark = minima.dark;
 

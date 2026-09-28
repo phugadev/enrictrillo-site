@@ -11,8 +11,8 @@ export default function Image() {
     (
       <OgCard
         eyebrow={site.role}
-        title="Production software, end to end."
-        footer={`${site.name} · ${site.location}`}
+        title={site.name}
+        footer={site.location}
       />
     ),
     { ...size, fonts: ogFonts() },
