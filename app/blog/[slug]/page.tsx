@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Container } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
@@ -38,7 +39,11 @@ export async function generateMetadata({
         publishedTime: meta.date,
         url: `/blog/${slug}`,
       },
-      twitter: { card: "summary_large_image", title: meta.title, description: meta.excerpt },
+      twitter: {
+        card: "summary_large_image",
+        title: meta.title,
+        description: meta.excerpt,
+      },
     };
   } catch {
     return {};
@@ -71,20 +76,22 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
       <JsonLd data={blogPostingSchema(meta)} />
       {/* The contents rail hangs in the empty margin beside the column on
           wide screens, rather than widening the page to make room for it. */}
-      <div className="relative">
-        <article>
-          <PostHeader meta={meta} />
-          <div className="prose mt-stack">
-            <Mdx source={content} />
-          </div>
-          <PostNav newer={newer} older={older} />
-        </article>
-        {hasToc && (
-          <aside className="absolute left-full top-0 ml-section hidden h-full w-52 xl:block">
-            <PostToc headings={headings} topic={meta.topic} />
-          </aside>
-        )}
-      </div>
+      <Container size="narrow" className="pt-stack">
+        <div className="relative">
+          <article>
+            <PostHeader meta={meta} />
+            <div className="prose mt-stack">
+              <Mdx source={content} />
+            </div>
+            <PostNav newer={newer} older={older} />
+          </article>
+          {hasToc && (
+            <aside className="absolute left-full top-0 ml-section hidden h-full w-52 xl:block">
+              <PostToc headings={headings} topic={meta.topic} />
+            </aside>
+          )}
+        </div>
+      </Container>
     </PageShell>
   );
 }

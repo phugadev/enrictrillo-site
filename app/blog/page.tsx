@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Container, PageHeader } from "@/components/layout";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { SeriesChips } from "@/components/SeriesChips";
@@ -31,7 +32,12 @@ export const metadata: Metadata = {
     url: "/blog",
     siteName: site.name,
     images: [
-      { url: "/opengraph-image", width: 1200, height: 630, alt: `${site.name} — ${site.role}` },
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${site.name} — ${site.role}`,
+      },
     ],
   },
 };
@@ -47,31 +53,39 @@ export default function BlogIndex() {
 
   return (
     <PageShell back={{ href: "/", label: site.name }}>
-      <h1 className="type-body text-foreground">Writing</h1>
-      <p className="mt-inset type-body text-muted-foreground">
-        Build logs, architecture notes and engineering write-ups.
-      </p>
-      {posts.length === 0 ? (
-        <p className="mt-stack type-body text-muted-foreground">
-          The first posts are being written. The{" "}
-          <a href="/feed.xml" className="text-foreground underline decoration-subtle-foreground/50 decoration-dotted underline-offset-4 hover:decoration-solid">
-            feed
-          </a>{" "}
-          will have them the moment they land.
-        </p>
-      ) : (
-        <>
-          <ul className="mt-stack">
-            {posts.map((post) => (
-              <PostCard key={post.slug} post={post} />
-            ))}
-          </ul>
-          <div className="mt-stack space-y-inset">
-            <TopicLinks />
-            <SeriesChips />
-          </div>
-        </>
-      )}
+      <PageHeader
+        variant="quiet"
+        size="narrow"
+        className="pt-stack"
+        title="Writing"
+        lead="Build logs, architecture notes and engineering write-ups."
+      />
+      <Container size="narrow">
+        {posts.length === 0 ? (
+          <p className="type-body text-muted-foreground">
+            The first posts are being written. The{" "}
+            <a
+              href="/feed.xml"
+              className="text-foreground underline decoration-subtle-foreground/50 decoration-dotted underline-offset-4 hover:decoration-solid"
+            >
+              feed
+            </a>{" "}
+            will have them the moment they land.
+          </p>
+        ) : (
+          <>
+            <ul>
+              {posts.map((post) => (
+                <PostCard key={post.slug} post={post} />
+              ))}
+            </ul>
+            <div className="mt-stack space-y-inset">
+              <TopicLinks />
+              <SeriesChips />
+            </div>
+          </>
+        )}
+      </Container>
     </PageShell>
   );
 }

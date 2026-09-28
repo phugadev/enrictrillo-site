@@ -2,16 +2,16 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Footer } from "./Footer";
 import { ScrollProgress } from "./ScrollProgress";
-import { COLUMN, PAGE } from "./layout";
+import { containerVariants } from "./layout";
 
 /**
- * Every page: one narrow column and a one-line footer. There is no nav bar —
- * the home page is the navigation — so every other page carries a single
- * quiet link back to where it came from.
+ * Every page: an optional link back, the page, a one-line footer. There is no
+ * nav bar — the home page is the navigation. The shell is not a column: each
+ * region brings its own Minima container (narrow for reading, page-width for
+ * the specimen), the way Minima's layout primitives are built to be used.
  *
  * `reading` adds the thin progress line along the top, for long articles.
- * `wide` lets a page that needs the room (the specimen, an article with its
- * contents rail) lay out its own columns instead of taking the narrow one.
+ * `wide` puts the back link on the page-width column, for pages laid out wide.
  */
 export function PageShell({
   children,
@@ -34,7 +34,10 @@ export function PageShell({
       </a>
       {reading && <ScrollProgress />}
       {back && (
-        <nav aria-label="Back" className={`${wide ? PAGE : COLUMN} pt-section`}>
+        <nav
+          aria-label="Back"
+          className={`${containerVariants({ size: wide ? "page" : "narrow" })} pt-section`}
+        >
           <Link
             href={back.href}
             className="type-body text-subtle-foreground transition-colors duration-quick hover:text-foreground"
@@ -43,9 +46,7 @@ export function PageShell({
           </Link>
         </nav>
       )}
-      <main id="content" className={wide ? "" : `${COLUMN} ${back ? "pt-stack" : "pt-section"}`}>
-        {children}
-      </main>
+      <main id="content">{children}</main>
       <Footer />
     </>
   );
