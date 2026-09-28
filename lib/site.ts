@@ -160,17 +160,6 @@ export const projects: Project[] = [
     specimen: { label: "Specimen", href: "/system" },
   },
   {
-    name: "Ruskel",
-    summary: "a design system with decisions in it",
-    description:
-      "A design system with decisions in it, not just components — one spectrum solved against contrast windows, two exposures, and a rule for which value belongs where.",
-    stack: ["CSS", "OKLCH", "shadcn", "npm"],
-    topic: "frontend",
-    status: "Shipped",
-    year: "2026",
-    links: { npm: "https://www.npmjs.com/package/@ruskel/ui", repo: "https://github.com/phugadev/ruskel" },
-  },
-  {
     name: "supasteeltokens",
     summary: "token encryption for Node, on AES-256-GCM",
     description:

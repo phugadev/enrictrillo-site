@@ -21,11 +21,28 @@ import { site } from "@/lib/site";
  */
 const body = Inter({
   subsets: ["latin"],
-  // Display sizes need a real medium cut now that Inter carries headings too;
-  // without it the browser synthesises one.
-  weight: ["400", "500"],
+  // 500 is the medium behind font-medium (list titles, table headers); 600 is
+  // Minima's prose <strong>. Inter is variable, so all three are one file —
+  // without 600 listed, the browser thickened the 500 instead.
+  weight: ["400", "500", "600"],
   variable: "--font-body",
   display: "swap",
+});
+
+/**
+ * Inter's real italic, for prose <em> only (app/globals.css). A separate
+ * instance so it can skip preloading: in the one above it was a 50 KB file
+ * preloaded on every page, the home page included, which has no italics.
+ * Unpreloaded, the browser fetches it only when a page actually sets italic
+ * text in this family.
+ */
+const bodyItalic = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["italic"],
+  variable: "--font-body-italic",
+  display: "swap",
+  preload: false,
 });
 
 /**
@@ -89,7 +106,7 @@ const followSystemTheme = `(() => {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${body.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-GB" className={`${body.variable} ${bodyItalic.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: followSystemTheme }} />
       </head>
