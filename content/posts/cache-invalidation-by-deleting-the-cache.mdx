@@ -73,8 +73,8 @@ create index concurrently component_updates_latest
 
 <Compare
   items={[
-    { code: "redis.get → db → redis.set", label: "Read-through cache", outcome: "bad" },
-    { code: "db (indexed)", label: "Just the query", outcome: "good" },
+    { code: "redis.get → db → redis.set", label: "Read-through cache", outcome: "bad", verdict: "Stale for up to 30s" },
+    { code: "db (indexed)", label: "Just the query", outcome: "good", verdict: "Always current" },
   ]}
   caption="Two milliseconds slower at the median, and never wrong."
 />
