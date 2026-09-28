@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { WavelengthChips } from "@/components/WavelengthChips";
-import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
+import { WavelengthDot } from "@/components/ui/WavelengthDot";
 import { getPostsByWavelength } from "@/lib/posts";
 import { site, wavelengths, type Wavelength } from "@/lib/site";
 
@@ -59,24 +59,19 @@ export default async function WavelengthPage({
   const wl = wavelengths[band.wavelength];
 
   return (
-    <PageShell>
-      <PageHeader
-        eyebrow={
-          <Eyebrow wavelength={band.wavelength as Wavelength}>
-            {wl.nm}nm · {band.posts.length} {band.posts.length === 1 ? "post" : "posts"}
-          </Eyebrow>
-        }
-        title={wl.label}
-        lead={`${wl.description}.`}
-      >
+    <PageShell back={{ href: "/blog", label: "Writing" }}>
+      <h1 className="flex items-center gap-2 type-body text-foreground">
+        <WavelengthDot wavelength={band.wavelength as Wavelength} />
+        {wl.label}
+      </h1>
+      <p className="mt-inset type-body text-muted-foreground">{wl.description}.</p>
+      <ul className="mt-stack">
+        {band.posts.map((post) => (
+          <PostCard key={post.slug} post={post} showWavelength={false} />
+        ))}
+      </ul>
+      <div className="mt-stack">
         <WavelengthChips active={band.wavelength as Wavelength} />
-      </PageHeader>
-      <div className={PAGE}>
-        <div className="focuslist divide-y divide-border border-t border-border">
-          {band.posts.map((post) => (
-            <PostCard key={post.slug} post={post} showWavelength={false} />
-          ))}
-        </div>
       </div>
     </PageShell>
   );

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
-import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
 import { getAllSeries, getSeriesBySlug } from "@/lib/posts";
 import { site } from "@/lib/site";
 
@@ -43,25 +41,16 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
   if (!found) notFound();
 
   return (
-    <PageShell>
-      <PageHeader
-        eyebrow={<Eyebrow>Series</Eyebrow>}
-        title={found.name}
-        lead={`${found.posts.length} ${found.posts.length === 1 ? "post" : "posts"} in this series, newest first.`}
-      />
-      <div className={PAGE}>
-        <div className="focuslist divide-y divide-border border-t border-border">
-          {found.posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
-        <Link
-          href="/blog"
-          className="signal mt-stack inline-block type-label-sm text-subtle-foreground transition-colors duration-quick hover:text-foreground"
-        >
-          ← All writing
-        </Link>
-      </div>
+    <PageShell back={{ href: "/blog", label: "Writing" }}>
+      <h1 className="type-body text-foreground">{found.name}</h1>
+      <p className="mt-inset type-body text-muted-foreground">
+        {found.posts.length} {found.posts.length === 1 ? "post" : "posts"} in this series, newest first.
+      </p>
+      <ul className="mt-stack">
+        {found.posts.map((post) => (
+          <PostCard key={post.slug} post={post} />
+        ))}
+      </ul>
     </PageShell>
   );
 }

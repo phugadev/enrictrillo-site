@@ -5,7 +5,6 @@ import { PostHeader } from "@/components/PostHeader";
 import { Mdx } from "@/components/Mdx";
 import { PostNav } from "@/components/PostNav";
 import { PostToc } from "@/components/PostToc";
-import { PAGE } from "@/components/layout";
 import { getHeadings } from "@/lib/headings";
 import { JsonLd, blogPostingSchema } from "@/lib/schema";
 import { getAdjacentPosts, getAllPosts, getPostBySlug } from "@/lib/posts";
@@ -68,17 +67,12 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   const hasToc = headings.length > 1;
 
   return (
-    <PageShell reading>
+    <PageShell reading back={{ href: "/blog", label: "Writing" }}>
       <JsonLd data={blogPostingSchema(meta)} />
-      {/* The article keeps its measure and the table of contents takes a
-          column of its own beside it on wide screens, rather than hanging
-          off the edge of the text. */}
-      <div
-        className={`${PAGE} grid gap-section pt-section ${
-          hasToc ? "xl:grid-cols-[minmax(0,1fr)_13rem]" : ""
-        }`}
-      >
-        <article className="min-w-0 max-w-[46rem]">
+      {/* The contents rail hangs in the empty margin beside the column on
+          wide screens, rather than widening the page to make room for it. */}
+      <div className="relative">
+        <article>
           <PostHeader meta={meta} />
           <div className="prose mt-stack">
             <Mdx source={content} />
@@ -86,7 +80,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
           <PostNav newer={newer} older={older} />
         </article>
         {hasToc && (
-          <aside className="hidden xl:block">
+          <aside className="absolute left-full top-0 ml-section hidden h-full w-52 xl:block">
             <PostToc headings={headings} wavelength={meta.wavelength} />
           </aside>
         )}

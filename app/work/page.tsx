@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
-import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
-import { band } from "@/lib/bands";
+import { WavelengthDot } from "@/components/ui/WavelengthDot";
 import { getAllCaseStudies } from "@/lib/work";
-import { site, wavelengths } from "@/lib/site";
+import { site } from "@/lib/site";
 
 const description = "Longer write-ups on individual projects — approach, decisions and outcomes.";
 
@@ -35,53 +34,33 @@ export default function WorkIndex() {
   const studies = getAllCaseStudies();
 
   return (
-    <PageShell>
-      <PageHeader
-        eyebrow={<Eyebrow>Case studies</Eyebrow>}
-        title="How the work was done."
-        lead={description}
-      />
-      <div className={PAGE}>
-        {studies.length === 0 ? (
-          <div className="rounded-panel border border-dashed border-gray-border-strong p-stack text-center">
-            <p className="type-subheading text-foreground">The write-ups are in progress.</p>
-            <p className="mx-auto mt-inset max-w-md type-body text-subtle-foreground">
-              Until they land, every project is on the homepage with its source and packages linked.
-            </p>
-            <Link
-              href="/#work"
-              className="signal mt-gutter inline-block type-label-sm text-subtle-foreground underline decoration-faint underline-offset-4 transition-colors duration-quick hover:text-foreground"
-            >
-              See the selected work
-            </Link>
-          </div>
-        ) : (
-          <ul className="grid gap-gutter sm:grid-cols-2">
-            {studies.map((study) => {
-              const wl = wavelengths[study.wavelength];
-              const b = band[study.wavelength];
-              return (
-                <li key={study.slug}>
-                  <Link
-                    href={`/work/${study.slug}`}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-panel border border-border bg-card p-stack shadow-raised transition-colors duration-quick hover:border-gray-border-strong"
-                  >
-                    <span aria-hidden="true" className={`absolute left-0 top-0 h-px w-24 ${b.mark}`} />
-                    <Eyebrow as="span" wavelength={study.wavelength}>
-                      {wl.label} · {study.year}
-                    </Eyebrow>
-                    <h2 className="mt-gutter text-balance type-heading text-foreground">{study.title}</h2>
-                    <p className="mt-inset flex-1 text-pretty type-body text-muted-foreground">{study.excerpt}</p>
-                    <span className="signal mt-stack type-label-sm text-subtle-foreground transition-colors duration-quick group-hover:text-foreground">
-                      Read the case study →
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </div>
+    <PageShell back={{ href: "/", label: site.name }}>
+      <h1 className="type-body text-foreground">Case studies</h1>
+      <p className="mt-inset type-body text-muted-foreground">{description}</p>
+      {studies.length === 0 ? (
+        <p className="mt-stack type-body text-muted-foreground">
+          The write-ups are in progress. Until they land, every project is on the{" "}
+          <Link href="/" className="text-foreground underline decoration-subtle-foreground/50 decoration-dotted underline-offset-4 hover:decoration-solid">
+            home page
+          </Link>{" "}
+          with its source linked.
+        </p>
+      ) : (
+        <ul className="mt-stack">
+          {studies.map((study) => (
+            <li key={study.slug}>
+              <Link
+                href={`/work/${study.slug}`}
+                className="group -mx-2 flex items-baseline gap-3 rounded-control-sm px-2 py-1.5 transition-colors duration-quick hover:bg-gray-tint"
+              >
+                <WavelengthDot wavelength={study.wavelength} className="translate-y-[-2px]" />
+                <span className="min-w-0 flex-1 text-foreground">{study.title}</span>
+                <span className="shrink-0 type-body tabular-nums text-subtle-foreground">{study.year}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </PageShell>
   );
 }

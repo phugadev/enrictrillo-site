@@ -4,6 +4,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, { type Options } from "rehype-pretty-code";
 import minimaDark from "@/styles/minima-syntax-dark.json";
+import minimaLight from "@/styles/minima-syntax-light.json";
 import rehypeUnwrapImages from "rehype-unwrap-images";
 import remarkGfm from "remark-gfm";
 import smartypants from "remark-smartypants";
@@ -98,7 +99,15 @@ function rehypeCountCodeLines() {
  * (phugadev/minima/syntax-shiki). Literal colours rather than CSS variables
  * because shiki dropped its css-variables theme from the bundle.
  */
-const syntax = minimaDark as unknown as NonNullable<Options["theme"]>;
+type Theme = Extract<NonNullable<Options["theme"]>, { name?: string }>;
+
+/* Both of Minima's syntax themes. With a map, rehype-pretty-code writes each
+   token's colour for every theme as a custom property (--shiki-light,
+   --shiki-dark), and app/globals.css picks the one for the page's mode. */
+const syntax = {
+  light: minimaLight as unknown as Theme,
+  dark: minimaDark as unknown as Theme,
+};
 
 export async function Mdx({ source }: { source: string }) {
   const { default: Content } = await evaluate(source, {

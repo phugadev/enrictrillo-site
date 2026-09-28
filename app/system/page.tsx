@@ -106,7 +106,7 @@ const ratio = (n: number) => `${n.toFixed(2)}:1`;
 
 export default function SystemPage() {
   return (
-    <PageShell>
+    <PageShell wide back={{ href: "/", label: site.name }}>
       <PageHeader
         eyebrow={<Eyebrow wavelength="interface">System · Minima</Eyebrow>}
         title="The system this site is built on."

@@ -42,12 +42,14 @@
   --color-intelligence-edge: var(--purple-border);
 
   /*
-    A fourth text level, below Minima's subtle-foreground. Minima took the
-    third from this site and keeps the fourth out: one consumer is not
-    evidence for a scale. 4.72:1 on the canvas and on cards; under 4.5 on
-    Minima's raised dark rungs, so it stays off overlays.
+    A fourth text level, below Minima's subtle-foreground — in dark only. Dark
+    has room under subtle: the solid step reads 4.72:1 on the canvas and
+    cards. Light does not: the same step is 3.2:1, and Minima's subtle already
+    sits near the floor there. So faint is its own quieter grey in dark and
+    collapses into subtle in light (--faint below), and the page keeps four
+    levels where it can and three where it must, never one under 4.5:1.
   */
-  --color-faint: var(--gray-solid);
+  --color-faint: var(--faint);
 }
 
 /* ── Faces ────────────────────────────────────────────────────────────────
@@ -56,6 +58,13 @@
    The serif is a third face and a site concern: a person speaking, used for
    article headlines only. next/font scopes it to the post layout, so the
    family is declared on the element that carries the face, not on :root. */
+:root {
+  --faint: var(--subtle-foreground);
+}
+.dark {
+  --faint: var(--gray-solid);
+}
+
 :root {
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, SFMono-Regular, monospace;
@@ -278,6 +287,16 @@ body {
   .codeframe__copy[data-floating] {
     opacity: 1;
   }
+}
+
+/* Syntax colour follows the page. The highlighter emits both of Minima's
+   themes as custom properties on every token; light is the default, and the
+   .dark root that follows the reader's OS switches every token at once. */
+.codeframe [data-line] span {
+  color: var(--shiki-light);
+}
+.dark .codeframe [data-line] span {
+  color: var(--shiki-dark);
 }
 
 /* The frame owns border, radius and ground; the pre inside keeps scroll. */

@@ -11,9 +11,8 @@ export const site = {
   url: "https://enrictrillo.com",
 
   /**
-   * Availability is deliberately a small, quiet signal rather than a page —
-   * a status line in the hero and footer. Flip `open` to false and both
-   * disappear without touching any component.
+   * Availability is one sentence in the home page's closing paragraph. Flip
+   * `open` to false and it disappears without touching any component.
    */
   availability: {
     open: true,
@@ -26,11 +25,6 @@ export const site = {
     linkedin: "https://linkedin.com/in/enrictrillo",
   },
 
-  nav: [
-    { label: "Work", href: "/#work" },
-    { label: "Writing", href: "/blog" },
-    { label: "About", href: "/#about" },
-  ],
 };
 
 export type Wavelength = "interface" | "systems" | "compute" | "intelligence";
@@ -75,7 +69,7 @@ const ascendingWavelengths = [...wavelengthOrder].reverse();
 
 /**
  * The site's one gradient — the full spectrum, ascending nm left to right.
- * Shared by `Spectrometer` (where it originated) and `ScrollProgress`, so
+ * Used by `ScrollProgress`, so
  * both instruments are drawn from the same calibration instead of two
  * hand-tuned copies drifting apart.
  *
@@ -100,43 +94,11 @@ export type ProjectLinks = {
 };
 
 /**
- * The toolkit, filed by band.
- *
- * This is the section that makes the wavelength taxonomy mean something on the
- * homepage — without it the spectrometer is a legend for a system the reader
- * never sees applied. Every entry here restates a claim the tagline and About
- * copy already make; don't add a technology here that isn't true elsewhere on
- * the page.
- */
-export const toolkit: Record<Wavelength, string[]> = {
-  interface: ["TypeScript", "React", "Next.js", "Tailwind"],
-  systems: ["Node", "Python", "PostgreSQL", "REST APIs"],
-  compute: ["Azure", "Vercel", "Docker", "CI/CD"],
-  intelligence: ["LLM APIs", "Agents & tool use", "RAG", "Evals"],
-};
-
-/**
  * Present tense — what's true this month. Kept as data so it can be edited
  * without touching a component, and the section hides itself while the array
  * is empty rather than showing a stale or invented status.
  */
 export const now: string[] = ["Building depth in Azure, with AWS returning to the toolkit down the line."];
-
-/**
- * Domain-level capability areas, not specific technologies — see `toolkit`
- * for the stack. Each one carries a short description, surfaced as a
- * hover/focus tooltip by `components/Expertise.tsx` (a CSS-only tooltip, not
- * the native `title` attribute — see that file for why). That component
- * hides itself while this array is empty, so clearing it is a one-line
- * revert.
- */
-export const expertise: { label: string; description: string }[] = [
-  { label: "Product Engineering", description: "Owning a feature from product decision through to what ships." },
-  { label: "UX/UI Design", description: "Interface and interaction decisions made in code, not handed off." },
-  { label: "System Design", description: "Architecture and data decisions that hold up under real load." },
-  { label: "Cloud Infra", description: "Deploys, CI/CD and infra-as-code — Azure-first." },
-  { label: "Applied AI", description: "LLM APIs and agentic workflows wired into production systems." },
-];
 
 /**
  * Diligence facts for the About section — the concrete details a contract
@@ -154,6 +116,8 @@ export const aboutFacts: { label: string; value: string }[] = [
 
 export type Project = {
   name: string;
+  /** One line for a list, lower case, no full stop — the row reads "Name — summary". */
+  summary?: string;
   description: string;
   /** Omit rather than guess — the stack line is hidden when this is absent. */
   stack?: string[];
@@ -188,6 +152,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     name: "Watchman",
+    summary: "a real-time system health monitor",
     description: "Real-time system health monitor.",
     // TODO(rico): add the stack once you confirm it — omitted rather than
     // guessed. Less urgent now the repo is linked and readable.
@@ -199,6 +164,7 @@ export const projects: Project[] = [
   },
   {
     name: "Minima",
+    summary: "the design system this site is built on",
     description:
       "A Tailwind v4 theme for interfaces that stay out of their own way — neutral carries the structure, colour is spent on state, identity and data. Every rule ships with the runner that proves it.",
     stack: ["Tailwind v4", "OKLCH", "shadcn registry"],
@@ -212,6 +178,7 @@ export const projects: Project[] = [
   },
   {
     name: "Ruskel",
+    summary: "a design system with decisions in it",
     description:
       "A design system with decisions in it, not just components — one spectrum solved against contrast windows, two exposures, and a rule for which value belongs where.",
     stack: ["CSS", "OKLCH", "shadcn", "npm"],
@@ -222,6 +189,7 @@ export const projects: Project[] = [
   },
   {
     name: "supasteeltokens",
+    summary: "token encryption for Node, on AES-256-GCM",
     description:
       "npm package for token encryption, rebuilt from scratch in v2.0.0 around proper AES-256-GCM.",
     stack: ["TypeScript", "Node", "npm"],

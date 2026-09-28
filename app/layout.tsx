@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -65,16 +65,34 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
+export const viewport: Viewport = {
+  // Minima's canvas in each mode, so the browser chrome matches the page.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f8f8" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  colorScheme: "light dark",
+};
+
+/*
+ * Minima keys dark mode off a `.dark` class on the root. The site follows the
+ * reader's OS setting: the class is set from prefers-color-scheme before first
+ * paint — inline in the head, so there is no flash of the wrong mode — and
+ * kept in step if the setting changes while the page is open.
+ */
+const followSystemTheme = `(() => {
+  const q = matchMedia("(prefers-color-scheme: dark)");
+  const apply = () => document.documentElement.classList.toggle("dark", q.matches);
+  apply();
+  q.addEventListener("change", apply);
+})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en-GB"
-      // Dark only: Minima keys its dark mode off this class. Comfortable
-      // density is Minima's roomier spacing ladder (20/40/80), the one meant
-      // for a page that is read rather than operated.
-      data-density="comfortable"
-      className={`dark ${body.variable} ${mono.variable}`}
-    >
+    <html lang="en-GB" className={`${body.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: followSystemTheme }} />
+      </head>
       {/*
         suppressHydrationWarning covers only <body>'s own attributes, not its
         children — browser extensions (Bitdefender's `bis_register`, password

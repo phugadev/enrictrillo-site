@@ -3,7 +3,6 @@ import { PageShell } from "@/components/PageShell";
 import { PostCard } from "@/components/PostCard";
 import { SeriesChips } from "@/components/SeriesChips";
 import { WavelengthChips } from "@/components/WavelengthChips";
-import { Eyebrow, PAGE, PageHeader } from "@/components/layout";
 import { getAllPosts } from "@/lib/posts";
 import { site } from "@/lib/site";
 
@@ -47,43 +46,32 @@ export default function BlogIndex() {
   const posts = getAllPosts();
 
   return (
-    <PageShell>
-      <PageHeader
-        eyebrow={<Eyebrow>Writing{posts.length > 0 ? ` · ${posts.length} ${posts.length === 1 ? "post" : "posts"}` : ""}</Eyebrow>}
-        title="Build logs and engineering notes."
-        lead="Architecture notes and engineering write-ups — filed by wavelength, the same taxonomy the work is organised by."
-      >
-        {posts.length > 0 && (
-          <div className="space-y-gutter">
-            <WavelengthChips />
-            <SeriesChips />
-          </div>
-        )}
-      </PageHeader>
-
-      <div className={PAGE}>
-        {posts.length === 0 ? (
-          <div className="rounded-panel border border-dashed border-gray-border-strong p-stack text-center">
-            <p className="type-subheading text-foreground">The first posts are being written.</p>
-            <p className="mx-auto mt-inset max-w-md type-body text-subtle-foreground">
-              Build logs and architecture notes land here as they are finished. The feed will
-              have them the moment they do.
-            </p>
-            <a
-              href="/feed.xml"
-              className="signal mt-gutter inline-block type-label-sm text-subtle-foreground underline decoration-faint underline-offset-4 transition-colors duration-quick hover:text-foreground"
-            >
-              Subscribe via RSS
-            </a>
-          </div>
-        ) : (
-          <div className="focuslist divide-y divide-border border-t border-border">
+    <PageShell back={{ href: "/", label: site.name }}>
+      <h1 className="type-body text-foreground">Writing</h1>
+      <p className="mt-inset type-body text-muted-foreground">
+        Build logs, architecture notes and engineering write-ups.
+      </p>
+      {posts.length === 0 ? (
+        <p className="mt-stack type-body text-muted-foreground">
+          The first posts are being written. The{" "}
+          <a href="/feed.xml" className="text-foreground underline decoration-subtle-foreground/50 decoration-dotted underline-offset-4 hover:decoration-solid">
+            feed
+          </a>{" "}
+          will have them the moment they land.
+        </p>
+      ) : (
+        <>
+          <ul className="mt-stack">
             {posts.map((post) => (
               <PostCard key={post.slug} post={post} />
             ))}
+          </ul>
+          <div className="mt-stack space-y-inset">
+            <WavelengthChips />
+            <SeriesChips />
           </div>
-        )}
-      </div>
+        </>
+      )}
     </PageShell>
   );
 }
