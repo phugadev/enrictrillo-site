@@ -104,7 +104,12 @@ async function main() {
       return abort(`content/posts/${slug}.mdx already exists — nothing written.`);
     }
 
-    const date = new Date().toISOString().slice(0, 10);
+    // The local calendar date. toISOString() is UTC, which dated a post
+    // written just after midnight in London (BST) as the day before.
+    const now = new Date();
+    const date = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
+      .map((n, i) => String(n).padStart(i === 0 ? 4 : 2, "0"))
+      .join("-");
     const frontmatter = [
       "---",
       `title: ${yamlString(title)}`,
