@@ -53,7 +53,7 @@ export default async function SeriesPage({ params }: { params: Promise<{ series:
       <Container size="narrow">
         <ul>
           {found.posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <PostCard key={post.slug} post={post} excerpt />
           ))}
         </ul>
       </Container>

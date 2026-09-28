@@ -37,7 +37,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         eyebrow={wl.label}
         title={meta.title}
         topic={meta.topic}
-        footer={`${site.name} · ${meta.readingTime}`}
+        footer={site.name}
       />
     ),
     { ...size, fonts: ogFonts() },
