@@ -260,16 +260,6 @@ body {
   }
 }
 
-/* Syntax colour follows the page. The highlighter emits both of Minima's
-   themes as custom properties on every token; light is the default, and the
-   .dark root that follows the reader's OS switches every token at once. */
-.codeframe [data-line] span {
-  color: var(--shiki-light);
-}
-.dark .codeframe [data-line] span {
-  color: var(--shiki-dark);
-}
-
 /* The frame owns border, radius and ground; the pre inside keeps scroll. */
 .prose .codeframe > pre,
 .codeframe > pre {
