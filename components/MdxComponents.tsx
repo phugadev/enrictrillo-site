@@ -8,7 +8,9 @@ import { Zigzag } from "./ui/Zigzag";
 
 const FIGURE = "my-stack";
 const CAPTION = "figure mt-inset text-center type-caption-sm not-italic text-faint";
-const FRAME = "rounded-panel border border-border";
+/** Images sit on the same tray and stage as every other figure. */
+const TRAY = "tray";
+const STAGE = "tray__stage block";
 
 /** Prose column width, so the browser can pick a sensible source. */
 const SIZES = "(max-width: 768px) 100vw, 672px";
@@ -26,13 +28,9 @@ function MdxImage({ src, alt, title }: ComponentPropsWithoutRef<"img">) {
 
   return (
     <figure className={FIGURE}>
-      <img
-        src={src}
-        alt={alt ?? ""}
-        loading="lazy"
-        decoding="async"
-        className={`${FRAME} mx-auto h-auto max-w-full`}
-      />
+      <div className={TRAY}>
+        <img src={src} alt={alt ?? ""} loading="lazy" decoding="async" className={`${STAGE} h-auto w-full`} />
+      </div>
       {title && <figcaption className={CAPTION}>{title}</figcaption>}
     </figure>
   );
@@ -61,15 +59,17 @@ export function Figure({
 }) {
   return (
     <figure className={FIGURE}>
-      <Image
-        src={src}
-        alt={alt}
-        width={Number(width)}
-        height={Number(height)}
-        priority={priority}
-        sizes={SIZES}
-        className={`${FRAME} h-auto w-full`}
-      />
+      <div className={TRAY}>
+        <Image
+          src={src}
+          alt={alt}
+          width={Number(width)}
+          height={Number(height)}
+          priority={priority}
+          sizes={SIZES}
+          className={`${STAGE} h-auto w-full`}
+        />
+      </div>
       {caption && <figcaption className={CAPTION}>{caption}</figcaption>}
     </figure>
   );
@@ -86,7 +86,9 @@ type CompareItem = {
   verdict?: string;
 };
 
-const CHIP = "figure inline-flex w-fit items-center rounded-chip border border-border px-2 py-0.5 type-caption-sm text-subtle-foreground";
+/** The snippet as a small card on the stage, its source in a strip beneath. */
+const SPECIMEN = "w-full max-w-72 overflow-hidden rounded-control-md border border-border bg-background shadow-raised";
+const SOURCE = "flex items-center border-t border-border bg-gray-tint px-3 py-1.5 type-caption-sm text-subtle-foreground";
 
 /**
  * A "wrong way / right way" pair of panels for the rare post making a single,
@@ -120,10 +122,12 @@ export function Compare({ items, caption }: { items: CompareItem[]; caption?: st
           verdict={item.outcome === "good" ? "yes" : "no"}
           label={item.verdict ?? (item.outcome === "good" ? "Works" : "Doesn't work")}
         >
-          <code className="block whitespace-pre-wrap bg-transparent p-0 font-mono type-caption leading-relaxed text-foreground">
-            {item.code}
-          </code>
-          <span className={CHIP}>{item.label}</span>
+          <div className={SPECIMEN}>
+            <code className="block whitespace-pre-wrap bg-transparent px-3 py-2.5 font-mono type-caption leading-relaxed text-foreground">
+              {item.code}
+            </code>
+            <span className={SOURCE}>{item.label}</span>
+          </div>
         </Cell>
       ))}
     </Plate>

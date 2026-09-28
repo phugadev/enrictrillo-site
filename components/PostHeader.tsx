@@ -48,6 +48,9 @@ export function PostHeader({ meta }: { meta: PostMeta }) {
       <h1 className="mt-gutter text-balance font-serif text-[2.25rem] leading-[1.1] tracking-[-0.01em] text-foreground">
         {meta.title}
       </h1>
+      {/* The excerpt as the standfirst: the title states a position, this is
+          the claim behind it — the same line the writing list shows. */}
+      <p className="mt-gutter max-w-prose text-pretty type-lead text-muted-foreground">{meta.excerpt}</p>
     </header>
   );
 }
