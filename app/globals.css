@@ -90,12 +90,12 @@ body {
   /*
     Body copy on the site's three tiers: foreground for what the eye should
     land on (headlines, headings, bold, links, names), muted for reading,
-    subtle for labels and dates. Minima's prose uses its own --gray-reading
-    step instead, which in dark mode sits at 0.88 — close enough to the 0.96
-    headings that a post read as one brightness, and brighter than the
-    standfirst above it. The landing page already reads on muted; posts and
-    case studies now match it. Minima's heading, strong and link rules keep
-    them at foreground.
+    subtle for labels and dates. Minima's prose reads on its own
+    --gray-reading step instead, one lift under the headings. Minima 1.4.0
+    fixed that step in dark (it was 0.88, nearly heading-bright — found
+    here); this override is now a site choice rather than a patch: the
+    landing page reads on muted, and posts and case studies match it.
+    Minima's heading, strong and link rules keep them at foreground.
   */
   .prose {
     color: var(--muted-foreground);
@@ -342,15 +342,22 @@ body {
     background: var(--gray-tint);
   }
 }
-/* Comments in italic, as the syntax themes mark them. Minima's Shiki rule
-   applies only the colour, so the italic Shiki writes inline was ignored. It
-   is the same scope in both themes, so one rule covers both modes. Keywords
-   the themes mark bold stay regular on purpose: colour already separates
-   them, and bold keywords make a block read heavier than the prose around
-   it. */
+/* Comments are italic as of Minima 1.4.0; this points them at Plex's real
+   italic, a separate unpreloaded instance (app/layout.tsx), instead of a
+   slanted upright. */
 .codeframe [style*="font-style:italic"] {
   font-family: var(--font-mono-italic), var(--font-mono);
-  font-style: italic;
+}
+
+/* Minima 1.4.0 sets the keywords the themes mark bold at 600. This site keeps
+   them regular, as Noé Chagué's and shedsgns.me's code blocks do: colour
+   already separates them, and bold keywords make a block read heavier than
+   the prose around it. In the components layer on purpose — Minima's rule is
+   a layered !important, which an unlayered !important cannot beat. */
+@layer components {
+  .codeframe [style*="font-weight:bold"] {
+    font-weight: inherit !important;
+  }
 }
 
 .codeframe [data-highlighted-line] {
