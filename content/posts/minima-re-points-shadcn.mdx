@@ -80,14 +80,17 @@ npx shadcn@latest add phugadev/minima/theme
     across two projects.
   - 1.3.0: the quiet voice for Section and PageHeader, written because this
     site's redesign hand-rolled one.
-  And what building on it still turned up (28 Sep 2026), all currently fixed
-  in this site's app/globals.css rather than upstream:
-  - prose body in dark mode used a reading grey (0.88) nearly as bright as
-    headings (0.96);
-  - Minima's highlighted-line margin shifted highlighted code lines left;
-  - Minima's Shiki rule applied colour but dropped the themes' italics.
-  Decide: upstream these as Minima fixes before publishing, and the post can
-  say "and here's the release they became".
+  - 1.4.0 (29 Sep 2026): two gaps this site found while building its first
+    real post, both now fixed upstream with an audit that fails on the old
+    behaviour:
+    - dark body prose used a reading grey (0.88) nearly as bright as the
+      headings — measured, it sat 40% of the way from headings to muted where
+      light sits 71%. Dark is now solved to light's position (0.821).
+    - under rehype-pretty-code, Shiki's italic comments and bold keywords
+      were silently dropped. Now applied, bold at 600 to match Prism/hljs.
+  A third suspected bug (highlighted code lines shifting left) turned out
+  to be this site's own doing, not Minima's — worth a line: testing it
+  against stock Minima is what told them apart.
 */}
 
 ## See it running
