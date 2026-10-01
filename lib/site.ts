@@ -152,7 +152,7 @@ export const projects: Project[] = [
       "A Tailwind v4 theme for interfaces that stay out of their own way — neutral carries the structure, colour is spent on state, identity and data. Every rule ships with the runner that proves it.",
     stack: ["Tailwind v4", "OKLCH", "shadcn registry"],
     topic: "frontend",
-    status: "In build",
+    status: "Shipped",
     year: "2026",
     /* This site is Minima's first real consumer and is rendered by it, so
        /system — the live specimen — is the proof a stranger can check. */
